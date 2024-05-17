@@ -14,3 +14,5 @@ To be in developer mode in Express use:
 cd Backend
 npm run start
 ```
+
+There is a .env required.
