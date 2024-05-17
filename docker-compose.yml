@@ -21,7 +21,7 @@ services:
       - beer-swipe-vol:/var/lib/postgresql/data
 
   sveltekit:
-    build: ./frontend-svelte
+    build: ./Frontend
     ports:
       - "3000:5173"
     #    environment:
