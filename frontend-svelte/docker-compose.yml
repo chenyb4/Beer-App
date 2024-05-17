@@ -1,0 +1,11 @@
+services:
+  sveltekit:
+    build: .
+    ports:
+      - "3000:5173"
+    volumes:
+      - .://app
+      - /app/node_modules
+#    environment:
+#      NODE_ENV: production
+    command: npm run dev -- --host
