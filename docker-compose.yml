@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   api:
-    build: .
+    build: ./Backend
     restart: always
     environment:
       PGPASSWORD: ${PGPASSWORD}
@@ -19,5 +19,16 @@ services:
       POSTGRES_USER: ${PGUSER}
     volumes:
       - beer-swipe-vol:/var/lib/postgresql/data
+
+  sveltekit:
+    build: ./frontend-svelte
+    ports:
+      - "3000:5173"
+    #    environment:
+    #      NODE_ENV: production
+    command: npm run dev -- --host
+
 volumes:
   beer-swipe-vol:
+
+
