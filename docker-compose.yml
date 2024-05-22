@@ -1,4 +1,5 @@
 version: "3.9"
+name: beer-swipe
 services:
   api:
     build: ./Backend
@@ -6,9 +7,12 @@ services:
     environment:
       PGPASSWORD: ${PGPASSWORD}
       POSTGRES_USER: ${PGUSER}
-      PORT: ${PORT}
+      APIURL: ${APIURL}
+      APIPORT: ${APIPORT}
+      DBURL: ${DOCKERDBURL}
+      DBPORT: ${DBPORT}
     ports:
-      - "8080:80"
+      - ${APIPORT}:${APIPORT}
     command: npm run start
   db:
     image: postgres
@@ -17,6 +21,8 @@ services:
     environment:
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_USER: ${PGUSER}
+    ports:
+      - ${DBPORT}:${DBPORT}
     volumes:
       - beer-swipe-vol:/var/lib/postgresql/data
 
@@ -24,8 +30,10 @@ services:
     build: ./Frontend
     ports:
       - "3000:5173"
-    #    environment:
-    #      NODE_ENV: production
+    environment:
+      APIURL: ${DOCKERAPIURL}
+      APIPORT: ${APIPORT}
+#      NODE_ENV: production
     command: npm run dev -- --host
 
 volumes:
