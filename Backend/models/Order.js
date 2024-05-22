@@ -1,44 +1,34 @@
 const {DataTypes} = require('sequelize');
 
 module.exports = function (sequelize) {
-    const User =  sequelize.define('user',
+    const Order =  sequelize.define('order',
         {
             id: {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            username: {
-                type: DataTypes.STRING,
+            transaction_id: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
-            },
-            email: {
-                type: DataTypes.STRING,
-                isEmail: true,
                 unique: true,
-                allowNull: false,
             },
-            role_id: {
+            seller_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            credits: {
+            buyer_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            amount_of_credits: {
                 type: DataTypes.FLOAT,
-                allowNull: false,
                 min: 0,
+                allowNull: false,
                 default: 0,
-            },
-            date_of_birth: {
-                type: DataTypes.DATE,
-                allowNull: false
-            },
-            lang_id: {
-                type: DataTypes.INTEGER,
-                default: 0,
-                allowNull: false
             },
         },
     );
 
-    return User;
+    return Order;
 }

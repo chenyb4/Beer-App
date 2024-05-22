@@ -28,6 +28,12 @@ const sequelize = new Sequelize('postgres', user, password, {
 // Insert models below
 const User = require("./models/User")(sequelize)
 const Product = require("./models/Product")(sequelize)
+const Order = require("./models/Order")(sequelize)
+const Order_Product = require("./models/Order_Product")(sequelize)
+const History = require("./models/History")(sequelize)
+const Credit = require("./models/Credit")(sequelize)
+const Role = require("./models/Role")(sequelize)
+const Lang = require("./models/Lang")(sequelize)
 
 async function authenticate() {
   try {
@@ -52,9 +58,9 @@ async function syncForce() {
   await authenticate();
   try {
     await sequelize.sync({force: true});
-    console.log('Database synced');
+    console.log('Database force synced');
   } catch (error) {
-    console.error('Unable to sync database:', error)
+    console.error('Unable to force sync database:', error)
   }
 }
 
@@ -83,7 +89,7 @@ app.get('/', async (req, res) => {
 
 app.get('/force', async (req, res) => {
   await syncForce()
-  res.send('User Created!')
+  res.send('Forced!')
 })
 
 const port = process.env.APIPORT

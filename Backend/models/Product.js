@@ -20,6 +20,10 @@ module.exports = function (sequelize) {
                 type: DataTypes.INTEGER,
                 min: 0,
             },
+            EAN: {
+                type: DataTypes.STRING,
+                len: [8,13],
+            },
         },
     );
     return Product;
