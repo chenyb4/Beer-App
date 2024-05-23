@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const process = require('process');
 const app = express();
-const { Sequelize } = require('sequelize');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -16,45 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-const user = process.env.POSTGRES_USER
-const password = process.env.PGPASSWORD
-const url = process.env.DBURL
-
-const sequelize = new Sequelize('postgres', user, password, {
-  host: url,
-  dialect: "postgres"
-});
-
-// Insert models below
-const User = require("./models/User")(sequelize)
-const Product = require("./models/Product")(sequelize)
-const Order = require("./models/Order")(sequelize)
-const Order_Product = require("./models/Order_Product")(sequelize)
-const History = require("./models/History")(sequelize)
-const Credit = require("./models/Credit")(sequelize)
-const Role = require("./models/Role")(sequelize)
-const Lang = require("./models/Lang")(sequelize)
-
-Product.hasMany(Order_Product)
-Order_Product.belongsTo(Product)
-Order.hasMany(Order_Product)
-Order_Product.belongsTo(Order)
-
-User.hasMany(History)
-History.belongsTo(User)
-Role.hasMany(User)
-User.belongsTo(Role)
-
-Lang.hasMany(User)
-User.belongsTo(Lang)
-
-User.hasMany(Order, {foreignKey: 'buyerId'})
-User.hasMany(Order, {foreignKey: 'sellerId'})
-
+const db = require('./database')
 
 async function authenticate() {
   try {
-    await sequelize.authenticate();
+    await db.sequelize.authenticate();
     console.log('Connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
@@ -64,7 +29,7 @@ async function authenticate() {
 async function sync() {
   await authenticate();
   try {
-    await sequelize.sync();
+    await db.sequelize.sync();
     console.log('Database synced');
   } catch (error) {
     console.error('Unable to sync database:', error)
@@ -74,7 +39,7 @@ async function sync() {
 async function syncForce() {
   await authenticate();
   try {
-    await sequelize.sync({force: true});
+    await db.sequelize.sync({force: true});
     console.log('Database force synced');
   } catch (error) {
     console.error('Unable to force sync database:', error)
@@ -100,7 +65,7 @@ app.use(function(err, req, res, next) {
 
 app.get('/', async (req, res) => {
   await sync()
-  await User.create({username: "Wouter", email: "wouter.baltus1999@gmail.com"});
+  await db.User.create({username: "Wouter", email: "wouter.baltus1999@gmail.com"});
   res.send('User Created!')
 })
 
