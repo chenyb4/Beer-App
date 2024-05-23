@@ -18,10 +18,6 @@ module.exports = function (sequelize) {
                 unique: true,
                 allowNull: false,
             },
-            role_id: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
             credits: {
                 type: DataTypes.FLOAT,
                 allowNull: false,
@@ -30,11 +26,6 @@ module.exports = function (sequelize) {
             },
             date_of_birth: {
                 type: DataTypes.DATE,
-                allowNull: false
-            },
-            lang_id: {
-                type: DataTypes.INTEGER,
-                default: 0,
                 allowNull: false
             },
         },

@@ -14,11 +14,8 @@ module.exports = function (sequelize) {
                     'add_user',
                     'remove_user',
                     'sell_credits',
+                    'undo'
                 ],
-                allowNull: false,
-            },
-            user_id: {
-                type: DataTypes.INTEGER,
                 allowNull: false,
             },
             description: {

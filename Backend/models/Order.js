@@ -8,19 +8,6 @@ module.exports = function (sequelize) {
                 autoIncrement: true,
                 primaryKey: true,
             },
-            transaction_id: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                unique: true,
-            },
-            seller_id: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            buyer_id: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
             amount_of_credits: {
                 type: DataTypes.FLOAT,
                 min: 0,

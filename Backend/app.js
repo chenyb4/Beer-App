@@ -35,6 +35,23 @@ const Credit = require("./models/Credit")(sequelize)
 const Role = require("./models/Role")(sequelize)
 const Lang = require("./models/Lang")(sequelize)
 
+Product.hasMany(Order_Product)
+Order_Product.belongsTo(Product)
+Order.hasMany(Order_Product)
+Order_Product.belongsTo(Order)
+
+User.hasMany(History)
+History.belongsTo(User)
+Role.hasMany(User)
+User.belongsTo(Role)
+
+Lang.hasMany(User)
+User.belongsTo(Lang)
+
+User.hasMany(Order, {foreignKey: 'buyerId'})
+User.hasMany(Order, {foreignKey: 'sellerId'})
+
+
 async function authenticate() {
   try {
     await sequelize.authenticate();
