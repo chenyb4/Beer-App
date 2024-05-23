@@ -4,12 +4,6 @@ module.exports = function (sequelize) {
 
     const OrderProduct = sequelize.define('order_product',
         {
-            order_id: {
-                type: DataTypes.INTEGER,
-            },
-            product_id: {
-                type: DataTypes.INTEGER,
-            },
             quantity: {
                 type: DataTypes.INTEGER,
                 min: 1,
@@ -17,6 +11,7 @@ module.exports = function (sequelize) {
                 default: 1,
             },
         },
+        { timestamps: false },
     );
     return OrderProduct;
 }
