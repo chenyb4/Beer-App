@@ -20,7 +20,7 @@ module.exports = function (sequelize) {
             },
             discount: {
                 type: DataTypes.FLOAT,
-                default: 1,
+                defaultValue: 1,
                 allowNull: false,
             }
         },

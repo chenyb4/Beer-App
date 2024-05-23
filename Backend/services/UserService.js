@@ -1,26 +1,54 @@
 const db = require('../database')
+const bcrypt = require('bcrypt');
 
 exports.getAllUsers = async () => {
-    const users = await db.User.find();
-    return users;
+    return await db.User.findAll();
 };
 
-exports.createUser = async (name, email, password) => {
-    // Validation (optional but recommended):
-    if (!name || !email || !password) {
+exports.createUser = async (username, email, password, date_of_birth) => {
+    if (!username || !email || !password || !date_of_birth) {
         throw new Error('Missing required fields');
     }
 
-    // Password hashing (highly recommended for security):
-    const hashedPassword = await bcrypt.hash(password, 10); // Use a suitable hashing library
-
-    const user = new db.User({ name, email, password: hashedPassword });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        const savedUser = await user.save();
-        return savedUser;
+        return db.User.create({username, email, password: hashedPassword, date_of_birth});
     } catch (err) {
         console.error(err);
-        throw new Error('Failed to create user'); // Re-throw for error handling in controller
+        throw new Error('Failed to create user');
     }
+};
+
+exports.updateUser = async (id, username, email, credits, date_of_birth) => {
+    if (!id || (!username && !email && !credits && !date_of_birth)) {
+        throw new Error('Missing required fields or no update data provided');
+    }
+
+    try {
+        return await db.User.update(
+            {
+                username: username,
+                email: email,
+                credits: credits,
+                date_of_birth: date_of_birth
+            },
+            {
+                where: {
+                    id: id,
+                },
+            },
+        );
+    } catch (err) {
+        console.error(err);
+        throw new Error('Failed to update user');
+    }
+};
+
+exports.deleteUser = async (id) => {
+    return await db.User.destroy({
+        where: {
+            id: id
+        }
+    });
 };

@@ -21,7 +21,8 @@ const usersController = require('./controllers/UserController');
 
 app.get('/users', usersController.getUsers);
 app.post('/users', usersController.createUser);
-
+app.put('/users', usersController.updateUser);
+app.delete('/users', usersController.deleteUser);
 
 async function authenticate() {
   try {
