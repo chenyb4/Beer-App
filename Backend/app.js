@@ -16,6 +16,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const db = require('./database')
+const usersController = require('./controllers/UserController');
+
+
+app.get('/users', usersController.getUsers);
+app.post('/users', usersController.createUser);
+
 
 async function authenticate() {
   try {
@@ -27,7 +33,6 @@ async function authenticate() {
 }
 
 async function sync() {
-  await authenticate();
   try {
     await db.sequelize.sync();
     console.log('Database synced');
@@ -37,7 +42,6 @@ async function sync() {
 }
 
 async function syncForce() {
-  await authenticate();
   try {
     await db.sequelize.sync({force: true});
     console.log('Database force synced');
@@ -78,5 +82,5 @@ const port = process.env.APIPORT
 app.listen(port, ()=>{
   console.log(`Example app listening on port ${port}`)
 })
-
+authenticate();
 module.exports = app;
