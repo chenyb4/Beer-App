@@ -2,11 +2,8 @@
     import {Card, DarkMode} from "flowbite-svelte";
 
     import { t, locale, locales } from '$lib/translations';
+    import ClickableCard from "$lib/components/cards/ClickableCard.svelte";
 
-
+    import {WalletSolid} from 'flowbite-svelte-icons';
 </script>
-
-<div>
-    <h2>{$t('homepage.title')}</h2>
-    <p>{$t('homepage.text')}</p>
-</div>
+<ClickableCard path="credits" icon="{WalletSolid}" />

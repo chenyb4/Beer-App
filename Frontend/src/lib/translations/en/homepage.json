@@ -1,4 +1,6 @@
 {
-  "title": "This is a English title",
-  "text": "Hello!"
+  "credits": {
+    "title": "Add credits to balance",
+    "info": "Here you can add credits to a students balance"
+  }
 }
