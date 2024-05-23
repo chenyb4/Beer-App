@@ -2,6 +2,7 @@
     import {Card, DarkMode} from "flowbite-svelte";
 
     import { t, locale, locales } from '$lib/translations';
+    import Sidebar from "$lib/components/navigation/Sidebar.svelte";
 
     const handleChange = ({ currentTarget }) => {
         const { value } = currentTarget;
@@ -10,6 +11,9 @@
     };
 </script>
 
+<Sidebar>
+
+</Sidebar>
 
 <Card href="/cards">
     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Flowbite works!</h5>

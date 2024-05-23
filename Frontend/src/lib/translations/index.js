@@ -26,6 +26,18 @@ export const config = {
             routes: ['/'],
             loader: async () => (await import('./nl/homepage.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'credits',
+            routes: ['/credits'],
+            loader: async () => (await import('./en/credits.json')).default,
+        },
+        {
+            locale: 'nl',
+            key: 'credits',
+            routes: ['/credits'],
+            loader: async () => (await import('./nl/credits.json')).default,
+        },
     ],
 };
 
