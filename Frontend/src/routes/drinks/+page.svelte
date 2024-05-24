@@ -4,6 +4,7 @@
     import InputField from "$lib/components/InputField.svelte";
     import { t } from "$lib/translations/index.js";
     import { onMount } from "svelte";
+    import DrinkSearchBar from "$lib/components/DrinkSearchBar.svelte";
 
     let ref;
     let identifier = "";
@@ -24,6 +25,7 @@
     }
 
     $: identifier, console.log(identifier);
+    $: drinksScanner, console.log(drinksScanner);
 
     // $: drinksScanner, function searchInDrinks() => {}
 </script>
@@ -42,26 +44,11 @@
             label={$t("drinks.studentNumber")}
             id="studentNumber_input"
             bind:value={studentNumber}
-            inputClass="dark:bg-dark-800"
+            inputClass="dark:bg-dark-300"
         ></InputField>
-        <div>
-            <div id="searchBar" class="flex flex-col">
-                <label for="inputSearchBar">{$t("drinks.drinkScanner")}</label>
-                <input
-                    class="dark:bg-dark-800 border-none rounded-lg"
-                    type="text"
-                    id="inputSearchBar"
-                    bind:value={studentNumber}
-                    on:focus={toggleDrinkOptions}
-                    on:blur={toggleDrinkOptions}
-                />
-                <div id="drinkOptions" class="hidden">
-                    {#each drinks as drink}
-                        <p>{drink}</p>
-                    {/each}
-                </div>
-            </div>
-        </div>
+
+        <DrinkSearchBar {drinks} bind:value={drinksScanner}></DrinkSearchBar>
+
         <!-- <InputField
             label={$t("drinks.drinkScanner")}
             id="selectedDrink_input"

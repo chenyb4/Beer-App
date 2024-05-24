@@ -10,7 +10,7 @@
 <div class="flex flex-col">
     <label class="pb-0.5" for={id}>{label}</label>
     <input
-        class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-900 dark:text-white focus:outline-0 {inputClass}"
+        class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0 !{inputClass}"
         {id}
         {...{ type }}
         bind:value
