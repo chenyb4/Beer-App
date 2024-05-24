@@ -3,29 +3,35 @@
 
     // Create reactive variables
     let studentNumber = '';
+
+
+    //todo: initial amount of credits and price should be fetched from backend
     let amountOfCredits = 11;
-    let price=10;
+    let price = 10;
+
+
+    //todo:these two values need to be fetched from the backend
+    let creditIncrement=11;
+    let priceIncrement=10;
+
 
     // Functions to handle increment and decrement
     function incrementCredits() {
-            amountOfCredits += 11;
-            price+=10
+        amountOfCredits += creditIncrement;
+        price += priceIncrement;
     }
 
     function decrementCredits() {
-        if (amountOfCredits > 11) {
-            amountOfCredits -= 11;
-            price-=10;
+        if (amountOfCredits > creditIncrement) {
+            amountOfCredits -= creditIncrement;
+            price -= priceIncrement;
         }
     }
 
-
-
-
-
-
-
-
+    // todo: Function to handle barcode scanning button being clicked
+    function handleIconClick() {
+        alert('barcode icon clicked!');
+    }
 </script>
 
 <div>
@@ -35,7 +41,7 @@
         <h2 class="text-4xl font-extrabold dark:text-white mb-8">{$t('credits.title')}</h2>
 
         <!-- for the student number field -->
-        <div class="mb-5">
+        <div class="mb-5 relative">
             <label for="student-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 {$t('credits.studentNumber')}
             </label>
@@ -43,8 +49,16 @@
                     type="text"
                     id="student-number"
                     bind:value={studentNumber}
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
+            />
+            <img
+                    src="https://static-00.iconduck.com/assets.00/barcode-icon-512x432-m5ui6cos.png"
+                    alt="Icon"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    on:click={handleIconClick()}
+                    width="24"
+                    height="24"
             />
         </div>
 
@@ -88,20 +102,10 @@
 
 
 
-
-
-
-
         <div class="mt-9 block w-40 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-
-
             <p class="font-normal text-gray-700 dark:text-gray-400">{$t('credits.price')}:</p>
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">€{price}</h5>
         </div>
-
-
-
-
 
         <button
                 type="submit"
