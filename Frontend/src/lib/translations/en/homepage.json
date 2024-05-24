@@ -1,6 +1,26 @@
 {
   "credits": {
-    "title": "Add credits to balance",
-    "info": "Here you can add credits to a students balance"
+    "title": "Add Credits to Balance",
+    "info": "Here you can add credits to a student's balance."
+  },
+  "drinks": {
+    "title": "Sell Drinks",
+    "info": "Here you can sell drinks to a student using their credits."
+  },
+  "inventory_management": {
+    "title": "Inventory Management",
+    "info": "Manage the inventory by adding new or existing types of drinks to the current stock."
+  },
+  "administration": {
+    "title": "Student Administration",
+    "info": "Here you can manage the students and add new students to the system."
+  },
+  "transaction_history": {
+    "title": "Transaction History",
+    "info": "Keep track of all previous transactions. Here you can also undo transactions."
+  },
+  "inventory_history": {
+    "title": "Inventory History",
+    "info": "Keep track of all previous inventory adjustments. Here you can also undo inventory changes."
   }
 }
