@@ -1,4 +1,26 @@
 {
-  "title": "Dit is een Nederlandse titel",
-  "text": "Hallo!"
+  "credits": {
+    "title": "Credits Toevoegen aan Saldo",
+    "info": "Hier kun je credits toevoegen aan het saldo van een student."
+  },
+  "drinks": {
+    "title": "Drankjes Verkopen",
+    "info": "Hier kun je drankjes verkopen aan een student met behulp van hun credits."
+  },
+  "inventory_management": {
+    "title": "Voorraadbeheer",
+    "info": "Beheer de voorraad door nieuwe of bestaande soorten drankjes aan de huidige voorraad toe te voegen."
+  },
+  "administration": {
+    "title": "Studentenadministratie",
+    "info": "Hier kun je de studenten beheren en nieuwe studenten aan het systeem toevoegen."
+  },
+  "transaction_history": {
+    "title": "Transactiegeschiedenis",
+    "info": "Houd alle eerdere transacties bij. Hier kun je ook transacties ongedaan maken."
+  },
+  "inventory_history": {
+    "title": "Voorraadgeschiedenis",
+    "info": "Houd alle eerdere voorraadwijzigingen bij. Hier kun je ook voorraadwijzigingen ongedaan maken."
+  }
 }
