@@ -19,7 +19,7 @@ const db = require('./database')
 const usersController = require('./controllers/UserController');
 
 
-app.get('/users', usersController.getUsers);
+app.get('/users', usersController.getUser);
 app.post('/users', usersController.createUser);
 app.put('/users', usersController.updateUser);
 app.delete('/users', usersController.deleteUser);

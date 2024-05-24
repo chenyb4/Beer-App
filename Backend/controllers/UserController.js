@@ -1,12 +1,19 @@
 const userService = require('../services/UserService');
 
-exports.getUsers = async (req, res) => {
+exports.getUser = async (req, res) => {
+    const {id} = req.query;
     try {
-        const users = await userService.getAllUsers();
+        let users
+        if(id) {
+            users = await userService.getUser(id);
+
+        } else {
+            users = await userService.getAllUsers();
+        }
         res.status(200).json(users);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Internal Service Error' });
+        res.status(500).json({ message: 'Service error' });
     }
 };
 
@@ -23,7 +30,7 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.query;
     const { username, email, credits, date_of_birth } = req.body;
 
     try {
@@ -31,7 +38,7 @@ exports.updateUser = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
-        res.json(updatedUser);
+        res.status(200).json(updatedUser);
     } catch (err) {
         console.error(err);
         res.status(400).json({ message: 'Bad request' });
@@ -39,11 +46,11 @@ exports.updateUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-    const {id} = req.body;
+    const {id} = req.query;
 
     try {
         const deletedUser = await userService.deleteUser(id);
-        res.status(201).json(deletedUser);
+        res.status(200).json(deletedUser);
     } catch (err) {
         console.error(err);
         res.status(400).json({message: 'Bad request'});

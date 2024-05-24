@@ -5,6 +5,10 @@ exports.getAllUsers = async () => {
     return await db.User.findAll();
 };
 
+exports.getUser = async (id) => {
+    return await db.User.findByPk(id);
+};
+
 exports.createUser = async (username, email, password, date_of_birth) => {
     if (!username || !email || !password || !date_of_birth) {
         throw new Error('Missing required fields');
