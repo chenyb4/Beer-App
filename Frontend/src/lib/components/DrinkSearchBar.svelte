@@ -10,11 +10,10 @@
     }
 
     function filterDrinksOptions() {
-        filteredDrinksOptions = drinks.filter((drink) =>
-            drink.name.toLowerCase().match(value.toLowerCase()),
-        );
-        filteredDrinksOptions = drinks.filter((drink) =>
-            drink.ean.match(value),
+        filteredDrinksOptions = drinks.filter(
+            (drink) =>
+                drink.name.toLowerCase().includes(value.toLowerCase()) ||
+                drink.ean.toLowerCase().includes(value.toLowerCase()),
         );
         if (value === "") {
             filteredDrinksOptions = [];
