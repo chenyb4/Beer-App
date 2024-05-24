@@ -12,8 +12,8 @@
     function filterDrinksOptions() {
         filteredDrinksOptions = drinks.filter(
             (drink) =>
-                drink.name.toLowerCase().includes(value.toLowerCase()) ||
-                drink.ean.toLowerCase().includes(value.toLowerCase()),
+                drink.name.toLowerCase().match(value.toLowerCase()) ||
+                drink.ean.toLowerCase().match(value.toLowerCase()),
         );
         if (value === "") {
             filteredDrinksOptions = [];
@@ -23,6 +23,14 @@
     function selectDrink(drinkName) {
         value = drinkName;
         document.getElementById("drinkOptions").style.display = "none";
+    }
+
+    function selectDrinkWithEnter(event) {
+        if (event.key === "Enter") {
+            if (filteredDrinksOptions.length > 0) {
+                selectDrink(filteredDrinksOptions[0].name);
+            }
+        }
     }
 </script>
 
@@ -35,6 +43,7 @@
         bind:value
         on:focus={showDrinksOptions}
         on:input={filterDrinksOptions}
+        on:keydown={selectDrinkWithEnter}
     />
     <div id="drinkOptions" class="block">
         {#each filteredDrinksOptions as drink}
