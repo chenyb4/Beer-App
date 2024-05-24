@@ -13,6 +13,9 @@
         filteredDrinksOptions = drinks.filter((drink) =>
             drink.name.toLowerCase().match(value.toLowerCase()),
         );
+        filteredDrinksOptions = drinks.filter((drink) =>
+            drink.ean.match(value),
+        );
         if (value === "") {
             filteredDrinksOptions = [];
         }
