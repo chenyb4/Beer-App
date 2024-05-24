@@ -88,15 +88,15 @@ export const config = {
         },
         {
             locale: 'en',
-            key: 'transactions_history',
-            routes: ['/transactions_history'],
-            loader: async () => (await import('./en/transactions_history.json')).default,
+            key: 'transaction_history',
+            routes: ['/transaction_history'],
+            loader: async () => (await import('./en/transaction_history.json')).default,
         },
         {
             locale: 'nl',
-            key: 'transactions_history',
-            routes: ['/transactions_history'],
-            loader: async () => (await import('./nl/transactions_history.json')).default,
+            key: 'transaction_history',
+            routes: ['/transaction_history'],
+            loader: async () => (await import('./nl/transaction_history.json')).default,
         },
     ],
 };
