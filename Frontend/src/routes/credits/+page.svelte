@@ -28,10 +28,7 @@
         }
     }
 
-    // todo: Function to handle barcode scanning button being clicked
-    function handleIconClick() {
-        alert('barcode icon clicked!');
-    }
+
 </script>
 
 <div>
@@ -52,14 +49,8 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
             />
-            <img
-                    src="https://static-00.iconduck.com/assets.00/barcode-icon-512x432-m5ui6cos.png"
-                    alt="Icon"
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                    on:click={handleIconClick()}
-                    width="24"
-                    height="24"
-            />
+
+
         </div>
 
         <!-- for the balance field -->
