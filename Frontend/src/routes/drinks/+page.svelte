@@ -21,18 +21,6 @@
     onMount(() => {
         ref.focus();
     });
-
-    function toggleDrinkOptions() {
-        let display = document.getElementById("drinkOptions").style.display;
-        if (display === "" || display === "none") {
-            document.getElementById("drinkOptions").style.display = "block";
-        } else document.getElementById("drinkOptions").style.display = "none";
-    }
-
-    $: identifier, console.log(identifier);
-    $: drinksScanner, console.log(drinksScanner);
-
-    // $: drinksScanner, function searchInDrinks() => {}
 </script>
 
 <body>
@@ -53,12 +41,5 @@
         ></InputField>
 
         <DrinkSearchBar {drinks} bind:value={drinksScanner}></DrinkSearchBar>
-
-        <!-- <InputField
-            label={$t("drinks.drinkScanner")}
-            id="selectedDrink_input"
-            bind:value={drinksScanner}
-            inputClass="dark:bg-dark-800"
-        ></InputField> -->
     </div>
 </body>
