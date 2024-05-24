@@ -1,4 +1,7 @@
 {
-  "title": "Dit is een Nederlandse credits titel",
-  "text": "Credits!"
+  "title": "KREDIETEN TOEVOEGEN AAN SALDO",
+  "studentNumber": "Studentnummer",
+  "amountOfCredits": "Aantal Kredieten",
+  "price": "Prijs",
+  "confirm": "Bevestigen"
 }

@@ -1,4 +1,7 @@
 {
-  "title": "This is a credits English title",
-  "text": "Credits!"
+  "title": "ADD CREDITS TO BALANCE",
+  "studentNumber": "Student Number",
+  "amountOfCredits": "Amount of Credits",
+  "price": "Price",
+  "confirm": "Confirm"
 }
