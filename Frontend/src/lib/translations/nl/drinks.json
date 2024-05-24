@@ -1,4 +1,9 @@
 {
-  "title": "Dit is een nederlandse drinken pagina!",
-  "text": "Drinken!"
+  "title": "VERKOOP DRANKEN",
+  "identifier": "Identificeren",
+  "studentNumber": "Studentennummer",
+  "drinkScanner": "Barcode / Dranknaam",
+  "selectedDrinks": "GESELECTEERDE DRANKEN",
+  "creditsLeft": "Aantal credits over:",
+  "confirm": "OPSLAAN"
 }
