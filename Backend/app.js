@@ -16,13 +16,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const db = require('./database')
-const usersController = require('./controllers/UserController');
+const userController = require('./controllers/UserController');
+const orderController = require('./controllers/OrderController');
 
 
-app.get('/users', usersController.getUser);
-app.post('/users', usersController.createUser);
-app.put('/users', usersController.updateUser);
-app.delete('/users', usersController.deleteUser);
+app.get('/users', userController.getUser);
+app.post('/users', userController.createUser);
+app.put('/users', userController.updateUser);
+app.delete('/users', userController.deleteUser);
+
+app.get('/orders', orderController.getOrder);
+app.post('/orders', orderController.createOrder);
+app.put('/orders', orderController.updateOrder);
+app.delete('/orders', orderController.deleteOrder);
+
 
 async function authenticate() {
   try {
