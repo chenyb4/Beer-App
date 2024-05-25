@@ -41,7 +41,7 @@ exports.updateOrder = async (id, amount_of_credits, buyerId, sellerId) => {
         );
     } catch (err) {
         console.error(err);
-        throw new Error('Failed to update user');
+        throw new Error('Failed to update order');
     }
 };
 

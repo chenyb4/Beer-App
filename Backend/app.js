@@ -18,6 +18,7 @@ app.use(cookieParser());
 const db = require('./database')
 const userController = require('./controllers/UserController');
 const orderController = require('./controllers/OrderController');
+const historyController = require('./controllers/HistoryController');
 
 
 app.get('/users', userController.getUser);
@@ -29,6 +30,11 @@ app.get('/orders', orderController.getOrder);
 app.post('/orders', orderController.createOrder);
 app.put('/orders', orderController.updateOrder);
 app.delete('/orders', orderController.deleteOrder);
+
+app.get('/histories', historyController.getHistory);
+app.post('/histories', historyController.createHistory);
+app.put('/histories', historyController.updateHistory);
+app.delete('/histories', historyController.deleteHistory);
 
 
 async function authenticate() {
