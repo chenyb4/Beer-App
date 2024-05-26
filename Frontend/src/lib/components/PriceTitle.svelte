@@ -1,7 +1,7 @@
 <script>
 import {t} from "$lib/translations/index.js";
 
-export let credits;
+export let credits; //this prop need to be passed from the parent component which is the page to buy credits
 
 
 //todo: this is the placeholder price. Should make a call to the backend to get the default price
