@@ -19,6 +19,7 @@ const db = require('./database')
 const userController = require('./controllers/UserController');
 const orderController = require('./controllers/OrderController');
 const historyController = require('./controllers/HistoryController');
+const creditController = require('./controllers/CreditController');
 
 
 app.get('/users', userController.getUser);
@@ -35,6 +36,9 @@ app.get('/histories', historyController.getHistory);
 app.post('/histories', historyController.createHistory);
 app.put('/histories', historyController.updateHistory);
 app.delete('/histories', historyController.deleteHistory);
+
+app.get('/credits', creditController.getCredit);
+app.put('/credits', creditController.updateCredit);
 
 
 async function authenticate() {
