@@ -10,17 +10,12 @@ module.exports = function (sequelize) {
                 primaryKey: true,
             },
             name: {
-                type: DataTypes.ENUM,
-                values: [
-                  'regular',
-                  'member',
-                  'board_member'
-                ],
+                type: DataTypes.STRING,
                 allowNull: false,
             },
             discount: {
                 type: DataTypes.FLOAT,
-                default: 1,
+                defaultValue: 1,
                 allowNull: false,
             }
         },
