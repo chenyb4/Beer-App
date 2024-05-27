@@ -5,7 +5,15 @@ exports.getRoles = async () => {
 };
 
 exports.getRole = async (id) => {
-    return await db.Role.findByPk(id);
+    if (!id) {
+        throw new Error('Missing required fields');
+    }
+
+    try {
+        return await db.Role.findByPk(id);
+    } catch (err) {
+        throw new Error('Failed to get role');
+    }
 };
 
 exports.createRole = async (name, discount) => {
@@ -34,7 +42,7 @@ exports.updateRole = async (id, name, discount) => {
             },
             {
                 where: {
-                    id: id,
+                    id,
                 },
             },
         );
@@ -47,7 +55,7 @@ exports.updateRole = async (id, name, discount) => {
 exports.deleteRole = async (id) => {
     return await db.Role.destroy({
         where: {
-            id: id
+            id
         }
     });
 };

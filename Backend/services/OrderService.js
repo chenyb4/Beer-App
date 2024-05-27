@@ -5,7 +5,15 @@ exports.getAllOrders = async () => {
 };
 
 exports.getOrder = async (id) => {
-    return await db.Order.findByPk(id);
+    if (!id) {
+        throw new Error('Missing required fields');
+    }
+
+    try {
+        return await db.Order.findByPk(id);
+    } catch (err) {
+        throw new Error('Failed to get order');
+    }
 };
 
 exports.createOrder = async (amount_of_credits, buyerId, sellerId) => {
@@ -35,7 +43,7 @@ exports.updateOrder = async (id, amount_of_credits, buyerId, sellerId) => {
             },
             {
                 where: {
-                    id: id,
+                    id,
                 },
             },
         );
@@ -48,7 +56,7 @@ exports.updateOrder = async (id, amount_of_credits, buyerId, sellerId) => {
 exports.deleteOrder = async (id) => {
     return await db.Order.destroy({
         where: {
-            id: id
+            id
         }
     });
 };
