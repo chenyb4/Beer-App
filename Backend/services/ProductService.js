@@ -19,20 +19,20 @@ exports.getProduct = async (id) => {
 }
 
 // Create product
-exports.createProduct = async (name, price_in_credits, amount_in_stock, ean) => {
-    if (!name || !price_in_credits || !amount_in_stock || !ean) {
+exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN) => {
+    if (!name || !price_in_credits || !amount_in_stock || !EAN) {
         throw new Error('Missing required fields: ');
     }
     try {
-        return db.Product.create({ name, price_in_credits, amount_in_stock, ean });
+        return db.Product.create({ name, price_in_credits, amount_in_stock, EAN });
     } catch (err) {
         throw new Error('Failed to create product');
     }
 }
 
 // Update product
-exports.updateProduct = async (id, name, price_in_credit, amount_in_stock, ean) => {
-    if (!id || (!name && !price_in_credit && !amount_in_stock && !ean)) {
+exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN) => {
+    if (!id || (!name && !price_in_credits && !amount_in_stock && !EAN)) {
         throw new Error('Missing required fields or no update data provided');
     }
 
@@ -40,9 +40,9 @@ exports.updateProduct = async (id, name, price_in_credit, amount_in_stock, ean) 
         return await db.Product.update(
             {
                 name,
-                price_in_credit,
+                price_in_credits,
                 amount_in_stock,
-                ean
+                EAN
             },
             {
                 where: {
@@ -57,9 +57,9 @@ exports.updateProduct = async (id, name, price_in_credit, amount_in_stock, ean) 
 
 exports.deleteProduct = async (id) => {
     if (!id) throw new Error('Missing required fields or no update data provided');
-    try {
-        return await db.Product.delete(id);
-    } catch (err) {
-        throw new Error('Failed to delete product with id: ' + id);
-    }
+    return await db.Product.destroy({
+        where: {
+            id: id
+        }
+    });
 }

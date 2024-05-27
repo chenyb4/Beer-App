@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const db = require('./database')
-const productsController = require('./controllers/ProductController');
+const productController = require('./controllers/ProductController');
 const userController = require('./controllers/UserController');
 const orderController = require('./controllers/OrderController');
 const historyController = require('./controllers/HistoryController');
@@ -47,10 +47,10 @@ app.post('/roles', roleController.createRole);
 app.put('/roles', roleController.updateRole);
 app.delete('/roles', roleController.deleteRole);
 
-app.get('/products', productsController.getProducts);
-app.post('/products', productsController.createProduct);
-app.get('/products', productsController.getProduct);
-app.put('/products', productsController.updateProduct);
+app.get('/products', productController.getProducts);
+app.post('/products', productController.createProduct);
+app.put('/products', productController.updateProduct);
+app.delete('/products', productController.deleteProduct)
 
 async function authenticate() {
   try {
