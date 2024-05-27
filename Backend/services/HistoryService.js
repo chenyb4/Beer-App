@@ -1,11 +1,13 @@
 const db = require('../database')
 
 exports.getHistories = async () => {
-    return await db.History.findAll();
+    let histories = await db.History.findAll();
+    histories.forEach(h => convertHistory(h))
+    return histories
 };
 
 exports.getHistory = async (id) => {
-    return await db.History.findByPk(id);
+    return convertHistory(await db.History.findByPk(id));
 };
 
 exports.createHistory = async (action, description, userId) => {
@@ -14,7 +16,7 @@ exports.createHistory = async (action, description, userId) => {
     }
 
     try {
-        action = db.History.getAttributes().action.values[action];
+        action = convertAction(action)
         return db.History.create({action, description, userId});
     } catch (err) {
         console.error(err);
@@ -53,3 +55,16 @@ exports.deleteHistory = async (id) => {
         }
     });
 };
+
+function convertHistory(history) {
+    history.action = convertAction(history.action)
+    return history
+}
+
+function convertAction(action) {
+    const actions = db.History.getAttributes().action.values;
+    if(isNaN(action)) {
+        return actions.indexOf(action)
+    }
+    return actions[action];
+}
