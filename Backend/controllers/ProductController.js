@@ -25,7 +25,7 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getProduct = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.query;
 
     try {
         const product = await productService.getProduct(id);

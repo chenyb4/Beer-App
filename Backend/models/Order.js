@@ -12,7 +12,7 @@ module.exports = function (sequelize) {
                 type: DataTypes.FLOAT,
                 min: 0,
                 allowNull: false,
-                default: 0,
+                defaultValue: 0,
             },
         },
     );

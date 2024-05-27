@@ -16,16 +16,40 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const db = require('./database')
-const usersController = require('./controllers/UserController');
 const productsController = require('./controllers/ProductController');
+const userController = require('./controllers/UserController');
+const orderController = require('./controllers/OrderController');
+const historyController = require('./controllers/HistoryController');
+const creditController = require('./controllers/CreditController');
+const roleController = require('./controllers/RoleController');
 
 
-app.get('/users', usersController.getUsers);
-app.post('/users', usersController.createUser);
+app.get('/users', userController.getUser);
+app.post('/users', userController.createUser);
+app.put('/users', userController.updateUser);
+app.delete('/users', userController.deleteUser);
+
+app.get('/orders', orderController.getOrder);
+app.post('/orders', orderController.createOrder);
+app.put('/orders', orderController.updateOrder);
+app.delete('/orders', orderController.deleteOrder);
+
+app.get('/histories', historyController.getHistory);
+app.post('/histories', historyController.createHistory);
+app.put('/histories', historyController.updateHistory);
+app.delete('/histories', historyController.deleteHistory);
+
+app.get('/credits', creditController.getCredit);
+app.put('/credits', creditController.updateCredit);
+
+app.get('/roles', roleController.getRole);
+app.post('/roles', roleController.createRole);
+app.put('/roles', roleController.updateRole);
+app.delete('/roles', roleController.deleteRole);
 
 app.get('/products', productsController.getProducts);
 app.post('/products', productsController.createProduct);
-app.get('/products/:id', productsController.getProduct);
+app.get('/products', productsController.getProduct);
 app.put('/products', productsController.updateProduct);
 
 async function authenticate() {

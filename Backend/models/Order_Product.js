@@ -8,7 +8,7 @@ module.exports = function (sequelize) {
                 type: DataTypes.INTEGER,
                 min: 1,
                 allowNull: false,
-                default: 1,
+                defaultValue: 1,
             },
         },
         { timestamps: false },

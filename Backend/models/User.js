@@ -14,9 +14,6 @@ module.exports = function (sequelize) {
             },
             password: {
                 type: DataTypes.STRING(64),
-                validate: {
-                    is: /^[0-9a-f]{64}$/i,
-                },
             },
             email: {
                 type: DataTypes.STRING,
@@ -26,9 +23,10 @@ module.exports = function (sequelize) {
             },
             credits: {
                 type: DataTypes.FLOAT,
+                defaultValue: 0.0,
                 allowNull: false,
                 min: 0,
-                default: 0,
+
             },
             date_of_birth: {
                 type: DataTypes.DATE,
