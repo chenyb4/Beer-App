@@ -17,11 +17,16 @@ app.use(cookieParser());
 
 const db = require('./database')
 const usersController = require('./controllers/UserController');
+const productsController = require('./controllers/ProductController');
 
 
 app.get('/users', usersController.getUsers);
 app.post('/users', usersController.createUser);
 
+app.get('/products', productsController.getProducts);
+app.post('/products', productsController.createProduct);
+app.get('/products/:id', productsController.getProduct);
+app.put('/products', productsController.updateProduct);
 
 async function authenticate() {
   try {
