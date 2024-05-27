@@ -10,12 +10,7 @@ module.exports = function (sequelize) {
                 primaryKey: true,
             },
             name: {
-                type: DataTypes.ENUM,
-                values: [
-                  'regular',
-                  'member',
-                  'board_member'
-                ],
+                type: DataTypes.STRING,
                 allowNull: false,
             },
             discount: {
