@@ -25,7 +25,7 @@ exports.createHistory = async (action, description, userId) => {
 
     try {
         action = convertAction(action)
-        return db.History.create({action, description, userId});
+        return convertHistory(await db.History.create({action, description, userId}));
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create history');
@@ -40,7 +40,7 @@ exports.updateHistory = async (id, action, description, userId) => {
     try {
         return await db.History.update(
             {
-                action,
+                action: convertAction(action),
                 description,
                 userId
             },
