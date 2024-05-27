@@ -7,7 +7,15 @@ exports.getHistories = async () => {
 };
 
 exports.getHistory = async (id) => {
-    return convertHistory(await db.History.findByPk(id));
+    if (!id) {
+        throw new Error('Missing required fields');
+    }
+
+    try {
+        return convertHistory(await db.History.findByPk(id));
+    } catch (err) {
+        throw new Error('Failed to get history');
+    }
 };
 
 exports.createHistory = async (action, description, userId) => {
@@ -38,7 +46,7 @@ exports.updateHistory = async (id, action, description, userId) => {
             },
             {
                 where: {
-                    id: id,
+                    id,
                 },
             },
         );
@@ -51,7 +59,7 @@ exports.updateHistory = async (id, action, description, userId) => {
 exports.deleteHistory = async (id) => {
     return await db.History.destroy({
         where: {
-            id: id
+            id
         }
     });
 };

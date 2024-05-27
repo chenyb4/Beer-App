@@ -6,7 +6,15 @@ exports.getAllUsers = async () => {
 };
 
 exports.getUser = async (id) => {
-    return await db.User.findByPk(id);
+    if (!id) {
+        throw new Error('Missing required fields');
+    }
+
+    try {
+        return await db.User.findByPk(id);
+    } catch (err) {
+        throw new Error('Failed to get user');
+    }
 };
 
 exports.createUser = async (username, email, password, date_of_birth) => {
@@ -32,27 +40,28 @@ exports.updateUser = async (id, username, email, credits, date_of_birth) => {
     try {
         return await db.User.update(
             {
-                username: username,
-                email: email,
-                credits: credits,
-                date_of_birth: date_of_birth
+                username,
+                email,
+                credits,
+                date_of_birth
             },
             {
                 where: {
-                    id: id,
+                    id,
                 },
             },
         );
     } catch (err) {
         console.error(err);
-        throw new Error('Failed to update user');
+        throw new Error('Failed to update user with id: ' + id);
     }
 };
 
 exports.deleteUser = async (id) => {
+    if (!id) throw new Error('Missing required fields or no update data provided');
     return await db.User.destroy({
         where: {
-            id: id
+            id
         }
     });
 };
