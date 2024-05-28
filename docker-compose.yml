@@ -11,6 +11,9 @@ services:
       APIPORT: ${APIPORT}
       DBURL: ${DOCKERDBURL}
       DBPORT: ${DBPORT}
+      FEURL: ${FEURL}
+      FEPORT: ${FEPORT}
+      DOCKERFEURL: ${DOCKERFEURL}
     ports:
       - ${APIPORT}:${APIPORT}
     command: npm run start
@@ -29,7 +32,7 @@ services:
   sveltekit:
     build: ./Frontend
     ports:
-      - "3000:5173"
+      - ${FEPORT}:5173
     environment:
       VITE_APIURL: ${DOCKERAPIURL}
       VITE_APIPORT: ${APIPORT}
