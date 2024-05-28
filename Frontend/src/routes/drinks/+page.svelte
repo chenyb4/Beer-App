@@ -5,6 +5,7 @@
     import { t } from "$lib/translations/index.js";
     import { onMount } from "svelte";
     import DrinkSearchBar from "$lib/components/DrinkSearchBar.svelte";
+    import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
 
     let ref;
     let identifier = "";
@@ -18,6 +19,17 @@
         { name: "Hertog Jan", ean: "7777" },
     ];
 
+    const students = [
+        {
+            id: "0000",
+            studentNumber: "483545",
+        },
+        {
+            id: "1111",
+            studentNumber: "500000",
+        },
+    ];
+
     onMount(() => {
         ref.focus();
     });
@@ -26,20 +38,14 @@
 <body>
     <div class="bg-dark-900 m-4 p-1">
         <h2>{$t("drinks.title")}</h2>
-        <InputField
-            label={$t("drinks.identifier")}
-            id="identifier_input"
-            bind:value={identifier}
-            bind:ref
-            inputClass="dark:bg-dark-800"
-        ></InputField>
-        <InputField
-            label={$t("drinks.studentNumber")}
-            id="studentNumber_input"
-            bind:value={studentNumber}
-            inputClass="dark:bg-dark-300"
-        ></InputField>
-
+        <div class="flex flex-col">
+            <StudentIdentifier
+                bind:identifier
+                bind:studentNumber
+                {students}
+                bind:ref
+            />
+        </div>
         <DrinkSearchBar {drinks} bind:value={drinksScanner}></DrinkSearchBar>
     </div>
 </body>
