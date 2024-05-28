@@ -8,9 +8,9 @@
     import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
 
     let ref;
-    let identifiedStudent;
+    let identifiedUser;
     let identifier = "";
-    let studentNumber = "";
+    let userName = "";
     let drinksScanner = "";
 
     const drinks = [
@@ -20,43 +20,36 @@
         { name: "Hertog Jan", ean: "7777" },
     ];
 
-    const students = [
-        {
-            id: "0000",
-            studentNumber: "483545",
-            credits: "10",
-        },
-        {
-            id: "1111",
-            studentNumber: "500000",
-            credits: "5",
-        },
-    ];
-
     onMount(() => {
         ref.focus();
     });
 </script>
 
-<body>
-    <div class="bg-dark-900 m-4 p-1">
-        <h2>{$t("drinks.title")}</h2>
-        <div class="flex flex-row">
-            <div class="flex flex-col">
+<body class="bg-dark-800 w-screen h-screen">
+    <div class="w-full h-full bg-dark-900 p-4 bg-clip-content">
+        <h2 class="p-6">{$t("drinks.title")}</h2>
+        <div class="flex flex-col mx-6">
+            <div class="flex flex-row justify-between">
                 <StudentIdentifier
-                    bind:identifiedStudent
+                    bind:identifiedUser
                     bind:identifier
-                    bind:studentNumber
-                    {students}
+                    bind:userName
                     bind:ref
                 />
-
+                <div
+                    class="bg-dark-300 w-64 p-4 rounded-2xl flex-col items-center"
+                >
+                    <h4>Amount of credits left:</h4>
+                    <p class="flex justify-center text-4xl">11</p>
+                    {#if identifiedUser}
+                        <p class="text-red-400">{identifiedUser.credits}</p>
+                    {/if}
+                </div>
+            </div>
+            <div class="flex w-full">
                 <DrinkSearchBar {drinks} bind:value={drinksScanner}
                 ></DrinkSearchBar>
             </div>
-            {#if identifiedStudent}
-                <p class="text-red-400">{identifiedStudent.credits}</p>
-            {/if}
         </div>
     </div>
 </body>

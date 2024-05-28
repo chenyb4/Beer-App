@@ -4,11 +4,11 @@
     import { t } from "$lib/translations/index.js";
 
     export let identifier = "";
-    export let studentNumber = "";
-    export let students = [];
+    export let userName = "";
     export let ref = "";
-    export let identifiedStudent;
+    export let identifiedUser;
     let errorMessage = "";
+    let user;
 
     let env = import.meta.env;
 
@@ -17,21 +17,29 @@
         matchIdentifierToStudent(identifier);
     }
 
-    function matchIdentifierToStudent(identifier) {
-        //TODO: Change to make the getter by identifier
-        fetch("http://localhost:8080/users")
-            .then((response) => response.json())
-            .then((data) => console.log(data))
-            .catch((error) => console.error("Error:", error));
-        const student = students.find((student) => student.id === identifier);
-        if (student) {
-            studentNumber = student.studentNumber;
-            identifiedStudent = student;
-            errorMessage = ""; // Reset the error message if a student is found
-        } else {
-            studentNumber = "";
-            identifiedStudent = "";
-            errorMessage = "Invalid identifier. Please try again.";
+    async function matchIdentifierToStudent(identifier) {
+        try {
+            const response = await fetch(
+                "http://" +
+                    env.VITE_APIURL +
+                    ":" +
+                    env.VITE_APIPORT +
+                    "/users?id=" +
+                    identifier,
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            user = await response.json();
+            identifiedUser = user;
+            userName = user.username;
+            errorMessage = "";
+        } catch (error) {
+            console.error("Failed to fetch user data:", error);
+            errorMessage = "Failed to fetch user data. Please try again later.";
+            userName = "";
+            identifiedUser = "";
         }
     }
 </script>
@@ -55,10 +63,10 @@
             >
                 Submit
             </button>
+            {#if errorMessage}
+                <p class="text-red-400">{errorMessage}</p>
+            {/if}
         </div>
-        {#if errorMessage}
-            <p class="text-red-400">{errorMessage}</p>
-        {/if}
         <label class="pb-0.5" for="studentNumber_input"
             >{$t("drinks.studentNumber")}</label
         >
@@ -67,7 +75,7 @@
             class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0 opacity-55"
             id="studentNumber_input"
             type="text"
-            bind:value={studentNumber}
+            bind:value={userName}
         />
     </div>
 </form>
