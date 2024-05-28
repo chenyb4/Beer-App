@@ -36,7 +36,7 @@
     }
 </script>
 
-<div id="searchBar" class="flex flex-col w-full">
+<div id="searchBar" class="flex flex-col">
     <label class="pb-0.5" for="inputSearchBar"
         >{$t("drinks.drinkScanner")}</label
     >

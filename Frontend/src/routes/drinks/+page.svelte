@@ -36,15 +36,16 @@
                     bind:userName
                     bind:ref
                 />
-                <div
-                    class="bg-dark-300 w-64 p-4 rounded-2xl flex-col items-center"
-                >
-                    <h4>Amount of credits left:</h4>
-                    <p class="flex justify-center text-4xl">11</p>
-                    {#if identifiedUser}
-                        <p class="text-red-400">{identifiedUser.credits}</p>
-                    {/if}
-                </div>
+                {#if identifiedUser}
+                    <div
+                        class="bg-dark-300 w-64 p-4 rounded-2xl flex-col items-center"
+                    >
+                        <h4>Amount of credits left:</h4>
+                        <p class="flex justify-center text-4xl">
+                            {identifiedUser.credits}
+                        </p>
+                    </div>
+                {/if}
             </div>
             <div class="flex w-full">
                 <DrinkSearchBar {drinks} bind:value={drinksScanner}
