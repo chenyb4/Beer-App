@@ -5,15 +5,22 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const process = require('process');
 const app = express();
+const cors = require('cors')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+const corsOptions = {
+  credentials: true,
+  origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT] // Whitelist the domains you want to allow
+};
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
 const db = require('./database')
 const productController = require('./controllers/ProductController');
