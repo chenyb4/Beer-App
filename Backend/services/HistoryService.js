@@ -32,6 +32,14 @@ exports.createHistory = async (action, description, userId) => {
     }
 };
 
+exports.getLastUndo = async () => {
+    try {
+        return convertHistory(await db.History.findByPk(1));
+    } catch (err) {
+        throw new Error('Failed to get history');
+    }
+}
+
 exports.updateHistory = async (id, action, description, userId) => {
     if (!id || (!action && !description && !userId)) {
         throw new Error('Missing required fields or no update data provided');

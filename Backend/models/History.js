@@ -14,12 +14,14 @@ module.exports = function (sequelize) {
                     'add_user',
                     'remove_user',
                     'sell_credits',
-                    'undo'
+                    'undo',
+                    'increase_product_stock',
+                    'decrease_product_stock'
                 ],
                 allowNull: false,
             },
             description: {
-                type: DataTypes.STRING,
+                type: DataTypes.JSON,
             },
         },
     );
