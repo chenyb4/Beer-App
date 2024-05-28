@@ -12,6 +12,9 @@ module.exports = function (sequelize) {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            password: {
+                type: DataTypes.STRING(64),
+            },
             email: {
                 type: DataTypes.STRING,
                 isEmail: true,
@@ -20,13 +23,23 @@ module.exports = function (sequelize) {
             },
             credits: {
                 type: DataTypes.FLOAT,
+                defaultValue: 0.0,
                 allowNull: false,
                 min: 0,
-                default: 0,
+
             },
             date_of_birth: {
                 type: DataTypes.DATE,
                 allowNull: false
+            },
+            language: {
+                type: DataTypes.ENUM,
+                values:[
+                    'english',
+                    'dutch'
+                ],
+                defaultValue: 'english',
+                allowNull: false,
             },
         },
     );
