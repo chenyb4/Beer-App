@@ -10,12 +10,18 @@
     export let identifiedStudent;
     let errorMessage = "";
 
+    let env = import.meta.env;
+
     function handleSubmit(event) {
         event.preventDefault();
         matchIdentifierToStudent(identifier);
     }
 
     function matchIdentifierToStudent(identifier) {
+        fetch("http://localhost:8080/users")
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error("Error:", error));
         const student = students.find((student) => student.id === identifier);
         if (student) {
             studentNumber = student.studentNumber;

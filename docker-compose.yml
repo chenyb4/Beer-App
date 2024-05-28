@@ -31,9 +31,9 @@ services:
     ports:
       - "3000:5173"
     environment:
-      APIURL: ${DOCKERAPIURL}
-      APIPORT: ${APIPORT}
-#      NODE_ENV: production
+      VITE_APIURL: ${DOCKERAPIURL}
+      VITE_APIPORT: ${APIPORT}
+    #      NODE_ENV: production
     command: npm run dev -- --host
 
 volumes:
