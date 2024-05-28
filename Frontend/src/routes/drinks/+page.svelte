@@ -8,6 +8,7 @@
     import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
 
     let ref;
+    let identifiedStudent;
     let identifier = "";
     let studentNumber = "";
     let drinksScanner = "";
@@ -23,10 +24,12 @@
         {
             id: "0000",
             studentNumber: "483545",
+            credits: "10",
         },
         {
             id: "1111",
             studentNumber: "500000",
+            credits: "5",
         },
     ];
 
@@ -38,14 +41,22 @@
 <body>
     <div class="bg-dark-900 m-4 p-1">
         <h2>{$t("drinks.title")}</h2>
-        <div class="flex flex-col">
-            <StudentIdentifier
-                bind:identifier
-                bind:studentNumber
-                {students}
-                bind:ref
-            />
+        <div class="flex flex-row">
+            <div class="flex flex-col">
+                <StudentIdentifier
+                    bind:identifiedStudent
+                    bind:identifier
+                    bind:studentNumber
+                    {students}
+                    bind:ref
+                />
+
+                <DrinkSearchBar {drinks} bind:value={drinksScanner}
+                ></DrinkSearchBar>
+            </div>
+            {#if identifiedStudent}
+                <p class="text-red-400">{identifiedStudent.credits}</p>
+            {/if}
         </div>
-        <DrinkSearchBar {drinks} bind:value={drinksScanner}></DrinkSearchBar>
     </div>
 </body>

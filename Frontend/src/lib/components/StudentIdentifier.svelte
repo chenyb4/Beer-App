@@ -7,6 +7,7 @@
     export let studentNumber = "";
     export let students = [];
     export let ref = "";
+    export let identifiedStudent;
     let errorMessage = "";
 
     function handleSubmit(event) {
@@ -18,9 +19,11 @@
         const student = students.find((student) => student.id === identifier);
         if (student) {
             studentNumber = student.studentNumber;
+            identifiedStudent = student;
             errorMessage = ""; // Reset the error message if a student is found
         } else {
             studentNumber = "";
+            identifiedStudent = "";
             errorMessage = "Invalid identifier. Please try again.";
         }
     }
