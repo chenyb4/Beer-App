@@ -32,6 +32,15 @@ module.exports = function (sequelize) {
                 type: DataTypes.DATE,
                 allowNull: false
             },
+            language: {
+                type: DataTypes.ENUM,
+                values:[
+                    'english',
+                    'dutch'
+                ],
+                defaultValue: 'english',
+                allowNull: false,
+            },
         },
     );
 
