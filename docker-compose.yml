@@ -34,9 +34,9 @@ services:
     ports:
       - ${FEPORT}:5173
     environment:
-      APIURL: ${DOCKERAPIURL}
-      APIPORT: ${APIPORT}
-#      NODE_ENV: production
+      VITE_APIURL: ${APIURL}
+      VITE_APIPORT: ${APIPORT}
+    #      NODE_ENV: production
     command: npm run dev -- --host
 
 volumes:
