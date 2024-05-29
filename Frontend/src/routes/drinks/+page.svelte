@@ -6,6 +6,7 @@
     import { onMount } from "svelte";
     import DrinkSearchBar from "$lib/components/DrinkSearchBar.svelte";
     import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
+    import CtaButton from "$lib/components/CtaButton.svelte";
 
     let ref;
     let identifiedUser;
@@ -49,8 +50,9 @@
                     ></DrinkSearchBar>
                 </div>
                 <div
-                    class="bg-dark-800 w-full h-full my-6 flex flex-col min-h-96 rounded-xl"
+                    class="bg-dark-800 w-full h-full my-6 flex flex-col min-h-80 rounded-xl"
                 ></div>
+                <CtaButton captionText="Submit"></CtaButton>
             </div>
         </div>
     </div>
