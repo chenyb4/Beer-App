@@ -19,7 +19,7 @@ exports.getHistory = async (id) => {
 };
 
 exports.createHistory = async (action, description, userId) => {
-    if (!action || !description || !userId) {
+    if (action === undefined || !description || !userId) {
         throw new Error('Missing required fields');
     }
 
@@ -34,7 +34,9 @@ exports.createHistory = async (action, description, userId) => {
 
 exports.getLastUndo = async () => {
     try {
-        return convertHistory(await db.History.findByPk(1));
+        return convertHistory(await db.History.findOne({
+            order: [['createdAt', 'DESC']]
+        }));
     } catch (err) {
         throw new Error('Failed to get history');
     }

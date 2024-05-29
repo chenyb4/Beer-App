@@ -19,34 +19,38 @@ exports.getUser = async (id) => {
     }
 };
 
-exports.createUser = async (username, email, password, date_of_birth) => {
-    if (!username || !email || !password || !date_of_birth) {
+exports.createUser = async (username, email, password, date_of_birth, roleId) => {
+    if (!username || !email || !password || !date_of_birth || !roleId) {
         throw new Error('Missing required fields');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        return convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth}));
+        return convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth, roleId}));
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create user');
     }
 };
 
-exports.updateUser = async (id, username, email, credits, date_of_birth, language) => {
-    if (!id || (!username && !email && !credits && !date_of_birth && !language)) {
+exports.updateUser = async (id, disabled, username, email, credits, date_of_birth, language, roleId) => {
+    if (!id || (disabled === undefined && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
         throw new Error('Missing required fields or no update data provided');
     }
+    if (language !== undefined) language = convertLanguage(language);
+
 
     try {
         return await db.User.update(
             {
+                disabled,
                 username,
                 email,
                 credits,
                 date_of_birth,
-                language: convertLanguage(language)
+                language,
+                roleId
             },
             {
                 where: {

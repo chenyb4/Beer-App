@@ -7,16 +7,14 @@ module.exports = function (sequelize) {
             action: {
                 type: DataTypes.ENUM,
                 values: [
-                    'add_product',
-                    'remove_product',
+                    'increase_product_stock',
+                    'decrease_product_stock',
                     'change_credit_value',
                     'change_role',
                     'add_user',
                     'remove_user',
                     'sell_credits',
                     'undo',
-                    'increase_product_stock',
-                    'decrease_product_stock'
                 ],
                 allowNull: false,
             },

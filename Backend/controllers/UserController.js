@@ -18,10 +18,10 @@ exports.getUser = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-    const { username, email, password, date_of_birth } = req.body;
+    const { username, email, password, date_of_birth, roleId } = req.body;
 
     try {
-        const newUser = await userService.createUser(username, email, password, date_of_birth);
+        const newUser = await userService.createUser(username, email, password, date_of_birth, roleId);
         res.status(201).json(newUser);
     } catch (err) {
         console.error(err);
@@ -31,10 +31,10 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const { id } = req.query;
-    const { username, email, credits, date_of_birth, language } = req.body;
+    const { disabled, username, email, credits, date_of_birth, language } = req.body;
 
     try {
-        const updatedUser = await userService.updateUser(id, username, email, credits, date_of_birth, language);
+        const updatedUser = await userService.updateUser(id, disabled, username, email, credits, date_of_birth, language);
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }

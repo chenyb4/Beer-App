@@ -41,6 +41,10 @@ module.exports = function (sequelize) {
                 defaultValue: 'english',
                 allowNull: false,
             },
+            disabled: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            }
         },
     );
 
