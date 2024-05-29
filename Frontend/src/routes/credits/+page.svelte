@@ -1,10 +1,13 @@
 <script>
     import { t } from "$lib/translations/index.js";
+    import CtaButton from "$lib/components/CtaButton.svelte";
+    import PriceTitle from "$lib/components/PriceTitle.svelte";
 
     // Create reactive variables
     let studentNumber = '';
 
 
+    //these are the amounts of credits to buy and how much in total you have to pay
     //todo: initial amount of credits and price should be fetched from backend
     let amountOfCredits = 11;
     let price = 10;
@@ -26,6 +29,10 @@
             amountOfCredits -= creditIncrement;
             price -= priceIncrement;
         }
+    }
+
+    function onConfirmButtonClick(){
+        console.log("confirm button clicked for buying credits");
     }
 
 
@@ -91,19 +98,16 @@
 
 
 
+        <PriceTitle
+            captionText={$t('credits.price')}
+            price={price}
+        ></PriceTitle>
+
+        <CtaButton
+                captionText= {$t('credits.confirm')}
+                onCTAButtonClickFn={onConfirmButtonClick}
+        ></CtaButton>
 
 
-        <div class="mt-9 block w-40 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-            <p class="font-normal text-gray-700 dark:text-gray-400">{$t('credits.price')}:</p>
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">€{price}</h5>
-        </div>
-
-        <button
-                type="submit"
-                style="background-color: #009C82;"
-                class="mt-12 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-            {$t('credits.confirm')}
-        </button>
     </form>
 </div>
