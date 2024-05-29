@@ -13,13 +13,6 @@
     let userName = "";
     let drinksScanner = "";
 
-    const drinks = [
-        { name: "Heineken", ean: "1234" },
-        { name: "Coca-Cola", ean: "0000" },
-        { name: "Grolsch", ean: "9999" },
-        { name: "Hertog Jan", ean: "7777" },
-    ];
-
     onMount(() => {
         ref.focus();
     });
@@ -48,8 +41,7 @@
                 {/if}
             </div>
             <div class="flex w-full">
-                <DrinkSearchBar {drinks} bind:value={drinksScanner}
-                ></DrinkSearchBar>
+                <DrinkSearchBar bind:value={drinksScanner}></DrinkSearchBar>
             </div>
         </div>
     </div>
