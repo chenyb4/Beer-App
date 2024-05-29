@@ -23,8 +23,8 @@
     let nonActiveClass = 'flex items-center p-2 text-light-text dark:text-dark-text bg-light-s_bg dark:bg-dark-s_bg ';
 </script>
 
-<Sidebar {activeUrl} {activeClass} {nonActiveClass} asideClass="flex h-screen">
-    <SidebarWrapper divClass="bg-light-s_bg dark:bg-dark-s_bg h-full w-52">
+<Sidebar {activeUrl} {activeClass} {nonActiveClass} asideClass="w-64 flex flex-col" >
+    <SidebarWrapper divClass="bg-light-s_bg dark:bg-dark-s_bg h-full">
         <SidebarGroup>
             <SidebarBrand {site} imgClass="h-7 mt-5 m-1 ml-0 sm:h-7"/>
             <NavBarOption title="Home" site="/" />
