@@ -23,10 +23,8 @@ exports.createUser = async (req, res) => {
 
     try {
         const newUser = await userService.createUser(username, email, password, date_of_birth);
-
         const qr = await QRService.createQR(newUser);
-
-        res.status(201).json(newUser, qr);
+        res.status(201).json({user: newUser, qr: qr, sendMail: false});
     } catch (err) {
         console.error(err);
         res.status(400).json({ message: 'Bad request' });

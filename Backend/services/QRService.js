@@ -14,13 +14,5 @@ exports.createQR = async (user) => {
         "image": "public/images/solid-ada-logo.png",
         "cornersSquareOptions": {"type": "extra-rounded", "color": "#009c82"},
     });
-
-    await qrCode.toFile('output.svg', 'svg');
-
-    fs.readFile('output.svg', (err, data) => {
-        if (err) {
-            return 'Error generating QR code';
-        }
-        return data;
-    });
+    return await qrCode.toDataUrl()
 }
