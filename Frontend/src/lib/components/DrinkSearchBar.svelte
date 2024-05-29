@@ -6,6 +6,7 @@
 
     export let filteredProductsOptions = [];
     export let value = "";
+    export let selectedProduct;
 
     let products;
     let errorMessage = "";
@@ -49,15 +50,16 @@
         }
     }
 
-    function selectProduct(productName) {
-        value = productName;
+    function selectProduct(product) {
+        selectedProduct = product;
+        value = product.name;
         document.getElementById("productOptions").style.display = "none";
     }
 
     function selectProductWithEnter(event) {
         if (event.key === "Enter") {
             if (filteredProductsOptions.length > 0) {
-                selectProduct(filteredProductsOptions[0].name);
+                selectProduct(filteredProductsOptions[0]);
             }
         }
     }
@@ -84,7 +86,7 @@
         {#each filteredProductsOptions as product}
             <button
                 class="border border-dark-300 w-full"
-                on:click={selectProduct(product.name)}>{product.name}</button
+                on:click={selectProduct(product)}>{product.name}</button
             >
         {/each}
     </div>
