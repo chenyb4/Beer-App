@@ -1,12 +1,11 @@
 <script>
-    // @ts-nocheck
-
     import InputField from "$lib/components/InputField.svelte";
     import { t } from "$lib/translations/index.js";
     import { onMount } from "svelte";
     import DrinkSearchBar from "$lib/components/DrinkSearchBar.svelte";
     import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
     import CtaButton from "$lib/components/CtaButton.svelte";
+    import { TrashBinSolid } from "flowbite-svelte-icons";
 
     let ref;
     let identifiedUser;
@@ -15,7 +14,7 @@
     let drinksScanner = "";
     let product;
 
-    console.log(product);
+    $: product, console.log(product);
 
     onMount(() => {
         ref.focus();
@@ -46,12 +45,49 @@
                     {/if}
                 </div>
                 <div class=" w-72">
-                    <DrinkSearchBar bind:value={drinksScanner} bind:product
+                    <DrinkSearchBar
+                        bind:value={drinksScanner}
+                        bind:selectedProduct={product}
                     ></DrinkSearchBar>
                 </div>
                 <div
                     class="bg-dark-800 w-full h-full my-6 flex flex-col min-h-80 rounded-xl"
-                ></div>
+                >
+                    <div class="px-4 py-2">
+                        <div class="grid grid-cols-6 gap-2">
+                            <div class="col-span-3">Product</div>
+                            <div
+                                class="col-span-2 flex items-center justify-center text-center"
+                            >
+                                Amount
+                            </div>
+                            <div
+                                class="col-span-1 flex items-center justify-center text-center"
+                            >
+                                Remove
+                            </div>
+                        </div>
+
+                        {#if product}
+                            <div
+                                class="grid grid-cols-6 gap-2 mt-2 font-bold bg-dark-900 rounded-xl px-2"
+                            >
+                                <div class="col-span-3">
+                                    {product.name}
+                                </div>
+                                <div class="col-span-2 flex justify-center">
+                                    1
+                                </div>
+                                <div class="col-span-1 flex justify-center">
+                                    <svelte:component
+                                        this={TrashBinSolid}
+                                        class="text-light-p_foreground h-full"
+                                    />
+                                </div>
+                            </div>
+                        {/if}
+                    </div>
+                </div>
                 <CtaButton captionText="Submit"></CtaButton>
             </div>
         </div>
