@@ -43,7 +43,7 @@ exports.undo = async (req, res) => {
     try {
         lastUndo = await historyService.getLastUndo();
         const actionDetails = lastUndo.description;
-        let product; // case 0 and 1
+        let product;
         let undoValue = 7;
         switch (lastUndo.action) {
             case 0: // increase product stock
@@ -87,7 +87,7 @@ exports.undo = async (req, res) => {
                         lastUndo.userId
                     )
                 );
-            case 4: // add user
+            case 4: // enable user
                 await userService.updateUser(actionDetails.user_id, true)
                 return res.status(201).json(
                     await historyService.createHistory(
@@ -96,7 +96,7 @@ exports.undo = async (req, res) => {
                         lastUndo.userId
                     )
                 );
-            case 5: // remove user
+            case 5: // disable user
                 await userService.updateUser(actionDetails.user_id, false)
                 return res.status(201).json(
                     await historyService.createHistory(

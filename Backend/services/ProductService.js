@@ -1,4 +1,9 @@
 const db = require('../database')
+const historyService = require("./HistoryService");
+const userService = require("./UserService");
+const {getDummyUser} = require('./UserService');
+const increase_product_stock_id = 0;
+const decrease_product_stock_id = 1;
 
 // Get all products
 exports.getAllProducts = async () => {
@@ -38,7 +43,8 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
     }
 
     try {
-        return await db.Product.update(
+        const oldProduct = await this.getProduct(id);
+        await db.Product.update(
             {
                 name,
                 price_in_credits,
@@ -51,6 +57,14 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
                 },
             },
         );
+        const updatedProduct = await this.getProduct(id);
+        if (oldProduct.amount_in_stock < updatedProduct.amount_in_stock) {
+            await historyService.createHistory(increase_product_stock_id, {"product_id": id}, await getDummyUser())
+        } else if (oldProduct.amount_in_stock > updatedProduct.amount_in_stock) {
+            await historyService.createHistory(decrease_product_stock_id, {"product_id": id}, await getDummyUser())
+        }
+
+        return updatedProduct;
     } catch (err) {
         console.error(err);
         throw new Error('Failed to update product with id: ' + id);
