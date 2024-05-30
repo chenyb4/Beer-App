@@ -41,6 +41,10 @@ module.exports = function (sequelize) {
                 defaultValue: 'english',
                 allowNull: false,
             },
+            qr_identifier: {
+                type: DataTypes.STRING,
+                unique: true
+            },
         },
     );
 

@@ -4,7 +4,7 @@ exports.sendmail = async (req, res) => {
     const { id } = req.query;
 
     try {
-        const user = await userService.getUser(id);
+        const user = await userService.createUserIdentifier(id);
         const qr = await QRService.createQR(user);
         res.status(201).json({qr: qr, sentMail: false});
     } catch (err) {
