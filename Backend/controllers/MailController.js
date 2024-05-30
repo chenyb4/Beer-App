@@ -5,7 +5,6 @@ exports.sendmail = async (req, res) => {
 
     try {
         const user = await userService.createUserIdentifier(id);
-        console.log(user)
         const qr = await QRService.createQR(user);
         res.status(201).json({qr: qr, sentMail: false});
     } catch (err) {
