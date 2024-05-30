@@ -1,8 +1,9 @@
 <script>
-    import {Alert, Drawer,, Input, Label} from "flowbite-svelte";
+    import {Alert, Drawer, Input, Label, Modal} from "flowbite-svelte";
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
     import {createUser} from "$lib/service/administration";
+    import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
 
     export let hideCreateUserDialog = true;
@@ -12,6 +13,8 @@
     let date_of_birth = new Date().toISOString().split('T')[0];
     let helper = "";
     $: hideHelper = true;
+    let showCreatedUserModal = false;
+    let createdUserModalText = "";
 
     function onStudentNumberChange(event) {
         studentNumber = event.target.value;
@@ -38,12 +41,37 @@
             return;
         }
 
+        function downloadBase64File(base64, fileName) {
+            const link = document.createElement('a');
+            link.href = base64;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         const response = await createUser(studentNumber, email, date_of_birth)
-        alert(response);
-        hideCreateUserDialog = true;
+        if (response){
+            let responseQR = await getQRandSendMail(response.user.id);
+            hideCreateUserDialog = true;
+            showCreatedUserModal = true;
+            if (!responseQR.sentMail){
+                downloadBase64File(responseQR.qr, 'QR code of ' + response.user.username + '.png');
+                createdUserModalText = $t("administration.noMailSent") + `<a href='mailto:${response.user.email}'>${response.user.email}</a>`;
+            } else {
+                createdUserModalText = $t("administration.mailSent") + response.user.username;
+            }
+        } else {
+            alert("User cannot be created");
+        }
+
     }
 </script>
-
+<Modal title="Created user!" bind:open={showCreatedUserModal} autoclose>
+    <p class="text-base leading-relaxed text-light-text dark:text-dark-text">
+        {@html createdUserModalText}
+    </p>
+</Modal>
 <Drawer class="absolute w-4/5 md:w-3/5 left-0 right-0 m-auto mt-10 mb-10 rounded-2xl"
         bind:hidden={hideCreateUserDialog}>
     <span class="text-3xl text-light-text dark:text-dark-text">{$t("administration.addUser")}</span>

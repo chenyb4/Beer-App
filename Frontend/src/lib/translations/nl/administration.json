@@ -8,5 +8,7 @@
   "helper": "Je bent de volgende velden vergeten",
   "studentNumberText": "Studenten nummer",
   "emailText": "Email",
-  "date_of_birthText": "Geboorte datum"
+  "date_of_birthText": "Geboorte datum",
+  "noMailSent": "Versturen van mail is gefaald!\nQR code wordt nu gedownload. \nVerstuur QR naar volgende email: ",
+  "sentMail": "Mail is verstuurd naar student: "
 }

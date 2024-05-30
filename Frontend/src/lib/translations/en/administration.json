@@ -8,5 +8,7 @@
   "helper": "Je forgot these input fields",
   "studentNumberText": "Student number",
   "emailText": "Email",
-  "date_of_birthText": "Date of birth"
+  "date_of_birthText": "Date of birth",
+  "noMailSent": "Sending mail has failed!\nQR code wil download now. \nSent this QR to the following email: ",
+  "sentMail": "Mail has been send for student: "
 }
