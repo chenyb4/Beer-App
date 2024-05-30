@@ -22,7 +22,7 @@ exports.createUser = async (req, res) => {
 
     try {
         const newUser = await userService.createUser(username, email, password, date_of_birth);
-        res.status(201).json(newUser);
+        res.status(201).json({user: newUser});
     } catch (err) {
         console.error(err);
         res.status(400).json({ message: 'Bad request' });

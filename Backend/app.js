@@ -29,6 +29,7 @@ const orderController = require('./controllers/OrderController');
 const historyController = require('./controllers/HistoryController');
 const creditController = require('./controllers/CreditController');
 const roleController = require('./controllers/RoleController');
+const mailController = require('./controllers/MailController');
 
 
 app.get('/users', userController.getUser);
@@ -58,6 +59,8 @@ app.get('/products', productController.getProducts);
 app.post('/products', productController.createProduct);
 app.put('/products', productController.updateProduct);
 app.delete('/products', productController.deleteProduct)
+
+app.post('/mail', mailController.sendmail);
 
 async function authenticate() {
   try {
