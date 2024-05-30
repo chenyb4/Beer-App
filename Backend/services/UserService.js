@@ -19,6 +19,18 @@ exports.getUser = async (id) => {
     }
 };
 
+exports.getQRUser = async (qr_identifier) => {
+    if (!qr_identifier) {
+        throw new Error('Missing required fields');
+    }
+
+    try {
+        return convertUser(await db.User.findOne({ where: { qr_identifier } }));
+    } catch (err) {
+        throw new Error('Failed to get user');
+    }
+};
+
 exports.createUser = async (username, email, password, date_of_birth) => {
     if (!username || !email || !password || !date_of_birth) {
         throw new Error('Missing required fields');
@@ -69,6 +81,35 @@ exports.deleteUser = async (id) => {
     });
 };
 
+exports.createUserIdentifier = async (id, baseCase = 0) => {
+    try{
+        const qr_identifier = await hashValue((Date.now()).toString())
+        await db.User.update(
+            {
+                qr_identifier
+            },
+            {
+                where: {
+                    id,
+                },
+            },
+        )
+
+        return this.getUser(id);
+    } catch (error) {
+        if(baseCase < 1) {
+            return await this.createUserIdentifier(id, baseCase + 1);
+        } else {
+            console.error(error)
+        }
+    }
+
+}
+
+async function hashValue(value) {
+    return await bcrypt.hash(value, 10);
+}
+
 function convertUser(user) {
     user.language = convertLanguage(user.language)
     return user
@@ -76,7 +117,7 @@ function convertUser(user) {
 
 function convertLanguage(language) {
     const languages = db.User.getAttributes().language.values;
-    if(isNaN(language)) {
+    if (isNaN(language)) {
         return languages.indexOf(language)
     }
     return languages[language];
