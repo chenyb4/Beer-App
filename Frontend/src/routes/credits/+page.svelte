@@ -3,19 +3,39 @@
     import CtaButton from "$lib/components/CtaButton.svelte";
     import PriceTitle from "$lib/components/PriceTitle.svelte";
 
+
     // Create reactive variables
     let studentNumber = '';
 
 
     //these are the amounts of credits to buy and how much in total you have to pay
     //todo: initial amount of credits and price should be fetched from backend
+
+
     let amountOfCredits = 11;
     let price = 10;
+    async function fetchDefaultCreditsAndPrice(){
+        const response=await fetch(
+            "http://" +
+            process.env.VITE_APIURL +
+            ":" +
+            process.env.VITE_APIPORT +
+            "/credits?id=2"
+        );
 
+        if(response.ok){
+           let resJson=await response.json();
+           amountOfCredits=resJson.default_amount;
+           price=resJson.price;
+        }
+
+    }
+
+    fetchDefaultCreditsAndPrice();
 
     //todo:these two values need to be fetched from the backend
-    let creditIncrement=11;
-    let priceIncrement=10;
+    let creditIncrement=amountOfCredits;
+    let priceIncrement=price;
 
 
     // Functions to handle increment and decrement
@@ -31,8 +51,32 @@
         }
     }
 
+
+    async function updateCreditsForAUser(){
+        const response = await fetch(
+            "http://" +
+            process.env.VITE_APIURL +
+            ":" +
+            process.env.VITE_APIPORT +
+            "/user?id=1",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    credits:amountOfCredits,
+                    language:0
+                })
+            }
+        );
+
+    }
+
+
+
     function onConfirmButtonClick(){
-        console.log("confirm button clicked for buying credits");
+        updateCreditsForAUser();
     }
 
 
@@ -41,7 +85,7 @@
 <div>
     <!-- You can use `placeholders` and `modifiers` in your definitions (see docs) -->
 
-    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg">
+    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
         <h2 class="text-4xl font-extrabold dark:text-white mb-8">{$t('credits.title')}</h2>
 
         <!-- for the student number field -->
