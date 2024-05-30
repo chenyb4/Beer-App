@@ -1,4 +1,5 @@
 const orderService = require('../services/OrderService');
+const paginationService = require("../services/PaginationService");
 
 exports.getOrder = async (req, res) => {
     const {id} = req.query;
@@ -9,6 +10,8 @@ exports.getOrder = async (req, res) => {
 
         } else {
             orders = await orderService.getAllOrders();
+            orders = await paginationService.addPaginationProperties(orders, orders.length, req);
+
         }
         res.status(200).json(orders);
     } catch (err) {

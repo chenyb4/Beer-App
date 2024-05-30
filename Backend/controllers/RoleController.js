@@ -1,4 +1,5 @@
 const roleService = require('../services/RoleService');
+const paginationService = require("../services/PaginationService");
 
 exports.getRole = async (req, res) => {
     const {id} = req.query;
@@ -9,6 +10,7 @@ exports.getRole = async (req, res) => {
 
         } else {
             roles = await roleService.getRoles();
+            roles = await paginationService.addPaginationProperties(roles, roles.length, req);
         }
         res.status(200).json(roles);
     } catch (err) {
