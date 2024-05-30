@@ -20,10 +20,20 @@ exports.getUser = async (id) => {
 };
 
 exports.createUser = async (username, email, password, date_of_birth) => {
-    if (!username || !email || !password || !date_of_birth) {
+    if (!username || !email || !date_of_birth) {
         throw new Error('Missing required fields');
     }
 
+    // For creating a student
+    if (!password){
+        try {
+            return convertUser(await db.User.create({username, email, date_of_birth}));
+        } catch (err) {
+            console.error(err);
+            throw new Error('Failed to create user');
+        }
+    }
+    // For creating an executive
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
