@@ -1,10 +1,13 @@
 const userService = require('../services/UserService');
 
 exports.getUser = async (req, res) => {
-    const {id} = req.query;
+    const {id, qr_identifier} = req.query;
     try {
         let users
-        if(id) {
+        if(qr_identifier) {
+            users = await userService.getQRUser(qr_identifier);
+        }
+        else if(id) {
             users = await userService.getUser(id);
 
         } else {
