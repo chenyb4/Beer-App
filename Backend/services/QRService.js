@@ -1,7 +1,7 @@
 const {QRCodeCanvas} = require('@loskir/styled-qr-code-node');
 
 exports.createQR = async (user) => {
-    let data = user.password;
+    let data = user.qr_identifier;
     const qrCode = new QRCodeCanvas({
         "width": 300,
         "height": 300,
