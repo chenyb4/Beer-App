@@ -38,8 +38,8 @@ exports.createUser = async (username, email, password, date_of_birth, roleId) =>
     }
 };
 
-exports.updateUser = async (id, disabled, username, email, credits, date_of_birth, language, roleId) => {
-    if (!id || (disabled === undefined && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
+exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_birth, language, roleId}) => {
+    if (!id || (isDisabled === undefined && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
         throw new Error('Missing required fields or no update data provided');
     }
     if (language !== undefined) language = convertLanguage(language);
@@ -47,9 +47,9 @@ exports.updateUser = async (id, disabled, username, email, credits, date_of_birt
 
     try {
         const oldUser = await this.getUser(id);
-        await db.User.update(
+        await db.User.update(   // Update User
             {
-                disabled,
+                isDisabled,
                 username,
                 email,
                 credits,
@@ -58,40 +58,12 @@ exports.updateUser = async (id, disabled, username, email, credits, date_of_birt
                 roleId
             },
             {
-                where: {
-                    id,
-                },
+                where: { id },
             },
-        );                  // Update User
+        );
+
         const newUser = await this.getUser(id);
-        if (oldUser.roleId !== newUser.roleId) {    // Create history entry
-            await historyService.createHistory(
-                change_role_id,
-                {
-                    "user_id": newUser.id,
-                    "old_role_id": oldUser.roleId,
-                    "new_role_id": newUser.roleId
-                },
-                await this.getDummyUser()
-                )
-        }
-        if (oldUser.disabled === true && newUser.disabled === false) {
-            await historyService.createHistory(
-                enable_user_id,
-                {
-                    "user_id": newUser.id,
-                },
-                await this.getDummyUser()
-            )
-        } else if (oldUser.disabled === false && newUser.disabled === true) {
-            await historyService.createHistory(
-                disable_user_id,
-                {
-                    "user_id": newUser.id,
-                },
-                await this.getDummyUser()
-            )
-        }
+        await createHistoryEntryIfNecessary(oldUser, newUser);
         return newUser;
     } catch (err) {
         console.error(err);
@@ -108,7 +80,7 @@ exports.deleteUser = async (id) => {
     });
 };
 
-exports.getDummyUser = async () => {
+exports.getDummyUserId = async () => {
     try {
         const dummyExists = await db.User.findOne({
             where: {
@@ -144,4 +116,29 @@ function convertLanguage(language) {
         return languages.indexOf(language)
     }
     return languages[language];
+}
+
+const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
+    const dummyUserId = await this.getDummyUserId();
+
+    if (oldUser.roleId !== newUser.roleId) {
+        await historyService.createHistory(
+            change_role_id,
+            {
+                user_id: newUser.id,
+                old_role_id: oldUser.roleId,
+                new_role_id: newUser.roleId
+            },
+            dummyUserId
+        );
+    }
+
+    if (oldUser.isDisabled !== newUser.isDisabled) {
+        const actionId = newUser.isDisabled ? disable_user_id : enable_user_id;
+        await historyService.createHistory(
+            actionId,
+            { user_id: newUser.id },
+            dummyUserId
+        );
+    }
 }

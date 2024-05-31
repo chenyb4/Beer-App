@@ -1,4 +1,6 @@
 const db = require('../database')
+const productService = require("./ProductService");
+const userService = require("./UserService");
 
 exports.getHistories = async () => {
     let histories = await db.History.findAll();
@@ -73,6 +75,36 @@ exports.deleteHistory = async (id) => {
         }
     });
 };
+
+exports.undo = async () => {
+    let lastUndo = await historyService.getLastUndo();
+    const actionDetails = lastUndo.description;
+    let product;
+    switch (lastUndo.action) {
+        case 0: // increase product stock
+        case 1: // decrease product stock
+            product = await productService.getProduct(actionDetails.product_id);
+            let updatedStock = lastUndo.action === 0
+                ? product.amount_in_stock - 1
+                : product.amount_in_stock + 1;
+            await productService.updateProduct(
+                product.id,
+                product.name,
+                product.price_in_credits,
+                updatedStock,
+                product.EAN
+            );
+            break;
+        case 3: // change role
+            await userService.updateUser({id: actionDetails.user_id, roleId: actionDetails.old_role_id})
+            break;
+        case 4: // enable user
+        case 5: // disable user - if action === 4 then pass true else pass false
+            await userService.updateUser({id: actionDetails.user_id, isDisabled: lastUndo.action === 4})
+    }
+
+    return lastUndo;
+}
 
 function convertHistory(history) {
     history.action = convertAction(history.action)
