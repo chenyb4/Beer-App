@@ -1,10 +1,132 @@
 <script>
-import {t} from "$lib/translations/index.js";
+    import { t } from "$lib/translations/index.js";
+    import CtaButton from "$lib/components/CtaButton.svelte";
+    import PriceTitle from "$lib/components/PriceTitle.svelte";
 
+    // Create reactive variables
+    let studentNumber = '';
+    let amountOfCredits = 11;
+    let price = 10;
+
+    async function fetchDefaultCreditsAndPrice() {
+        const response = await fetch(
+            `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/credits?id=2`
+        );
+
+        if (response.ok) {
+            let resJson = await response.json();
+            amountOfCredits = resJson.default_amount;
+            price = resJson.price;
+        }
+    }
+
+    fetchDefaultCreditsAndPrice();
+
+    // Initialize these values based on fetched data
+    let creditIncrement = amountOfCredits;
+    let priceIncrement = price;
+
+    // Functions to handle increment and decrement
+    function incrementCredits() {
+        amountOfCredits += creditIncrement;
+        price += priceIncrement;
+    }
+
+    function decrementCredits() {
+        if (amountOfCredits > creditIncrement) {
+            amountOfCredits -= creditIncrement;
+            price -= priceIncrement;
+        }
+    }
+
+    async function updateCreditsForAUser() {
+        //todo:this call need to be fired when user is possible to be identified.
+        // const response = await fetch(
+        //     `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/user?id=1`,
+        //     {
+        //         method: "PUT",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({
+        //             credits: amountOfCredits,
+        //             language: 0
+        //         })
+        //     }
+        // );
+    }
+
+    function onConfirmButtonClick() {
+        updateCreditsForAUser();
+    }
 </script>
 
 <div>
-    <!-- you can use `placeholders` and `modifiers` in your definitions (see docs) -->
-    <h2>{$t('credits.title')}</h2>
-    <p>{$t('credits.text')}</p>
+    <!-- You can use `placeholders` and `modifiers` in your definitions (see docs) -->
+    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
+        <h2 class="text-4xl font-extrabold dark:text-white mb-8">{$t('credits.title')}</h2>
+
+
+        <!-- for the student number field -->
+        <div class="mb-5 relative">
+            <label for="student-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                {$t('credits.studentNumber')}
+            </label>
+            <input
+                    type="text"
+                    id="student-number"
+                    bind:value={studentNumber}
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    required
+            />
+        </div>
+
+
+
+        <!-- for the balance field -->
+        <label for="quantity-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            {$t('credits.amountOfCredits')}
+        </label>
+        <div class="relative flex items-center max-w-[8rem]">
+            <button
+                    type="button"
+                    id="decrement-button"
+                    on:click={decrementCredits}
+                    class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+            >
+                <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
+                </svg>
+            </button>
+            <input
+                    type="text"
+                    id="quantity-input"
+                    bind:value={amountOfCredits}
+                    aria-describedby="helper-text-explanation"
+                    class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="999"
+                    required
+            />
+            <button
+                    type="button"
+                    id="increment-button"
+                    on:click={incrementCredits}
+                    class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+            >
+                <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <PriceTitle
+                captionText={$t('credits.price')}
+                price={price}
+        ></PriceTitle>
+
+        <CtaButton
+                captionText={$t('credits.confirm')}
+                onCTAButtonClickFn={onConfirmButtonClick}
+        ></CtaButton>
+    </form>
 </div>

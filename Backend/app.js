@@ -5,17 +5,62 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const process = require('process');
 const app = express();
+const cors = require('cors')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+const corsOptions = {
+  credentials: true,
+  origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT] // Whitelist the domains you want to allow
+};
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
 const db = require('./database')
+const productController = require('./controllers/ProductController');
+const userController = require('./controllers/UserController');
+const orderController = require('./controllers/OrderController');
+const historyController = require('./controllers/HistoryController');
+const creditController = require('./controllers/CreditController');
+const roleController = require('./controllers/RoleController');
+const mailController = require('./controllers/MailController');
+
+
+app.get('/users', userController.getUser);
+app.post('/users', userController.createUser);
+app.put('/users', userController.updateUser);
+app.delete('/users', userController.deleteUser);
+
+app.get('/orders', orderController.getOrder);
+app.post('/orders', orderController.createOrder);
+app.put('/orders', orderController.updateOrder);
+app.delete('/orders', orderController.deleteOrder);
+
+app.get('/histories', historyController.getHistory);
+app.post('/histories', historyController.createHistory);
+app.put('/histories', historyController.updateHistory);
+app.delete('/histories', historyController.deleteHistory);
+
+app.get('/credits', creditController.getCredit);
+app.put('/credits', creditController.updateCredit);
+
+app.get('/roles', roleController.getRole);
+app.post('/roles', roleController.createRole);
+app.put('/roles', roleController.updateRole);
+app.delete('/roles', roleController.deleteRole);
+
+app.get('/products', productController.getProducts);
+app.post('/products', productController.createProduct);
+app.put('/products', productController.updateProduct);
+app.delete('/products', productController.deleteProduct)
+
+app.post('/mail', mailController.sendmail);
 
 async function authenticate() {
   try {
@@ -27,7 +72,6 @@ async function authenticate() {
 }
 
 async function sync() {
-  await authenticate();
   try {
     await db.sequelize.sync();
     console.log('Database synced');
@@ -37,7 +81,6 @@ async function sync() {
 }
 
 async function syncForce() {
-  await authenticate();
   try {
     await db.sequelize.sync({force: true});
     console.log('Database force synced');
@@ -78,5 +121,5 @@ const port = process.env.APIPORT
 app.listen(port, ()=>{
   console.log(`Example app listening on port ${port}`)
 })
-
+authenticate();
 module.exports = app;

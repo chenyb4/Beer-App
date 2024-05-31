@@ -1,8 +1,10 @@
 <script>
     import {Card} from "flowbite-svelte";
-    import {t} from '$lib/translations'; // Ensure t is correctly imported from your localization setup
+    import {t, locale} from '$lib/translations'; // Ensure t is correctly imported from your localization setup
     export let path;
     export let icon;
+
+
 
     // Reactive statements for localization keys
     $: titleGetter = `homepage.${path}.title`;
