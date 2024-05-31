@@ -24,7 +24,6 @@ exports.sendmail = async (req, res) => {
         const user = await userService.createUserIdentifier(id);
         const qr = await QRService.createQR(user);
         let cleanedBase64String = qr.replace("data:image/png;base64,", "");
-        console.log(process.env.EMAIL_FROM)
 
         const mailData = {
             from: process.env.EMAIL_FROM,
