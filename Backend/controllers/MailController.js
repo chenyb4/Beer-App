@@ -29,9 +29,41 @@ exports.sendmail = async (req, res) => {
             from: process.env.EMAIL_FROM,
             to: user.email,
             subject: 'Beer Card QR',
-            html: '<b>Hey there! </b>' +
-                '<br>In the attachment an image is sent you can use to buy drinks at DoMiBo or other events of ADA<br/>' +
-                "<br>If this isn't the first mail you recieve with QR code, old QR codes won't work!</br>",
+            html: "<b>Hey there!</b>\n" +
+                "<br>In the attachment an image can be found. With this you can buy drinks at DoMiBo or other events of ADA<br/>\n" +
+                "<br>If this isn't the first mail you receive with a QR code, old QR codes won't work!</br>" +
+                "<br/>" +
+                "<h3>Explanation on Saving a QR Code for easy access</h3>\n" +
+                "<br />" +
+                "<h4>Android Phones</h4>\n" +
+                "<p>On Android phones, you can easily save and use the QR code via Google Wallet. Follow these steps:</p>\n" +
+                "<ol>" +
+                "    <li><b>Download the image</b> by tapping and holding on the image in the email, then selecting \"Save image\".</li>" +
+                "    <li><b>Open the Google Wallet app</b></li>\n" +
+                "    <li><b>Add the QR code</b> to your Google Wallet by navigating to the option to add a new card or ticket, select \"Image\" and select the saved image.</li>" +
+                "</ol>" +
+                "<br />" +
+                "<h4>iPhone</h4>\n" +
+                "<p>On an iPhone, it is not possible to save the QR code directly to Apple Wallet. Here are two alternative methods to easily access the QR code:</p>" +
+                "<h5>Option 1: Save the Image</h5>\n" +
+                "<ol>" +
+                "    <li><b>Download the image</b> by tapping and holding on the image in the email, then selecting \"Save Image\".</li>" +
+                "    <li><b>Open the Photos app</b> and select the heart to add to favorites</li>" +
+                "    <li><b>Select the favorites tab</b> in the Photos app when you need the QR code</li>" +
+                "</ol>" +
+                "<br/>" +
+                "<h5>Option 2: Create a Widget</h5>\n" +
+                "<ol>" +
+                "    <li><b>Download the image</b> by tapping and holding on the image in the email, then selecting \"Save Image\".</li>" +
+                "    <li><b>Open the Photos app</b> on your iPhone and add the QR code to an album or mark it as a favorite</li>" +
+                "    <li><b>Go to your home screen</b> and press and hold on an empty space until the apps start to jiggle</li>" +
+                "    <li><b>Tap the plus icon</b> (+) in the top left corner of the screen to add a new widget</li>" +
+                "    <li><b>Search for the Photos widget</b> and select it.</li>" +
+                "    <li><b>Choose the size of the widget</b> and tap \"Add Widget\".</li>" +
+                "    <li><b>Press and hold the new widget and choose \"Edit Widget\"</b> to select a specific album or favorite photos</li>" +
+                "</ol>\n" +
+                "<br>" +
+                "<p>With these methods, you can easily save the QR code and quickly access it for DoMiBo or other ADA events.</p>",
             attachments: [
                 {
                     filename: 'QR.png',
