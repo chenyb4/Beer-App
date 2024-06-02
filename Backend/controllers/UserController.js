@@ -18,10 +18,10 @@ exports.getUser = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-    const { username, email, password, date_of_birth, roleId } = req.body;
+    const { username, email, password, date_of_birth } = req.body;
 
     try {
-        const newUser = await userService.createUser(username, email, password, date_of_birth, roleId);
+        const newUser = await userService.createUser(username, email, password, date_of_birth);
         res.status(201).json(newUser);
     } catch (err) {
         console.error(err);

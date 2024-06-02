@@ -1,9 +1,7 @@
 const db = require('../database')
 const bcrypt = require('bcrypt');
 const historyService = require("./HistoryService");
-const change_role_id = 3;
-const enable_user_id = 4;
-const disable_user_id = 5;
+const {Action} = require('../enums/Action')
 
 exports.getAllUsers = async () => {
     let users = await db.User.findAll();
@@ -23,15 +21,15 @@ exports.getUser = async (id) => {
     }
 };
 
-exports.createUser = async (username, email, password, date_of_birth, roleId) => {
-    if (!username || !email || !password || !date_of_birth || !roleId) {
+exports.createUser = async (username, email, password, date_of_birth) => {
+    if (!username || !email || !password || !date_of_birth) {
         throw new Error('Missing required fields');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        return convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth, roleId}));
+        return convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth}));
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create user');
@@ -39,10 +37,10 @@ exports.createUser = async (username, email, password, date_of_birth, roleId) =>
 };
 
 exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_birth, language, roleId}) => {
-    if (!id || (isDisabled === undefined && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
+    if (!id || (!isDisabled && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
         throw new Error('Missing required fields or no update data provided');
     }
-    if (language !== undefined) language = convertLanguage(language);
+    if (language) language = convertLanguage(language);
 
 
     try {
@@ -81,28 +79,29 @@ exports.deleteUser = async (id) => {
 };
 
 exports.getDummyUserId = async () => {
-    try {
-        const dummyExists = await db.User.findOne({
-            where: {
-                id: -1
-            }
-        })
-        if (dummyExists === null) {
-            await db.User.create({
-                id: -1,
-                username: "dummy",
-                email: "dummy@dummy.nl",
-                password: "password",
-                date_of_birth: "2024-05-23 13:03:32.289",
-                roleId: 1
-            });
-        }
-
-        return -1
-    } catch (err) {
-        console.error(err);
-        throw new Error('Failed to create dummy user');
-    }
+    // try {
+    //     const dummyExists = await db.User.findOne({
+    //         where: {
+    //             id: -1
+    //         }
+    //     })
+    //     if (dummyExists === null) {
+    //         await db.User.create({
+    //             id: -1,
+    //             username: "dummy",
+    //             email: "dummy@dummy.nl",
+    //             password: "password",
+    //             date_of_birth: "2024-05-23 13:03:32.289",
+    //             roleId: 1
+    //         });
+    //     }
+    //
+    //     return -1
+    // } catch (err) {
+    //     console.error(err);
+    //     throw new Error('Failed to create dummy user');
+    // }
+    return 1
 }
 
 function convertUser(user) {
@@ -123,7 +122,7 @@ const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
 
     if (oldUser.roleId !== newUser.roleId) {
         await historyService.createHistory(
-            change_role_id,
+            Action.change_role,
             {
                 user_id: newUser.id,
                 old_role_id: oldUser.roleId,
@@ -134,7 +133,7 @@ const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
     }
 
     if (oldUser.isDisabled !== newUser.isDisabled) {
-        const actionId = newUser.isDisabled ? disable_user_id : enable_user_id;
+        const actionId = newUser.isDisabled ? Action.disable_user : Action.enable_user;
         await historyService.createHistory(
             actionId,
             { user_id: newUser.id },

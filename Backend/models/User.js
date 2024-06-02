@@ -44,6 +44,10 @@ module.exports = function (sequelize) {
             isDisabled: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
+            },
+            roleId: {
+                type: DataTypes.INTEGER,
+                defaultValue: 1
             }
         },
     );

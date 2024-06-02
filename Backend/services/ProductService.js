@@ -1,8 +1,8 @@
 const db = require('../database')
 const historyService = require("./HistoryService");
 const {getDummyUserId} = require('./UserService');
-const increase_product_stock_id = 0;
-const decrease_product_stock_id = 1;
+const {Action} = require('../enums/Action')
+
 
 // Get all products
 exports.getAllProducts = async () => {
@@ -58,9 +58,9 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
         );
         const updatedProduct = await this.getProduct(id);
         if (oldProduct.amount_in_stock < updatedProduct.amount_in_stock) {
-            await historyService.createHistory(increase_product_stock_id, {"product_id": id}, await getDummyUserId())
+            await historyService.createHistory(Action.increase_product_stock, {"product_id": id}, await getDummyUserId())
         } else if (oldProduct.amount_in_stock > updatedProduct.amount_in_stock) {
-            await historyService.createHistory(decrease_product_stock_id, {"product_id": id}, await getDummyUserId())
+            await historyService.createHistory(Action.decrease_product_stock, {"product_id": id}, await getDummyUserId())
         }
 
         return updatedProduct;

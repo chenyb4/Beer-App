@@ -1,5 +1,5 @@
 const historyService = require('../services/HistoryService');
-const undoValue = 7;
+const {Action} = require("../enums/Action");
 
 exports.getHistory = async (req, res) => {
     const {id} = req.query;
@@ -7,10 +7,13 @@ exports.getHistory = async (req, res) => {
         let histories
         if(id) {
             histories = await historyService.getHistory(id);
+            histories = historyService.convertHistory(histories)
 
         } else {
             histories = await historyService.getHistories();
+            histories.forEach(h => historyService.convertHistory(h))
         }
+
         res.status(200).json(histories);
     } catch (err) {
         console.error(err);
@@ -19,10 +22,12 @@ exports.getHistory = async (req, res) => {
 };
 
 exports.createHistory = async (req, res) => {
-    const { action, description, userId } = req.body;
-
+    let { action, description, userId } = req.body;
+    if(action) {
+        action = historyService.convertAction(action)
+    }
     try {
-        const newHistory = await historyService.createHistory(action, description, userId);
+        const newHistory = historyService.convertHistory(await historyService.createHistory(action, description, userId));
         // newHistory.description = JSON.parse(newHistory.description);
         res.status(201).json(newHistory);
     } catch (err) {
@@ -32,15 +37,14 @@ exports.createHistory = async (req, res) => {
 };
 
 exports.undo = async (req, res) => {
-    let lastUndo;
     try {
         const lastUndo = await historyService.undo();
         return res.status(201).json(
-            await historyService.createHistory(
-                undoValue,
+            historyService.convertHistory(await historyService.createHistory(
+                Action.undo,
                 {history_id: lastUndo.id},
                 lastUndo.userId
-            )
+            ))
         );
     } catch (err) {
         console.error(err);
@@ -51,14 +55,15 @@ exports.undo = async (req, res) => {
 
 exports.updateHistory = async (req, res) => {
     const { id } = req.query;
-    const { action, description, userId} = req.body;
-
+    let { action, description, userId} = req.body;
+    if(action) {
+        action = historyService.convertAction(action)
+    }
     try {
-        const updatedHistory = await historyService.updateHistory(id, action, description, userId);
+        const updatedHistory = historyService.convertHistory(await historyService.updateHistory(id, action, description, userId));
         if (!updatedHistory) {
             return res.status(404).json({ message: 'History not found' });
         }
-        updatedHistory.description = JSON.parse(updatedHistory.description);
         res.status(200).json(updatedHistory);
     } catch (err) {
         console.error(err);
