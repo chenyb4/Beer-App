@@ -1,4 +1,5 @@
 const productService = require('../services/ProductService');
+const paginationService = require("../services/PaginationService");
 
 exports.getProducts = async (req, res) => {
     const { id } = req.query;
@@ -9,6 +10,8 @@ exports.getProducts = async (req, res) => {
             products = await productService.getProduct(id);
         } else {
             products = await productService.getAllProducts();
+            products = await paginationService.addPaginationProperties(products, products.length, req);
+
         }
         res.status(200).json(products);
     } catch (err) {
