@@ -54,7 +54,7 @@
                     class="bg-dark-800 w-full h-full my-6 flex flex-col min-h-80 rounded-xl"
                 >
                     <div class="px-4 py-2">
-                        <div class="grid grid-cols-6 gap-2">
+                        <div class="grid grid-cols-6 gap-2 font-bold">
                             <div class="col-span-3">Product</div>
                             <div
                                 class="col-span-2 flex items-center justify-center text-center"
@@ -70,15 +70,19 @@
 
                         {#if product}
                             <div
-                                class="grid grid-cols-6 gap-2 mt-2 font-bold bg-dark-900 rounded-xl px-2"
+                                class="grid grid-cols-6 gap-2 mt-2 bg-dark-900 rounded-xl p-4"
                             >
                                 <div class="col-span-3">
                                     {product.name}
                                 </div>
-                                <div class="col-span-2 flex justify-center">
+                                <div
+                                    class="col-span-2 flex justify-center text-center items-center"
+                                >
                                     1
                                 </div>
-                                <div class="col-span-1 flex justify-center">
+                                <div
+                                    class="col-span-1 flex justify-center text-center items-center"
+                                >
                                     <svelte:component
                                         this={TrashBinSolid}
                                         class="text-light-p_foreground h-full"
