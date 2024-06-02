@@ -13,7 +13,7 @@ app.set('view engine', 'pug');
 
 const corsOptions = {
   credentials: true,
-  origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT] // Whitelist the domains you want to allow
+  origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT, "http://localhost:5173"] // Whitelist the domains you want to allow
 };
 
 app.use(logger('dev'));
