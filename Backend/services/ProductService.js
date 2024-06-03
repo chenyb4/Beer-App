@@ -24,7 +24,7 @@ exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN) => 
         throw new Error('Missing required fields: ');
     }
     try {
-        return db.Product.create({ name, price_in_credits, amount_in_stock, EAN });
+        return db.Product.create({name, price_in_credits, amount_in_stock, EAN});
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create product');
@@ -55,6 +55,10 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
         console.error(err);
         throw new Error('Failed to update product with id: ' + id);
     }
+}
+
+exports.incrementProductStock = async (id, amount) => {
+    db.Product.increment({amount_in_stock: amount}, {where: {id}})
 }
 
 exports.deleteProduct = async (id) => {
