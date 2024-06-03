@@ -14,7 +14,7 @@ export async function createUser(username, email, date_of_birth) {
             return await response.json();
         } catch (error) {
             console.error("Failed to fetch user data:", error);
-        }
+        }}
         
 export async function getUsers(page = 1, pageSize = 10) {
     let env = import.meta.env;
