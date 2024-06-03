@@ -58,7 +58,7 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
 }
 
 exports.incrementProductStock = async (id, amount) => {
-    db.Product.increment({amount_in_stock: amount}, {where: {id}})
+    return await db.Product.increment({amount_in_stock: amount}, {where: {id}})
 }
 
 exports.deleteProduct = async (id) => {
