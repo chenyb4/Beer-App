@@ -1,13 +1,13 @@
 <script>
   // @ts-nocheck
 
-  import InputField from "$lib/components/InputField.svelte";
   import { t } from "$lib/translations/index.js";
   import { onMount } from "svelte";
   import DrinkSearchBar from "$lib/components/DrinkSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { TrashBinSolid } from "flowbite-svelte-icons";
+  import { createOrder } from "$lib/service/orders";
 
   let ref;
   let identifiedUser;
@@ -16,12 +16,36 @@
   let drinksScanner;
   let product;
   let selectedProducts = [];
+  let errorMessage = "";
 
   function handleSelectProduct(event) {
     const selectedProduct = event.detail.product;
     selectedProducts = [...selectedProducts, selectedProduct];
   }
 
+  function handleSubmitOrder() {
+    if (!identifiedUser) {
+      errorMessage = "User must be identified before submitting an order.";
+      return;
+    }
+
+    if (selectedProducts.length === 0) {
+      errorMessage =
+        "At least one product must be selected before submitting an order.";
+      return;
+    }
+    errorMessage = "";
+    createOrder(identifiedUser.id, selectedProducts);
+    clearFields();
+  }
+
+  function clearFields() {
+    identifier = "";
+    identifiedUser = "";
+    selectedProducts= "";
+    userName= "";
+    drinksScanner = "";
+  }
   onMount(() => {
     ref.focus();
   });
@@ -97,7 +121,11 @@
             {/each}
           </div>
         </div>
-        <CtaButton captionText="Submit"></CtaButton>
+        {#if errorMessage}
+          <p class="text-red-400 px-4">{errorMessage}</p>
+        {/if}
+        <CtaButton captionText="Submit" onCTAButtonClickFn={handleSubmitOrder}
+        ></CtaButton>
       </div>
     </div>
   </div>
