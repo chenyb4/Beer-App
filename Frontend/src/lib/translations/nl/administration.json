@@ -1,4 +1,14 @@
 {
-  "title": "Dit is een Nederlandse titel",
-  "text": "Hallo!"
+  "addUser": "Nieuwe gebruiker toevoegen",
+  "studentNumber": "Studenten nummer van student:",
+  "studentNumberPlaceholder": "Typ hier het studenten nummer van student...",
+  "email": "e-mail:",
+  "emailPlaceholder": "Typ hier het student email van student...",
+  "date_of_birth": "Geboortedatum van student:",
+  "helper": "Je bent de volgende velden vergeten",
+  "studentNumberText": "Studenten nummer",
+  "emailText": "Email",
+  "date_of_birthText": "Geboorte datum",
+  "noMailSent": "Versturen van mail is gefaald!\nQR code wordt nu gedownload. \nVerstuur QR naar volgende email: ",
+  "sentMail": "Mail is verstuurd naar student: "
 }
