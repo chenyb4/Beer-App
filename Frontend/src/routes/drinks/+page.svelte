@@ -17,8 +17,6 @@
   let product;
   let selectedProducts = [];
 
-  $: console.log(selectedProducts);
-
   function handleSelectProduct(event) {
     const selectedProduct = event.detail.product;
     selectedProducts = [...selectedProducts, selectedProduct];
@@ -66,12 +64,12 @@
               <div
                 class="col-span-2 flex items-center justify-center text-center"
               >
-                Amount
+                {$t("drinks.numberOfItems")}
               </div>
               <div
                 class="col-span-1 flex items-center justify-center text-center"
               >
-                Remove
+                {$t("drinks.remove")}
               </div>
             </div>
 

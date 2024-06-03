@@ -5,5 +5,7 @@
   "drinkScanner": "Barcode / Dranknaam",
   "selectedDrinks": "GESELECTEERDE DRANKEN",
   "creditsLeft": "Aantal credits over:",
-  "confirm": "OPSLAAN"
+  "confirm": "OPSLAAN",
+  "numberOfItems": "Aantal",
+  "remove": "Verwijderen"
 }

@@ -5,5 +5,7 @@
   "drinkScanner": "Barcode / Name of drink",
   "selectedDrinks": "DRINKS SELECTED",
   "creditsLeft": "Number of credits left:",
-  "confirm": "CONFIRM"
+  "confirm": "CONFIRM",
+  "numberOfItems": "Amount",
+  "remove": "Remove"
 }
