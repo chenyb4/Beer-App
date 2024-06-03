@@ -9,18 +9,12 @@
   export let selectedProduct;
 
   let products = [];
-  let env = import.meta.env;
-
   const dispatch = createEventDispatcher();
-
-  function showProductOptions() {
-    document.getElementById("productOptions").style.display = "block";
-  }
 
   async function loadProducts() {
     try {
       const response = await fetch(
-        "http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/products"
+        `http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products`
       );
 
       if (!response.ok) {
@@ -34,16 +28,14 @@
   }
 
   function filterProductOptions() {
-    if (value === "") {
-      filteredProductsOptions = [];
-    } else {
-      filteredProductsOptions = products.filter(
-        (product) =>
-          product.name.toLowerCase().includes(value.toLowerCase()) ||
-          product.EAN.includes(value)
-      );
-    }
-    showProductOptions();
+    filteredProductsOptions = value
+      ? products.filter(
+          (product) =>
+            product.name.toLowerCase().includes(value.toLowerCase()) ||
+            product.EAN.includes(value)
+        )
+      : [];
+    document.getElementById("productOptions").style.display = "block";
   }
 
   function selectProduct(product) {
@@ -60,10 +52,8 @@
   }
 
   function selectProductWithEnter(event) {
-    if (event.key === "Enter") {
-      if (filteredProductsOptions.length > 0) {
-        selectProduct(filteredProductsOptions[0]);
-      }
+    if (event.key === "Enter" && filteredProductsOptions.length > 0) {
+      selectProduct(filteredProductsOptions[0]);
     }
   }
 
@@ -79,7 +69,8 @@
     type="text"
     id="inputSearchBar"
     bind:value
-    on:focus={showProductOptions}
+    on:focus={() =>
+      (document.getElementById("productOptions").style.display = "block")}
     on:input={filterProductOptions}
     on:keydown={selectProductWithEnter}
   />
