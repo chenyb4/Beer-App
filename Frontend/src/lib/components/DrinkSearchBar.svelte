@@ -1,6 +1,6 @@
 <script>
   // @ts-nocheck
-
+  import { loadProducts } from "$lib/service/inventory";
   import { t } from "$lib/translations/index.js";
   import { createEventDispatcher, onMount } from "svelte";
 
@@ -10,22 +10,6 @@
 
   let products = [];
   const dispatch = createEventDispatcher();
-
-  async function loadProducts() {
-    try {
-      const response = await fetch(
-        `http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      let jsonData = await response.json();
-      return jsonData.data;
-    } catch (error) {
-      console.error("Failed to fetch user data:", error);
-    }
-  }
 
   function filterProductOptions() {
     filteredProductsOptions = value
@@ -59,6 +43,7 @@
 
   onMount(async () => {
     products = await loadProducts();
+    console.log(products);
   });
 </script>
 
