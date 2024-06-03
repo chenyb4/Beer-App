@@ -78,32 +78,6 @@ exports.deleteUser = async (id) => {
     });
 };
 
-exports.getDummyUserId = async () => {
-    // try {
-    //     const dummyExists = await db.User.findOne({
-    //         where: {
-    //             id: -1
-    //         }
-    //     })
-    //     if (dummyExists === null) {
-    //         await db.User.create({
-    //             id: -1,
-    //             username: "dummy",
-    //             email: "dummy@dummy.nl",
-    //             password: "password",
-    //             date_of_birth: "2024-05-23 13:03:32.289",
-    //             roleId: 1
-    //         });
-    //     }
-    //
-    //     return -1
-    // } catch (err) {
-    //     console.error(err);
-    //     throw new Error('Failed to create dummy user');
-    // }
-    return 1
-}
-
 function convertUser(user) {
     user.language = convertLanguage(user.language)
     return user
@@ -118,7 +92,7 @@ function convertLanguage(language) {
 }
 
 const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
-    const dummyUserId = await this.getDummyUserId();
+    const dummyUserId = 1   // The dummy user always has id number 1 -- will be changed
 
     if (oldUser.roleId !== newUser.roleId) {
         await historyService.createHistory(

@@ -1,6 +1,5 @@
 const db = require('../database')
 const historyService = require("./HistoryService");
-const {getDummyUserId} = require('./UserService');
 const {Action} = require('../enums/Action')
 
 
@@ -57,10 +56,11 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
             },
         );
         const updatedProduct = await this.getProduct(id);
+        const dummyUserId = 1  // The dummy user always has id number 1 -- will be changed
         if (oldProduct.amount_in_stock < updatedProduct.amount_in_stock) {
-            await historyService.createHistory(Action.increase_product_stock, {"product_id": id}, await getDummyUserId())
+            await historyService.createHistory(Action.increase_product_stock, {"product_id": id}, dummyUserId)
         } else if (oldProduct.amount_in_stock > updatedProduct.amount_in_stock) {
-            await historyService.createHistory(Action.decrease_product_stock, {"product_id": id}, await getDummyUserId())
+            await historyService.createHistory(Action.decrease_product_stock, {"product_id": id}, dummyUserId)
         }
 
         return updatedProduct;
