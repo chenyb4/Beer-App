@@ -7,5 +7,6 @@
   "creditsLeft": "Aantal credits over:",
   "confirm": "OPSLAAN",
   "numberOfItems": "Aantal",
-  "remove": "Verwijderen"
+  "remove": "Verwijderen",
+  "errorMessage": "Kan gebruiker niet vinden. Probeer het opnieuw."
 }

@@ -7,5 +7,6 @@
   "creditsLeft": "Number of credits left:",
   "confirm": "CONFIRM",
   "numberOfItems": "Amount",
-  "remove": "Remove"
+  "remove": "Remove",
+  "errorMessage": "Failed to find corresponding user. Please try again."
 }
