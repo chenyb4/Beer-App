@@ -11,7 +11,7 @@ exports.updateCredit = async (default_amount, price) => {
 
     const credit = await this.getCredit()
     if(!credit) {
-        return await this.createCredit(default_amount, price, "No credit data available. Creating new Credit => ")
+        return await this.createCredit(default_amount, price)
     } else {
         let ids = [1,100];
         try {
@@ -36,15 +36,15 @@ exports.updateCredit = async (default_amount, price) => {
 
 };
 
-exports.createCredit = async (default_amount, price, additionalMessage = '') => {
+exports.createCredit = async (default_amount, price) => {
     if (!default_amount || !price) {
-        throw new Error(additionalMessage + 'Missing required fields');
+        throw new Error('No credit data available. Creating new Credit => Missing required fields');
     }
 
     try {
         return await db.Credit.create({default_amount, price});
     } catch (err) {
         console.error(err);
-        throw new Error(additionalMessage + 'Failed to create credit');
+        throw new Error('No credit data available. Creating new Credit => Failed to create credit');
     }
 }
