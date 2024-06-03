@@ -1,5 +1,5 @@
-const userService = require("../services/UserService");
-const QRService = require("../services/QRService");
+const userService = require("./UserService");
+const QRService = require("./QRService");
 const nodemailer = require('nodemailer');
 const process = require('process');
 
@@ -80,7 +80,7 @@ exports.sendmail = async (req, res) => {
             }
             else {
                 console.log("Mail sent to" + user.email);
-                res.status(201).json({qr: qr, sentMail: true});
+                res.status(201).json({sentMail: true});
             }
         });
     } catch (err) {

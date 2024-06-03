@@ -29,7 +29,7 @@ const orderController = require('./controllers/OrderController');
 const historyController = require('./controllers/HistoryController');
 const creditController = require('./controllers/CreditController');
 const roleController = require('./controllers/RoleController');
-const mailController = require('./controllers/MailController');
+const mailController = require('./services/MailService');
 
 
 app.get('/users', userController.getUser);
