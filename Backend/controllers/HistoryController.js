@@ -29,7 +29,7 @@ exports.getInventoryHistory = async (req, res) => {
             { action: Action.increase_product_stock },
             { action: Action.decrease_product_stock }
         ]
-        let histories = await historyService.getHistories(whereOrClause);
+        let histories = await historyService.getHistories(req, whereOrClause);
         histories.forEach(h => historyService.convertHistory(h))
 
         res.status(200).json(histories);
