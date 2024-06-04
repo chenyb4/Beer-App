@@ -1,4 +1,4 @@
-
+const {Action} = require('../enums/Action')
 const {DataTypes} = require('sequelize');
 module.exports = function (sequelize) {
 
@@ -7,19 +7,19 @@ module.exports = function (sequelize) {
             action: {
                 type: DataTypes.ENUM,
                 values: [
-                    'add_product',
-                    'remove_product',
-                    'change_credit_value',
-                    'change_role',
-                    'add_user',
-                    'remove_user',
-                    'sell_credits',
-                    'undo'
+                    Action.increase_product_stock,
+                    Action.decrease_product_stock,
+                    Action.change_credit_value,
+                    Action.change_role,
+                    Action.enable_user,
+                    Action.disable_user,
+                    Action.sell_credits,
+                    Action.undo,
                 ],
                 allowNull: false,
             },
             description: {
-                type: DataTypes.STRING,
+                type: DataTypes.JSON,
             },
         },
     );
