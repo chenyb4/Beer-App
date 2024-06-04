@@ -1,19 +1,30 @@
 <script>
     import { t } from "$lib/translations/index.js";
+    import CtaButton from "$lib/components/CtaButton.svelte";
+    import PriceTitle from "$lib/components/PriceTitle.svelte";
 
     // Create reactive variables
     let studentNumber = '';
-
-
-    //todo: initial amount of credits and price should be fetched from backend
     let amountOfCredits = 11;
     let price = 10;
 
+    async function fetchDefaultCreditsAndPrice() {
+        const response = await fetch(
+            `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/credits?id=2`
+        );
 
-    //todo:these two values need to be fetched from the backend
-    let creditIncrement=11;
-    let priceIncrement=10;
+        if (response.ok) {
+            let resJson = await response.json();
+            amountOfCredits = resJson.default_amount;
+            price = resJson.price;
+        }
+    }
 
+    fetchDefaultCreditsAndPrice();
+
+    // Initialize these values based on fetched data
+    let creditIncrement = amountOfCredits;
+    let priceIncrement = price;
 
     // Functions to handle increment and decrement
     function incrementCredits() {
@@ -28,14 +39,33 @@
         }
     }
 
+    async function updateCreditsForAUser() {
+        //todo:this call need to be fired when user is possible to be identified.
+        // const response = await fetch(
+        //     `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/user?id=1`,
+        //     {
+        //         method: "PUT",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({
+        //             credits: amountOfCredits,
+        //             language: 0
+        //         })
+        //     }
+        // );
+    }
 
+    function onConfirmButtonClick() {
+        updateCreditsForAUser();
+    }
 </script>
 
 <div>
     <!-- You can use `placeholders` and `modifiers` in your definitions (see docs) -->
-
-    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg">
+    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
         <h2 class="text-4xl font-extrabold dark:text-white mb-8">{$t('credits.title')}</h2>
+
 
         <!-- for the student number field -->
         <div class="mb-5 relative">
@@ -49,9 +79,9 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
             />
-
-
         </div>
+
+
 
         <!-- for the balance field -->
         <label for="quantity-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -89,21 +119,14 @@
             </button>
         </div>
 
+        <PriceTitle
+                captionText={$t('credits.price')}
+                price={price}
+        ></PriceTitle>
 
-
-
-
-        <div class="mt-9 block w-40 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-            <p class="font-normal text-gray-700 dark:text-gray-400">{$t('credits.price')}:</p>
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">€{price}</h5>
-        </div>
-
-        <button
-                type="submit"
-                style="background-color: #009C82;"
-                class="mt-12 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-            {$t('credits.confirm')}
-        </button>
+        <CtaButton
+                captionText={$t('credits.confirm')}
+                onCTAButtonClickFn={onConfirmButtonClick}
+        ></CtaButton>
     </form>
 </div>

@@ -1,5 +1,6 @@
 const historyService = require('../services/HistoryService');
 const {Action} = require("../enums/Action");
+const paginationService = require("../services/PaginationService");
 
 exports.getHistory = async (req, res) => {
     const {id} = req.query;
@@ -12,6 +13,7 @@ exports.getHistory = async (req, res) => {
         } else {
             histories = await historyService.getHistories();
             histories.forEach(h => historyService.convertHistory(h))
+            histories = await paginationService.addPaginationProperties(histories, histories.length, req);
         }
 
         res.status(200).json(histories);

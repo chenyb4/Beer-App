@@ -13,7 +13,7 @@ app.set('view engine', 'pug');
 
 const corsOptions = {
   credentials: true,
-  origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT] // Whitelist the domains you want to allow
+  origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT, "http://localhost:5173"] // Whitelist the domains you want to allow
 };
 
 app.use(logger('dev'));
@@ -29,6 +29,7 @@ const orderController = require('./controllers/OrderController');
 const historyController = require('./controllers/HistoryController');
 const creditController = require('./controllers/CreditController');
 const roleController = require('./controllers/RoleController');
+const mailController = require('./services/MailService');
 
 
 app.get('/users', userController.getUser);
@@ -59,6 +60,8 @@ app.get('/products', productController.getProducts);
 app.post('/products', productController.createProduct);
 app.put('/products', productController.updateProduct);
 app.delete('/products', productController.deleteProduct)
+
+app.post('/mail', mailController.sendmail);
 
 async function authenticate() {
   try {

@@ -5,10 +5,11 @@
     export let type = "text";
     export let ref = null;
     export let inputClass = "";
+    export let labelClass = "";
 </script>
 
 <div class="flex flex-col">
-    <label class="pb-0.5" for={id}>{label}</label>
+    <label class="pb-0.5 {labelClass}" for={id}>{label}</label>
     <input
         class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0 !{inputClass}"
         {id}

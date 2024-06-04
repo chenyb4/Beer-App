@@ -1,6 +1,8 @@
-FROM node:12-alpine3.14
+FROM node:22-alpine3.19
 
+# Install dependencies for skia-canvas
 
+RUN apk update && apk add fontconfig
 # Setting up the work directory
 WORKDIR /usr/src/app
 
@@ -12,3 +14,6 @@ RUN npm install
 
 # Exposing server port
 EXPOSE 8080
+
+# Command to run the application
+CMD ["node", "app.js"]

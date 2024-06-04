@@ -48,7 +48,11 @@ module.exports = function (sequelize) {
             roleId: {
                 type: DataTypes.INTEGER,
                 defaultValue: 1
-            }
+            },
+            qr_identifier: {
+                type: DataTypes.STRING,
+                unique: true
+            },
         },
     );
 

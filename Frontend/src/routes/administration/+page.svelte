@@ -1,9 +1,136 @@
 <script>
-import {t} from "$lib/translations/index.js";
-</script>
+    import {t} from "$lib/translations/index.js";
+    import CtaButton from "$lib/components/CtaButton.svelte";
+    import CreateStudent from "$lib/components/CreateStudent.svelte";
+    import TablePage from "$lib/components/table/TablePage.svelte"
 
-<div>
-    <!-- you can use `placeholders` and `modifiers` in your definitions (see docs) -->
-    <h2>{$t('drinks.title')}</h2>
-    <p>{$t('drinks.text')}</p>
+    let hideCreateUserDialog = true;
+
+    import {
+        Button,
+        Modal,
+        Popover,
+        TableBody,
+        TableBodyRow,
+    } from "flowbite-svelte";
+    import languages from "$lib/service/languages.json"
+    import {dateToString} from "$lib/service/dateToString.js";
+    import {
+        CheckCircleOutline,
+        CloseCircleOutline,
+        QrCodeOutline,
+        TrashBinSolid,
+        UserEditSolid, UserSettingsSolid
+    } from "flowbite-svelte-icons";
+    import {getUsers} from "$lib/service/administration.js";
+    import TableHeader from "$lib/components/table/TableHeader.svelte";
+    import TableCell from "$lib/components/table/TableCell.svelte";
+
+    /** @type {import('./$types').PageData} */
+    export let data;
+    $: users = data.users.data;
+
+    const pages = Math.ceil(data.users.meta.total / data.users.meta.page_size);
+    let currentPage = 1;
+
+    const roles = data.roles.data;
+
+    let modalTitle = "";
+    let modalText = "";
+    let modalOpen = false;
+
+    // Calculate if the user is above 18
+    function isAbove18(dob = new Date()) {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age >= 18;
+    }
+
+    function getRole(role = undefined) {
+        if (role === undefined)
+            return "No role assigned!";
+        return roles[role];
+    }
+
+    function handleResendQR(user = undefined) {
+        if (user === undefined) return;
+        modalOpen = true;
+        modalTitle = "Resending QR code";
+        modalText = "Are you certain to resend and regenerate QR code of " + user.username + "?";
+    }
+
+    async function changeUsers(page = 1, pageSize = 10) {
+        const response = await getUsers(page, pageSize);
+        users = response.data;
+        currentPage = page;
+    }
+
+    const iconStyle = "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
+</script>
+<Modal title={modalTitle} bind:open={modalOpen} autoclose>
+    {modalText}
+    <svelte:fragment slot="footer">
+        <Button on:click={() => alert('Handle "success"')}>Send QR</Button>
+        <Button color="alternative">Cancel</Button>
+    </svelte:fragment>
+</Modal>
+<CreateStudent hideCreateUserDialog={hideCreateUserDialog}/>
+<div class="fixed bottom-12 right-12 z-50">
+    <CtaButton
+            captionText={$t("administration.addUser")}
+            onCTAButtonClickFn={() => hideCreateUserDialog = false}
+    />
 </div>
+<TablePage {pages} {currentPage} changeData={changeUsers} title="Student administration">
+    <TableHeader headerValues={[
+                "Username/ Student number",
+                "Email",
+                "Role",
+                "Above 18",
+                "Preferred language",
+                ""]}/>
+    <TableBody>
+        {#if users.length > 0}
+            {#each users as user}
+                <TableBodyRow>
+                    <TableCell position="first">{user.username}</TableCell>
+                    <TableCell position="middle">{user.email}</TableCell>
+                    <TableCell position="middle">{getRole(user.role)}</TableCell>
+                    <TableCell position="middle">
+                        <div>
+                            {#if isAbove18(user.date_of_birth)}
+                                <CheckCircleOutline id="date_of_birth" class="text-green-600"/>
+                            {:else}
+                                <CloseCircleOutline id="date_of_birth" class="text-red-600"/>
+                            {/if}
+                            <Popover class="text-sm text-light-text dark:text-dark-text z-50"
+                                     triggeredBy="#date_of_birth">{dateToString(user.date_of_birth)}</Popover>
+                        </div>
+                    </TableCell>
+                    <TableCell position="middle">{languages[(user.language)]}</TableCell>
+                    <TableCell position="last">
+                        <div class="flex gap-4">
+                            <Button class="p-0" on:click={() => handleResendQR(user)}>
+                                <QrCodeOutline class={iconStyle}/>
+                            </Button>
+                            <Button class="p-0">
+                                <UserSettingsSolid class={iconStyle}/>
+                            </Button>
+                            <Button class="p-0">
+                                <UserEditSolid class={iconStyle}/>
+                            </Button>
+                            <Button class="p-0">
+                                <TrashBinSolid class={iconStyle}/>
+                            </Button>
+                        </div>
+                    </TableCell>
+                </TableBodyRow>
+            {/each}
+        {/if}
+    </TableBody>
+</TablePage>

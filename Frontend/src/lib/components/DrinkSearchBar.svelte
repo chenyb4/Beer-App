@@ -1,4 +1,6 @@
 <script>
+    // @ts-nocheck
+
     import { t } from "$lib/translations/index.js";
 
     export let drinks;
@@ -35,7 +37,9 @@
 </script>
 
 <div id="searchBar" class="flex flex-col">
-    <label for="inputSearchBar">{$t("drinks.drinkScanner")}</label>
+    <label class="pb-0.5" for="inputSearchBar"
+        >{$t("drinks.drinkScanner")}</label
+    >
     <input
         class="dark:bg-dark-800 border-none rounded-lg"
         type="text"
