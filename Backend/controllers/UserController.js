@@ -6,11 +6,11 @@ exports.getUser = async (req, res) => {
     try {
         if (qr_identifier) {
             let user = await userService.getQRUser(qr_identifier);
-            user = this.convertUser(user)
+            user = userService.convertUser(user)
             res.status(200).json(user);
         } else if (id) {
             let user = await userService.getUser(id);
-            user = this.convertUser(user)
+            user = userService.convertUser(user)
             res.status(200).json(user);
         } else {
             let {users, total} = await userService.getAllUsers(req)
@@ -29,7 +29,7 @@ exports.createUser = async (req, res) => {
 
     try {
         let newUser = await userService.createUser(username, email, password, date_of_birth);
-        newUser = this.convertUser(newUser)
+        newUser = userService.convertUser(newUser)
         res.status(201).json({user: newUser});
     } catch (err) {
         console.error(err);
