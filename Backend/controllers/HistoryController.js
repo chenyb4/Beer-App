@@ -9,7 +9,7 @@ exports.getHistory = async (req, res) => {
             histories = await historyService.getHistory(id);
 
         } else {
-            histories = await historyService.getHistories();
+            histories = await historyService.getHistories(req);
             histories = await paginationService.addPaginationProperties(histories, histories.length, req);
         }
         res.status(200).json(histories);

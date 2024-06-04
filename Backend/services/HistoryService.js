@@ -1,7 +1,10 @@
 const db = require('../database')
+const paginationService = require("./PaginationService");
 
-exports.getHistories = async () => {
-    let histories = await db.History.findAll();
+exports.getHistories = async (req) => {
+    let query = await paginationService.getQuery(req)
+
+    let histories = await db.History.findAll(query);
     histories.forEach(h => convertHistory(h))
     return histories
 };

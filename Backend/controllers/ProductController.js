@@ -9,7 +9,7 @@ exports.getProducts = async (req, res) => {
         if (id) {
             products = await productService.getProduct(id);
         } else {
-            products = await productService.getAllProducts();
+            products = await productService.getAllProducts(req);
             products = await paginationService.addPaginationProperties(products, products.length, req);
 
         }

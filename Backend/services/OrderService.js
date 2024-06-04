@@ -1,7 +1,10 @@
 const db = require('../database')
+const paginationService = require("./PaginationService");
 
-exports.getAllOrders = async () => {
-    return await db.Order.findAll();
+exports.getAllOrders = async (req) => {
+    let query = await paginationService.getQuery(req)
+
+    return await db.Order.findAll(query);
 };
 
 exports.getOrder = async (id) => {

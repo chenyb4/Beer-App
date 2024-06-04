@@ -1,8 +1,11 @@
 const db = require('../database')
+const paginationService = require("./PaginationService");
 
 // Get all products
-exports.getAllProducts = async () => {
-    return await db.Product.findAll();
+exports.getAllProducts = async (req) => {
+    let query = await paginationService.getQuery(req)
+
+    return await db.Product.findAll(query);
 }
 
 // Get one product

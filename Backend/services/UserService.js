@@ -1,10 +1,28 @@
 const db = require('../database')
 const bcrypt = require('bcrypt');
+const {Op} = require("sequelize");
+const paginationService = require("./PaginationService");
 
-exports.getAllUsers = async () => {
-    let users = await db.User.findAll();
-    users.forEach(u => convertUser(u))
-    return users
+exports.getAllUsers = async (req) => {
+    const {username, email, isLegalAge, roleId, language} = req.query
+    let query = await paginationService.getQuery(req)
+    if (!(!username && !email && !isLegalAge && !roleId && !language)) {
+        let queries = {};
+
+        if (username) queries = Object.assign({}, queries, {username: {[Op.substring]: username}});
+        if (email) queries = Object.assign({}, queries, {email: {[Op.substring]: email}});
+        if (isLegalAge) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const legalAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            queries = Object.assign({}, queries, {date_of_birth: {[Op.lte]: legalAgeDate}});
+        }
+        if (roleId) queries = Object.assign({}, queries, {roleId});
+        if (language) queries = Object.assign({}, queries, {language});
+
+        query = Object.assign({}, query, {where: queries});
+    }
+    return await db.User.findAll(query);
 };
 
 exports.getUser = async (id) => {
@@ -13,7 +31,7 @@ exports.getUser = async (id) => {
     }
 
     try {
-        return convertUser(await db.User.findByPk(id));
+        return this.convertUser(await db.User.findByPk(id));
     } catch (err) {
         throw new Error('Failed to get user');
     }
@@ -25,7 +43,7 @@ exports.getQRUser = async (qr_identifier) => {
     }
 
     try {
-        return convertUser(await db.User.findOne({ where: { qr_identifier } }));
+        return this.convertUser(await db.User.findOne({where: {qr_identifier}}));
     } catch (err) {
         throw new Error('Failed to get user');
     }
@@ -37,9 +55,9 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     }
 
     // For creating a student
-    if (!password){
+    if (!password) {
         try {
-            return convertUser(await db.User.create({username, email, date_of_birth}));
+            return this.convertUser(await db.User.create({username, email, date_of_birth}));
         } catch (err) {
             console.error(err);
             throw new Error('Failed to create user');
@@ -49,7 +67,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        return convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth}));
+        return this.convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth}));
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create user');
@@ -68,7 +86,7 @@ exports.updateUser = async (id, username, email, credits, date_of_birth, languag
                 email,
                 credits,
                 date_of_birth,
-                language: convertLanguage(language)
+                language: this.convertLanguage(language)
             },
             {
                 where: {
@@ -92,7 +110,7 @@ exports.deleteUser = async (id) => {
 };
 
 exports.createUserIdentifier = async (id, baseCase = 0) => {
-    try{
+    try {
         const qr_identifier = await hashValue((Date.now()).toString())
         await db.User.update(
             {
@@ -107,7 +125,7 @@ exports.createUserIdentifier = async (id, baseCase = 0) => {
 
         return this.getUser(id);
     } catch (error) {
-        if(baseCase < 1) {
+        if (baseCase < 1) {
             return await this.createUserIdentifier(id, baseCase + 1);
         } else {
             console.error(error)
@@ -120,12 +138,12 @@ async function hashValue(value) {
     return await bcrypt.hash(value, 10);
 }
 
-function convertUser(user) {
-    user.language = convertLanguage(user.language)
+exports.convertUser = (user) => {
+    user.language = this.convertLanguage(user.language)
     return user
 }
 
-function convertLanguage(language) {
+exports.convertLanguage = (language) => {
     const languages = db.User.getAttributes().language.values;
     if (isNaN(language)) {
         return languages.indexOf(language)
