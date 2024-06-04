@@ -44,6 +44,7 @@ app.put('/orders/products', orderController.addProductToOrder)
 app.delete('/orders', orderController.deleteOrder);
 
 app.get('/histories', historyController.getHistory);
+app.get('/histories/inventory', historyController.getInventoryHistory);
 app.post('/histories/undo', historyController.undo);
 app.post('/histories', historyController.createHistory);
 app.put('/histories', historyController.updateHistory);
