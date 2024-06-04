@@ -37,9 +37,8 @@ exports.getUser = async (id) => {
     if (!id) {
         throw new Error('Missing required fields');
     }
-
     try {
-        return this.convertUser(await db.User.findByPk(id));
+        return await db.User.findByPk(id);
     } catch (err) {
         throw new Error('Failed to get user');
     }
@@ -51,7 +50,7 @@ exports.getQRUser = async (qr_identifier) => {
     }
 
     try {
-        return this.convertUser(await db.User.findOne({where: {qr_identifier}}));
+        return await db.User.findOne({ where: { qr_identifier } });
     } catch (err) {
         throw new Error('Failed to get user');
     }
@@ -65,7 +64,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     // For creating a student
     if (!password) {
         try {
-            return this.convertUser(await db.User.create({username, email, date_of_birth}));
+            return await db.User.create({username, email, date_of_birth});
         } catch (err) {
             console.error(err);
             throw new Error('Failed to create user');
@@ -75,7 +74,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        return this.convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth}));
+        return await db.User.create({username, email, password: hashedPassword, date_of_birth});
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create user');

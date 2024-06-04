@@ -6,9 +6,11 @@ exports.getUser = async (req, res) => {
     try {
         if (qr_identifier) {
             let user = await userService.getQRUser(qr_identifier);
+            user = this.convertUser(user)
             res.status(200).json(user);
         } else if (id) {
             let user = await userService.getUser(id);
+            user = this.convertUser(user)
             res.status(200).json(user);
         } else {
             let {users, total} = await userService.getAllUsers(req)
@@ -26,7 +28,8 @@ exports.createUser = async (req, res) => {
     const {username, email, password, date_of_birth} = req.body;
 
     try {
-        const newUser = await userService.createUser(username, email, password, date_of_birth);
+        let newUser = await userService.createUser(username, email, password, date_of_birth);
+        newUser = this.convertUser(newUser)
         res.status(201).json({user: newUser});
     } catch (err) {
         console.error(err);
@@ -36,13 +39,14 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const { id } = req.query;
-    const { isDisabled, username, email, credits, date_of_birth, language, roleId } = req.body;
-
+    let { isDisabled, username, email, credits, date_of_birth, language, roleId } = req.body;
+    if (language) language = userService.convertLanguage(language);
     try {
-        const updatedUser = await userService.updateUser({id, isDisabled, username, email, credits, date_of_birth, language, roleId});
+        let updatedUser = await userService.updateUser({id, isDisabled, username, email, credits, date_of_birth, language, roleId});
         if (!updatedUser) {
             return res.status(404).json({message: 'User not found'});
         }
+        updatedUser = userService.convertUser(updatedUser)
         res.status(200).json(updatedUser);
     } catch (err) {
         console.error(err);
