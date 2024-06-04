@@ -31,7 +31,6 @@ exports.createProduct = async (req, res) => {
         console.error(err);
         res.status(400).json({message: 'Bad request'});
     }
-
 };
 
 exports.updateProduct = async (req, res) => {
