@@ -1,7 +1,9 @@
 const db = require('../database')
 
+const creditId = 1;
+
 exports.getCredit = async () => {
-    return await db.Credit.findOne();
+    return await db.Credit.findByPk(creditId);
 };
 
 exports.updateCredit = async (default_amount, price) => {
@@ -13,7 +15,6 @@ exports.updateCredit = async (default_amount, price) => {
     if(!credit) {
         return await this.createCredit(default_amount, price)
     } else {
-        let ids = [1,100];
         try {
             return await db.Credit.update(
                 {
@@ -22,7 +23,7 @@ exports.updateCredit = async (default_amount, price) => {
                 },
                 {
                     where: {
-                        id: ids
+                        id: creditId
                     }
                 }
             );
@@ -42,7 +43,7 @@ exports.createCredit = async (default_amount, price) => {
     }
 
     try {
-        return await db.Credit.create({default_amount, price});
+        return await db.Credit.create({id: creditId, default_amount, price});
     } catch (err) {
         console.error(err);
         throw new Error('No credit data available. Creating new Credit => Failed to create credit');
