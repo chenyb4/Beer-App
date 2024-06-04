@@ -1,5 +1,7 @@
 const db = require('../database')
 const bcrypt = require('bcrypt');
+const historyService = require("./HistoryService");
+const {Action} = require('../enums/Action')
 
 exports.getAllUsers = async () => {
     let users = await db.User.findAll();
@@ -56,26 +58,33 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     }
 };
 
-exports.updateUser = async (id, username, email, credits, date_of_birth, language) => {
-    if (!id || (!username && !email && !credits && !date_of_birth && !language)) {
+exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_birth, language, roleId}) => {
+    if (!id || (!isDisabled && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
         throw new Error('Missing required fields or no update data provided');
     }
+    if (language) language = convertLanguage(language);
+
 
     try {
-        return await db.User.update(
+        const oldUser = await this.getUser(id);
+        await db.User.update(   // Update User
             {
+                isDisabled,
                 username,
                 email,
                 credits,
                 date_of_birth,
-                language: convertLanguage(language)
+                language,
+                roleId
             },
             {
-                where: {
-                    id,
-                },
+                where: { id },
             },
         );
+
+        const newUser = await this.getUser(id);
+        await createHistoryEntryIfNecessary(oldUser, newUser);
+        return newUser;
     } catch (err) {
         console.error(err);
         throw new Error('Failed to update user with id: ' + id);
@@ -131,4 +140,29 @@ function convertLanguage(language) {
         return languages.indexOf(language)
     }
     return languages[language];
+}
+
+const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
+    const dummyUserId = 1   // The dummy user always has id number 1 -- will be changed
+
+    if (oldUser.roleId !== newUser.roleId) {
+        await historyService.createHistory(
+            Action.change_role,
+            {
+                user_id: newUser.id,
+                old_role_id: oldUser.roleId,
+                new_role_id: newUser.roleId
+            },
+            dummyUserId
+        );
+    }
+
+    if (oldUser.isDisabled !== newUser.isDisabled) {
+        const actionId = newUser.isDisabled ? Action.disable_user : Action.enable_user;
+        await historyService.createHistory(
+            actionId,
+            { user_id: newUser.id },
+            dummyUserId
+        );
+    }
 }

@@ -29,7 +29,7 @@ const orderController = require('./controllers/OrderController');
 const historyController = require('./controllers/HistoryController');
 const creditController = require('./controllers/CreditController');
 const roleController = require('./controllers/RoleController');
-const mailController = require('./controllers/MailController');
+const mailController = require('./services/MailService');
 
 
 app.get('/users', userController.getUser);
@@ -43,6 +43,7 @@ app.put('/orders', orderController.updateOrder);
 app.delete('/orders', orderController.deleteOrder);
 
 app.get('/histories', historyController.getHistory);
+app.post('/histories/undo', historyController.undo);
 app.post('/histories', historyController.createHistory);
 app.put('/histories', historyController.updateHistory);
 app.delete('/histories', historyController.deleteHistory);
@@ -89,6 +90,45 @@ async function syncForce() {
   }
 }
 
+async function loadDummyData() {
+  try {
+    await db.Role.bulkCreate([
+      {
+        name: 'member',
+        discount: 1.5,
+      },
+      {
+        name: 'student',
+        discount: 1
+      }
+    ]);
+    await db.User.create({
+      username: "dummy",
+      email: "dummy@dummy.nl",
+      password: "password",
+      date_of_birth: "2024-05-23 13:03:32.289",
+      roleId: 1
+    });
+    await db.Product.create({
+      name: 'beer',
+      price_in_credits: 1,
+      amount_in_stock: 24,
+      EAN: '12345678910'
+    })
+    await db.Order.create({
+      amount_of_credits: 4
+    })
+    await db.Credit.create({
+      default_amount: 10,
+      price: 11
+    })
+  } catch (err) {
+    console.error(err);
+    throw new Error('Failed to create dummy data');
+  }
+}
+
+
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   next(createError(404));
@@ -114,6 +154,7 @@ app.get('/', async (req, res) => {
 
 app.get('/force', async (req, res) => {
   await syncForce()
+  await loadDummyData()
   res.send('Forced!')
 })
 

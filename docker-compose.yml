@@ -14,6 +14,14 @@ services:
       FEURL: ${FEURL}
       FEPORT: ${FEPORT}
       DOCKERFEURL: ${DOCKERFEURL}
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SECURE: ${SMTP_SECURE}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_TLS_REJECT_UNAUTHORIZED: ${SMTP_TLS_REJECT_UNAUTHORIZED}
+      EMAIL_FROM: ${EMAIL_FROM}
     ports:
       - ${APIPORT}:${APIPORT}
     command: npm run start

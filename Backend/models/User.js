@@ -41,6 +41,14 @@ module.exports = function (sequelize) {
                 defaultValue: 'english',
                 allowNull: false,
             },
+            isDisabled: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
+            roleId: {
+                type: DataTypes.INTEGER,
+                defaultValue: 1
+            },
             qr_identifier: {
                 type: DataTypes.STRING,
                 unique: true
