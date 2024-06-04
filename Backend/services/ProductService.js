@@ -1,4 +1,7 @@
 const db = require('../database')
+const historyService = require("./HistoryService");
+const {Action} = require('../enums/Action')
+
 
 // Get all products
 exports.getAllProducts = async () => {
@@ -38,7 +41,8 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
     }
 
     try {
-        return await db.Product.update(
+        const oldProduct = await this.getProduct(id);
+        await db.Product.update(
             {
                 name,
                 price_in_credits,
@@ -51,6 +55,15 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
                 },
             },
         );
+        const updatedProduct = await this.getProduct(id);
+        const dummyUserId = 1  // The dummy user always has id number 1 -- will be changed
+        if (oldProduct.amount_in_stock < updatedProduct.amount_in_stock) {
+            await historyService.createHistory(Action.increase_product_stock, {"product_id": id}, dummyUserId)
+        } else if (oldProduct.amount_in_stock > updatedProduct.amount_in_stock) {
+            await historyService.createHistory(Action.decrease_product_stock, {"product_id": id}, dummyUserId)
+        }
+
+        return updatedProduct;
     } catch (err) {
         console.error(err);
         throw new Error('Failed to update product with id: ' + id);
