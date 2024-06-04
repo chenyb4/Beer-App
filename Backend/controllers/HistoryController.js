@@ -11,7 +11,7 @@ exports.getHistory = async (req, res) => {
             histories = historyService.convertHistory(histories)
 
         } else {
-            histories = await historyService.getHistories();
+            histories = await historyService.getHistories(req);
             histories.forEach(h => historyService.convertHistory(h))
             histories = await paginationService.addPaginationProperties(histories, histories.length, req);
         }

@@ -1,19 +1,20 @@
 const db = require('../database')
+const paginationService = require("./PaginationService");
 const productService = require("./ProductService");
 const userService = require("./UserService");
 const {Action} = require('../enums/Action')
-const { Op } = require('sequelize');
+const {Op} = require('sequelize');
 
-exports.getHistories = async (whereOrClause) => {
-    if (whereOrClause) {
-        return await db.History.findAll({
-            where: {
-                [Op.or]: whereOrClause
-            }
-        })
-    } else {
-        return await db.History.findAll()
-    }
+exports.getHistories = async (req, whereOrClause) => {
+    let query = await paginationService.getQuery(req)
+
+    if (whereOrClause) query = Object.assign({}, query, {
+        where: {
+            [Op.or]: whereOrClause
+        }
+    })
+
+    return await db.History.findAll(query);
 };
 
 exports.getHistory = async (id) => {
@@ -120,7 +121,7 @@ exports.convertHistory = function convertHistory(history) {
 
 exports.convertAction = function convertAction(action) {
     const actions = db.History.getAttributes().action.values;
-    if(isNaN(action)) {
+    if (isNaN(action)) {
         return actions.indexOf(action)
     }
     return actions[action];
