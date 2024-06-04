@@ -4,18 +4,15 @@ const historyService = require("./HistoryService");
 const {Action} = require('../enums/Action')
 
 exports.getAllUsers = async () => {
-    let users = await db.User.findAll();
-    users.forEach(u => convertUser(u))
-    return users
+    return await db.User.findAll();
 };
 
 exports.getUser = async (id) => {
     if (!id) {
         throw new Error('Missing required fields');
     }
-
     try {
-        return convertUser(await db.User.findByPk(id));
+        return await db.User.findByPk(id);
     } catch (err) {
         throw new Error('Failed to get user');
     }
@@ -27,7 +24,7 @@ exports.getQRUser = async (qr_identifier) => {
     }
 
     try {
-        return convertUser(await db.User.findOne({ where: { qr_identifier } }));
+        return await db.User.findOne({ where: { qr_identifier } });
     } catch (err) {
         throw new Error('Failed to get user');
     }
@@ -41,7 +38,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     // For creating a student
     if (!password){
         try {
-            return convertUser(await db.User.create({username, email, date_of_birth}));
+            return await db.User.create({username, email, date_of_birth});
         } catch (err) {
             console.error(err);
             throw new Error('Failed to create user');
@@ -51,7 +48,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        return convertUser(await db.User.create({username, email, password: hashedPassword, date_of_birth}));
+        return await db.User.create({username, email, password: hashedPassword, date_of_birth});
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create user');
@@ -62,8 +59,6 @@ exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_b
     if (!id || (!isDisabled && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
         throw new Error('Missing required fields or no update data provided');
     }
-    if (language) language = convertLanguage(language);
-
 
     try {
         const oldUser = await this.getUser(id);
@@ -129,12 +124,12 @@ async function hashValue(value) {
     return await bcrypt.hash(value, 10);
 }
 
-function convertUser(user) {
-    user.language = convertLanguage(user.language)
+exports.convertUser = (user) => {
+    user.language = this.convertLanguage(user.language)
     return user
 }
 
-function convertLanguage(language) {
+exports.convertLanguage = (language) => {
     const languages = db.User.getAttributes().language.values;
     if (isNaN(language)) {
         return languages.indexOf(language)

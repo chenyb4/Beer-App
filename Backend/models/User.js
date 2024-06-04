@@ -1,4 +1,5 @@
 const {DataTypes} = require('sequelize');
+const {Language} = require('../enums/Language')
 
 module.exports = function (sequelize) {
     const User =  sequelize.define('user',
@@ -35,10 +36,10 @@ module.exports = function (sequelize) {
             language: {
                 type: DataTypes.ENUM,
                 values:[
-                    'english',
-                    'dutch'
+                    Language.english,
+                    Language.dutch
                 ],
-                defaultValue: 'english',
+                defaultValue: Language.english,
                 allowNull: false,
             },
             isDisabled: {
