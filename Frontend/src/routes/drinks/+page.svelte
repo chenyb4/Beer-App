@@ -39,6 +39,11 @@
     clearFields();
   }
 
+  function removeProductFromCart(product) {
+    selectedProducts = selectedProducts.filter(p => p.id !== product.id);
+  }
+  
+
   function clearFields() {
     identifier = "";
     identifiedUser = "";
@@ -112,10 +117,10 @@
                 <div
                   class="col-span-1 flex justify-center text-center items-center"
                 >
-                  <svelte:component
+                 <button on:click={removeProductFromCart(product)}><svelte:component
                     this={TrashBinSolid}
                     class="text-light-p_foreground h-full"
-                  />
+                  /></button>
                 </div>
               </div>
             {/each}
