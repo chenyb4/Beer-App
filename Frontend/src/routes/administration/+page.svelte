@@ -2,10 +2,8 @@
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
     import CreateStudent from "$lib/components/CreateStudent.svelte";
+    import {handleSendMailResponse} from "$lib/service/QR.js";
     import TablePage from "$lib/components/table/TablePage.svelte"
-
-
-
     import {
         Button,
         Modal,
@@ -25,6 +23,8 @@
     import {deleteUser, getUsers} from "$lib/service/administration.js";
     import TableHeader from "$lib/components/table/TableHeader.svelte";
     import TableCell from "$lib/components/table/TableCell.svelte";
+    import SendQRModal from "$lib/components/ResponseModal.svelte";
+    import {getQRandSendMail} from "$lib/service/emailService.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -40,6 +40,9 @@
     let modalOpen = false;
     let modalTextOk = "Yes";
     let modalFunction = async function(){};
+
+    let openSentQRModal = false;
+    let textSentQRModal = "";
 
     // Calculate if the user is above 18
     function isAbove18(dob = new Date()) {
@@ -65,6 +68,12 @@
         modalTitle = "Resending QR code";
         modalText = "Are you certain to resend and regenerate QR code of " + user.username + "?";
         modalTextOk = "Resend QR";
+        modalFunction = async function(){
+            let responseQR = await getQRandSendMail(user.id);
+            textSentQRModal = handleSendMailResponse(responseQR.sentMail, user, responseQR.qr);
+            openSentQRModal = false;
+            openSentQRModal = true;
+        };
     }
 
     function handleDeleteUser(user = undefined){
@@ -99,6 +108,7 @@
     }
 </script>
 <CreateStudent openCreateUserDialog={openCreateUserDialog} onClose={changeUsers}/>
+<SendQRModal showModal={openSentQRModal} modalText={textSentQRModal} modalTitle={$t("administration.qrRecreation")} />
 <Modal title={modalTitle} bind:open={modalOpen} autoclose>
     {modalText}
     <svelte:fragment slot="footer">

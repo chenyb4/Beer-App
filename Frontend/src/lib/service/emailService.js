@@ -7,7 +7,6 @@ export async function getQRandSendMail(userID) {
             },
             method: "POST",
         });
-
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

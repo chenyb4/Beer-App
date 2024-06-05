@@ -10,5 +10,7 @@
   "emailText": "Email",
   "date_of_birthText": "Date of birth",
   "noMailSent": "Sending mail has failed!\nQR code wil download now. \nSent this QR to the following email: ",
-  "sentMail": "Mail has been send for student: "
+  "mailSent": "Mail has been send for student: ",
+  "userCreated": "An user is created!",
+  "qrRecreation": "The QR code has been recreated!"
 }
