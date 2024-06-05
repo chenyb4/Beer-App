@@ -25,6 +25,7 @@
     import TableCell from "$lib/components/table/TableCell.svelte";
     import SendQRModal from "$lib/components/ResponseModal.svelte";
     import {getQRandSendMail} from "$lib/service/emailService.js";
+    import UpdateStudentRoleModal from "$lib/components/UpdateStudentRoleModal.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -56,10 +57,10 @@
         return age >= 18;
     }
 
-    function getRole(role = undefined) {
+    function getRole(role = 0) {
         if (role === undefined)
             return "No role assigned!";
-        return roles[role];
+        return roles[role].name;
     }
 
     function handleResendQR(user = undefined) {
@@ -106,8 +107,17 @@
         openCreateUserDialog = false;
         openCreateUserDialog = true;
     }
+
+    let openUpdateStudentRoleModal = false;
+    let selectedUser = undefined;
+    function handleChangeUser(user = undefined){
+        openUpdateStudentRoleModal = false;
+        openUpdateStudentRoleModal = true;
+        selectedUser = user;
+    }
 </script>
 <CreateStudent openCreateUserDialog={openCreateUserDialog} onClose={changeUsers}/>
+<UpdateStudentRoleModal roles={roles} modalOpen={openUpdateStudentRoleModal} user={selectedUser} onClose={changeUsers}/>
 <SendQRModal showModal={openSentQRModal} modalText={textSentQRModal} modalTitle={$t("administration.qrRecreation")} />
 <Modal title={modalTitle} bind:open={modalOpen} autoclose>
     {modalText}
@@ -154,8 +164,8 @@
                             <Button class="p-0" on:click={() => handleResendQR(user)}>
                                 <QrCodeOutline class={iconStyle}/>
                             </Button>
-                            <Button class="p-0">
-                                <UserSettingsSolid class={iconStyle}/>
+                            <Button class="p-0" on:click={() => handleChangeUser(user)}>
+                                <UserSettingsSolid class={iconStyle} />
                             </Button>
                             <Button class="p-0">
                                 <UserEditSolid class={iconStyle}/>
