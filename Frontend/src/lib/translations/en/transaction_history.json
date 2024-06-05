@@ -1,4 +1,7 @@
 {
-  "title": "This is a credits English title",
-  "text": "Credits!"
+  "title": "TRANSACTION HISTORY",
+  "studentNumber": "Student Number",
+  "credits": "Credits",
+  "barkeeper": "Barkeeper",
+  "date": "Date"
 }
