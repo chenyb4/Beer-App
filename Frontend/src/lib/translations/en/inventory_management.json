@@ -1,4 +1,9 @@
 {
   "title": "INVENTORY MANAGEMENT",
-  "text": "Credits!"
+  "name": "Name",
+  "credits": "Number of credits",
+  "stock": "Stock",
+  "ean": "EAN-number",
+  "addProduct": "Add a new type of product",
+  "helper": "You forgot these input fields"
 }
