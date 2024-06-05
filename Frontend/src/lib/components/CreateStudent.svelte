@@ -1,12 +1,14 @@
 <script>
-    import {Alert, Drawer, Input, Label, Modal} from "flowbite-svelte";
+    import {Alert, Input, Label, Modal} from "flowbite-svelte";
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
     import {createUser} from "$lib/service/administration";
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
 
-    export let hideCreateUserDialog = true;
+    export let openCreateUserDialog = false;
+
+    export let onClose = async function(){};
 
     let studentNumber = "";
     let email = "";
@@ -41,7 +43,7 @@
             return;
         }
 
-        function downloadBase64File(base64, fileName) {
+        function downloadBase64File(base64 = "", fileName = "QR.png") {
             const link = document.createElement('a');
             link.href = base64;
             link.download = fileName;
@@ -53,7 +55,7 @@
         const response = await createUser(studentNumber, email, date_of_birth)
         if (response){
             let responseQR = await getQRandSendMail(response.user.id);
-            hideCreateUserDialog = true;
+            openCreateUserDialog = false;
             showCreatedUserModal = true;
             if (!responseQR.sentMail){
                 downloadBase64File(responseQR.qr, 'QR code of ' + response.user.username + '.png');
@@ -64,7 +66,7 @@
         } else {
             alert("User cannot be created");
         }
-
+        await onClose();
     }
 </script>
 <Modal title="Created user!" bind:open={showCreatedUserModal} autoclose>
@@ -72,8 +74,7 @@
         {@html createdUserModalText}
     </p>
 </Modal>
-<Drawer class="absolute w-4/5 md:w-3/5 left-0 right-0 m-auto mt-10 mb-10 rounded-2xl"
-        bind:hidden={hideCreateUserDialog}>
+<Modal bind:open={openCreateUserDialog} autoclose>
     <span class="text-3xl text-light-text dark:text-dark-text">{$t("administration.addUser")}</span>
     {#if !hideHelper}
         <Alert class="bg-light-s_bg dark:bg-dark-s_bg mt-2 border-1" color="red" dismissable transition={fly}>
@@ -94,4 +95,4 @@
         <Input bind:value={date_of_birth} type="date" id="date_of_birth-input" size="lg"/>
     </div>
     <CtaButton captionText={$t("administration.addUser")} onCTAButtonClickFn={handleSubmit}/>
-</Drawer>
+</Modal>

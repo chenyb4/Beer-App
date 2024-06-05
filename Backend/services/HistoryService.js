@@ -2,10 +2,18 @@ const db = require('../database')
 const productService = require("./ProductService");
 const userService = require("./UserService");
 const {Action} = require('../enums/Action')
+const { Op } = require('sequelize');
 
-exports.getHistories = async () => {
-    let histories = await db.History.findAll();
-    return histories
+exports.getHistories = async (whereOrClause) => {
+    if (whereOrClause) {
+        return await db.History.findAll({
+            where: {
+                [Op.or]: whereOrClause
+            }
+        })
+    } else {
+        return await db.History.findAll()
+    }
 };
 
 exports.getHistory = async (id) => {

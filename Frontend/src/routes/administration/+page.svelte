@@ -4,7 +4,7 @@
     import CreateStudent from "$lib/components/CreateStudent.svelte";
     import TablePage from "$lib/components/table/TablePage.svelte"
 
-    let hideCreateUserDialog = true;
+
 
     import {
         Button,
@@ -22,7 +22,7 @@
         TrashBinSolid,
         UserEditSolid, UserSettingsSolid
     } from "flowbite-svelte-icons";
-    import {getUsers} from "$lib/service/administration.js";
+    import {deleteUser, getUsers} from "$lib/service/administration.js";
     import TableHeader from "$lib/components/table/TableHeader.svelte";
     import TableCell from "$lib/components/table/TableCell.svelte";
 
@@ -38,6 +38,8 @@
     let modalTitle = "";
     let modalText = "";
     let modalOpen = false;
+    let modalTextOk = "Yes";
+    let modalFunction = async function(){};
 
     // Calculate if the user is above 18
     function isAbove18(dob = new Date()) {
@@ -62,6 +64,23 @@
         modalOpen = true;
         modalTitle = "Resending QR code";
         modalText = "Are you certain to resend and regenerate QR code of " + user.username + "?";
+        modalTextOk = "Resend QR";
+    }
+
+    function handleDeleteUser(user = undefined){
+        if (user === undefined) {
+            modalOpen = true;
+            modalTitle = "User not found!";
+            modalText = "";
+        } else {
+            modalOpen = true;
+            modalTitle = "Deleting user";
+            modalText = "Are you sure to delete the user?";
+            modalFunction = async function(){
+                await deleteUser(user);
+                await changeUsers();
+            };
+        }
     }
 
     async function changeUsers(page = 1, pageSize = 10) {
@@ -71,19 +90,26 @@
     }
 
     const iconStyle = "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
+
+    let openCreateUserDialog = false;
+
+    function handleOpenCreateUserDialog(){
+        openCreateUserDialog = false;
+        openCreateUserDialog = true;
+    }
 </script>
+<CreateStudent openCreateUserDialog={openCreateUserDialog} onClose={changeUsers}/>
 <Modal title={modalTitle} bind:open={modalOpen} autoclose>
     {modalText}
     <svelte:fragment slot="footer">
-        <Button on:click={() => alert('Handle "success"')}>Send QR</Button>
+        <Button on:click={modalFunction}>{modalTextOk}</Button>
         <Button color="alternative">Cancel</Button>
     </svelte:fragment>
 </Modal>
-<CreateStudent hideCreateUserDialog={hideCreateUserDialog}/>
 <div class="fixed bottom-12 right-12 z-50">
     <CtaButton
             captionText={$t("administration.addUser")}
-            onCTAButtonClickFn={() => hideCreateUserDialog = false}
+            onCTAButtonClickFn={handleOpenCreateUserDialog}
     />
 </div>
 <TablePage {pages} {currentPage} changeData={changeUsers} title="Student administration">
@@ -124,7 +150,7 @@
                             <Button class="p-0">
                                 <UserEditSolid class={iconStyle}/>
                             </Button>
-                            <Button class="p-0">
+                            <Button class="p-0" on:click={() => handleDeleteUser(user)}>
                                 <TrashBinSolid class={iconStyle}/>
                             </Button>
                         </div>

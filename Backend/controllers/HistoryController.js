@@ -23,9 +23,25 @@ exports.getHistory = async (req, res) => {
     }
 };
 
+exports.getInventoryHistory = async (req, res) => {
+    try {
+        const whereOrClause = [
+            { action: Action.increase_product_stock },
+            { action: Action.decrease_product_stock }
+        ]
+        let histories = await historyService.getHistories(whereOrClause);
+        histories.forEach(h => historyService.convertHistory(h))
+
+        res.status(200).json(histories);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Service error' });
+    }
+};
+
 exports.createHistory = async (req, res) => {
     let { action, description, userId } = req.body;
-    if(action) {
+    if (action !== undefined) {
         action = historyService.convertAction(action)
     }
     try {
@@ -58,7 +74,7 @@ exports.undo = async (req, res) => {
 exports.updateHistory = async (req, res) => {
     const { id } = req.query;
     let { action, description, userId} = req.body;
-    if(action) {
+    if (action !== undefined) {
         action = historyService.convertAction(action)
     }
     try {
