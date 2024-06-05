@@ -1,5 +1,6 @@
 <script>
-  import TableCell from "$lib/components/table/TableCell.svelte";
+  import CtaButton from "$lib/components/CtaButton.svelte";
+import TableCell from "$lib/components/table/TableCell.svelte";
 import TableHeader from "$lib/components/table/TableHeader.svelte";
   import TablePage from "$lib/components/table/TablePage.svelte";
 import {t} from "$lib/translations/index.js";
@@ -22,5 +23,8 @@ import {t} from "$lib/translations/index.js";
                 <TableCell position="middle">24</TableCell>
                 <TableCell position="last">+</TableCell>
             </TableBodyRow>
-            </TableBody></TablePage>
+            </TableBody>
+            <div class="flex">
+            <CtaButton captionText="Add new item"></CtaButton></div></TablePage>
+            
 </body>
