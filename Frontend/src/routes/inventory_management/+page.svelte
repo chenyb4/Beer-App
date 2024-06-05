@@ -4,7 +4,7 @@ import TableCell from "$lib/components/table/TableCell.svelte";
 import TableHeader from "$lib/components/table/TableHeader.svelte";
 import TablePage from "$lib/components/table/TablePage.svelte";
 import CreateProduct from "$lib/components/CreateProduct.svelte";
-import { getProducts } from "$lib/service/inventory";
+import { getProducts, updateAmountInStock } from "$lib/service/inventory";
 import {t} from "$lib/translations/index.js";
 import { TableBody, TableBodyRow } from "flowbite-svelte";
 import { CirclePlusSolid } from "flowbite-svelte-icons";
@@ -29,6 +29,7 @@ import { CirclePlusSolid } from "flowbite-svelte-icons";
     }
 
 function handleOpenCreateProductDialog(){
+        updateAmountInStock(100, 1);
         openCreateProductDialog = false;
         openCreateProductDialog = true;
 }

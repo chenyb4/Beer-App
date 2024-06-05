@@ -48,6 +48,7 @@
         }
         await onClose();
     }
+
 </script>
 
 <Modal bind:open={openCreateProductDialog}>

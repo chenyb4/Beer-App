@@ -1,3 +1,5 @@
+import { t } from "$lib/translations";
+
 let env = import.meta.env;
 
 export async function loadProducts() {
@@ -51,3 +53,22 @@ export async function createProduct(name, price_in_credits, amount_in_stock, EAN
     console.error("Failed to create product", error);
   }
 }
+  export async function updateAmountInStock(amount_in_stock, productID) {
+    try {
+      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products/?id=${productID}`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "PUT",
+        body: JSON.stringify({amount_in_stock})
+    });
+  
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    console.log(await response.json());
+    } catch (error) {
+      console.error("Failed to edit product", error);
+    }
+  }
+
