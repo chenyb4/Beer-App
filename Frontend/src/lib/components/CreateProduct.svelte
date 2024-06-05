@@ -2,11 +2,8 @@
     import {Alert, Input, Label, Modal} from "flowbite-svelte";
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
-    import {createUser} from "$lib/service/administration";
-    import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
-    import SendQRModal from "$lib/components/ResponseModal.svelte";
-    import {handleSendMailResponse} from "$lib/service/QR.js";
+    import { createProduct } from "$lib/service/inventory";
 
     export let openCreateProductDialog = false;
 
@@ -16,7 +13,7 @@
     let price_in_credits = 0;
     let amount_in_stock = 0;
     let EAN = "";
-    let helper = "",
+    let helper = "";
     $: hideHelper = true;
 
 
@@ -31,7 +28,7 @@
         if (amount_in_stock.length === 0) {
             missingFields.push($t("inventory_management.amount_in_stock"));
         }
-        if (ean.length === 0) {
+        if (EAN.length === 0) {
             missingFields.push($t("inventory_management.ean"));
         }
         if (missingFields.length > 0) {
@@ -43,7 +40,7 @@
             return;
         }
 
-        const response = await createProduct(name, price_in_credits, amount_in_stock, ean)
+        const response = await createProduct(name, price_in_credits, amount_in_stock, EAN)
         if (response){
             openCreateProductDialog = false;
         } else {
@@ -70,11 +67,11 @@
     </div>
     <div class="mb-6">
         <Label for="stock-input" class="block mb-2">{$t("inventory_management.stock")}</Label>
-        <Input type="number" bind:value={amount_in_stock} type="date" id="stock-input" size="lg"/>
+        <Input type="number" bind:value={amount_in_stock}  id="stock-input" size="lg"/>
     </div>
     <div class="mb-6">
         <Label for="ean-input" class="block mb-2">{$t("inventory_management.ean")}</Label>
-        <Input bind:value={EAN} type="date" id="ean-input" size="lg"/>
+        <Input bind:value={EAN} id="ean-input" size="lg"/>
     </div>
     <CtaButton captionText={$t("inventory_management.addProduct")} onCTAButtonClickFn={handleSubmit}/>
 </Modal>

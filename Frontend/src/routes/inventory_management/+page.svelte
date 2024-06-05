@@ -3,14 +3,15 @@ import CtaButton from "$lib/components/CtaButton.svelte";
 import TableCell from "$lib/components/table/TableCell.svelte";
 import TableHeader from "$lib/components/table/TableHeader.svelte";
 import TablePage from "$lib/components/table/TablePage.svelte";
-  import { getProducts } from "$lib/service/inventory";
+import CreateProduct from "$lib/components/CreateProduct.svelte";
+import { getProducts } from "$lib/service/inventory";
 import {t} from "$lib/translations/index.js";
 import { TableBody, TableBodyRow } from "flowbite-svelte";
 import { CirclePlusSolid } from "flowbite-svelte-icons";
-import CreateProduct from "$lib/components/CreateProduct.svelte";
 
 
  /** @type {import('./$types').PageData} */
+  // @ts-ignore
   export let data;
   $: products = data.products.data;
 
@@ -28,7 +29,6 @@ import CreateProduct from "$lib/components/CreateProduct.svelte";
     }
 
 function handleOpenCreateProductDialog(){
-        console.log("hi");
         openCreateProductDialog = false;
         openCreateProductDialog = true;
 }
