@@ -18,20 +18,20 @@ exports.getAllUsers = async (req) => {
 exports.getQueries = (req) => {
     let {username, email, isLegalAge, roleId, language} = req.query
 
-    if(language) language = this.convertLanguage(language);
+    if(language !== undefined) language = this.convertLanguage(language);
 
     let queries = {};
 
-    if (username) queries = Object.assign({}, queries, {username: {[Op.substring]: username}});
-    if (email) queries = Object.assign({}, queries, {email: {[Op.substring]: email}});
+    if (username !== undefined) queries = Object.assign({}, queries, {username: {[Op.substring]: username}});
+    if (email !== undefined) queries = Object.assign({}, queries, {email: {[Op.substring]: email}});
     if (isLegalAge) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const legalAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
         queries = Object.assign({}, queries, {date_of_birth: {[Op.lte]: legalAgeDate}});
     }
-    if (roleId) queries = Object.assign({}, queries, {roleId});
-    if (language) queries = Object.assign({}, queries, {language});
+    if (roleId !== undefined) queries = Object.assign({}, queries, {roleId});
+    if (language !== undefined) queries = Object.assign({}, queries, {language});
 
     return queries;
 }
