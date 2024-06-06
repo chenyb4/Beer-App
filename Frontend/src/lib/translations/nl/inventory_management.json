@@ -1,4 +1,12 @@
 {
   "title": "VOORRAADBEHEER",
-  "text": "Hallo!"
+  "name": "Naam",
+  "credits": "Aantal credits",
+  "stock": "Voorraad",
+  "minusStock": "Voorraad mag niet kleiner zijn dan nul",
+  "ean": "EAN-nummer",
+  "addProduct": "Voeg een nieuw product toe",
+  "addProductStock": "Voeg voorraad toe aan product",
+  "helper": "De volgende input fields zijn fout",
+  "addProductStockButton": "Voeg voorraad toe"
 }
