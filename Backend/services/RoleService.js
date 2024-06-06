@@ -1,7 +1,11 @@
 const db = require('../database')
+const paginationService = require("./PaginationService");
 
-exports.getRoles = async () => {
-    return await db.Role.findAll();
+exports.getRoles = async (req) => {
+    let query = await paginationService.getQuery(req)
+    const total = await db.Role.count()
+    const roles = await db.Role.findAll(query);
+    return {returnedRoles: roles, total}
 };
 
 exports.getRole = async (id) => {
