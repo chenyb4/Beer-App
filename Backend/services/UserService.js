@@ -16,7 +16,10 @@ exports.getAllUsers = async (req) => {
 };
 
 exports.getQueries = (req) => {
-    const {username, email, isLegalAge, roleId, language} = req.query
+    let {username, email, isLegalAge, roleId, language} = req.query
+
+    language = this.convertLanguage(language);
+
     let queries = {};
 
     if (username) queries = Object.assign({}, queries, {username: {[Op.substring]: username}});
