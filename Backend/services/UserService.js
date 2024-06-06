@@ -18,7 +18,7 @@ exports.getAllUsers = async (req) => {
 exports.getQueries = (req) => {
     let {username, email, isLegalAge, roleId, language} = req.query
 
-    language = this.convertLanguage(language);
+    if(language) language = this.convertLanguage(language);
 
     let queries = {};
 
