@@ -17,7 +17,10 @@ module.exports = function (sequelize) {
             },
             amount_in_stock: {
                 type: DataTypes.INTEGER,
-                min: 0,
+                validate: {
+                    min: 0,
+                },
+                defaultValue: 0
             },
             EAN: {
                 type: DataTypes.STRING,
