@@ -11,9 +11,9 @@ exports.getHistory = async (req, res) => {
             histories = historyService.convertHistory(histories)
 
         } else {
-            histories = await historyService.getHistories();
-            histories.forEach(h => historyService.convertHistory(h))
-            histories = await paginationService.addPaginationProperties(histories, histories.length, req);
+            const {returnedHistories, total} = await historyService.getHistories(req);
+            returnedHistories.forEach(h => historyService.convertHistory(h))
+            histories = await paginationService.addPaginationProperties(returnedHistories, total, req);
         }
 
         res.status(200).json(histories);
@@ -29,10 +29,10 @@ exports.getInventoryHistory = async (req, res) => {
             { action: Action.increase_product_stock },
             { action: Action.decrease_product_stock }
         ]
-        let histories = await historyService.getHistories(whereOrClause);
-        histories.forEach(h => historyService.convertHistory(h))
+        let {returnedHistories} = await historyService.getHistories(req, whereOrClause);
+        returnedHistories.forEach(h => historyService.convertHistory(h))
 
-        res.status(200).json(histories);
+        res.status(200).json(returnedHistories);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Service error' });
