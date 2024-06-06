@@ -6,7 +6,7 @@
     export let roles = [{id: 0, name: "No roles assigned!"}];
     export let modalOpen = false;
     export let user = {"roleId":0};
-    let selectedRoleId = user.roleId;
+    export let selectedRoleId = user.roleId;
 
     async function handleChangeRole(){
         if (selectedRoleId === 0){
@@ -17,6 +17,7 @@
         if (!response) alert("Something went wrong");
         await onClose();
     }
+
 
     export let onClose = async function(){};
 </script>
