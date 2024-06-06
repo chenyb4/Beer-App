@@ -83,7 +83,6 @@ export async function updateUser(user, username = user.username, date_of_birth =
             method: "PUT",
             body: JSON.stringify({username, date_of_birth, language, roleId})
         });
-
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
