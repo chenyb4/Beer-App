@@ -40,7 +40,7 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const { id } = req.query;
     let { isDisabled, username, email, credits, date_of_birth, language, roleId } = req.body;
-    if (language) language = userService.convertLanguage(language);
+    if (language !== undefined) language = userService.convertLanguage(language);
     try {
         let updatedUser = await userService.updateUser({id, isDisabled, username, email, credits, date_of_birth, language, roleId});
         if (!updatedUser) {
