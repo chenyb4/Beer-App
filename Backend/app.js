@@ -30,6 +30,8 @@ const historyController = require('./controllers/HistoryController');
 const creditController = require('./controllers/CreditController');
 const roleController = require('./controllers/RoleController');
 const mailController = require('./services/MailService');
+const authController = require("./controllers/AuthController");
+const authService = require("./services/AuthService");
 
 
 app.get('/users', userController.getUser);
@@ -58,12 +60,14 @@ app.post('/roles', roleController.createRole);
 app.put('/roles', roleController.updateRole);
 app.delete('/roles', roleController.deleteRole);
 
-app.get('/products', productController.getProducts);
+app.get('/products', authService.authenticateToken, productController.getProducts);
 app.post('/products', productController.createProduct);
 app.put('/products', productController.updateProduct);
 app.delete('/products', productController.deleteProduct)
 
 app.post('/mail', mailController.sendmail);
+
+app.post('/login', authController.login)
 
 async function authenticate() {
   try {
