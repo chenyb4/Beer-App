@@ -1,10 +1,6 @@
-
 exports.addPaginationProperties = async function (collection, total, request) {
     let page = getPage(request) - 1;
     let pageSize = getPageSize(request, total);
-
-    if (page < 0)
-        page = 0;
 
     if (total === 0 && pageSize === 0) {
         pageSize = 15;
@@ -29,9 +25,14 @@ exports.getQuery = async (request) => {
 }
 
 function getPage(request) {
+    let result = 1
     let {page} = request.query;
-    if (!page) return 0;
-    return Number(page);
+    if (page) {
+        result = Number(page)
+    }
+    if (result < 0)
+        result = 0;
+    return result
 }
 
 function getPageSize(request, total) {
