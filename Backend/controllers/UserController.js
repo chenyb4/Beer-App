@@ -11,9 +11,9 @@ exports.getUser = async (req, res) => {
             let user = await userService.getUser(id);
             res.status(200).json(user);
         } else {
-            let users = await userService.getAllUsers(req)
+            let {users, total} = await userService.getAllUsers(req)
             users.forEach(u => userService.convertUser(u))
-            res.status(200).json(await paginationService.addPaginationProperties(users, users.length, req));
+            res.status(200).json(await paginationService.addPaginationProperties(users, total, req));
         }
 
     } catch (err) {

@@ -3,8 +3,9 @@ const paginationService = require("./PaginationService");
 
 exports.getRoles = async (req) => {
     let query = await paginationService.getQuery(req)
-
-    return await db.Role.findAll(query);
+    const total = await db.Role.count()
+    const roles = await db.Role.findAll(query);
+    return {returnedRoles: roles, total}
 };
 
 exports.getRole = async (id) => {

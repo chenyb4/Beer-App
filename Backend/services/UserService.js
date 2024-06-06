@@ -6,26 +6,32 @@ const historyService = require("./HistoryService");
 const {Action} = require('../enums/Action')
 
 exports.getAllUsers = async (req) => {
-    const {username, email, isLegalAge, roleId, language} = req.query
     let query = await paginationService.getQuery(req)
-    if (!(!username && !email && !isLegalAge && !roleId && !language)) {
-        let queries = {};
-        
-        if (username) queries = Object.assign({}, queries, {username: {[Op.substring]: username}});
-        if (email) queries = Object.assign({}, queries, {email: {[Op.substring]: email}});
-        if (isLegalAge) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const legalAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-            queries = Object.assign({}, queries, {date_of_birth: {[Op.lte]: legalAgeDate}});
-        }
-        if (roleId) queries = Object.assign({}, queries, {roleId});
-        if (language) queries = Object.assign({}, queries, {language});
 
-        query = Object.assign({}, query, {where: queries});
-    }
-    return await db.User.findAll(query);
+    let queries = this.getQueries(req)
+    query = Object.assign({}, query, {where: queries});
+    const users = await db.User.findAll(query)
+    const total = await db.User.count({where: queries})
+    return {users, total};
 };
+
+exports.getQueries = (req) => {
+    const {username, email, isLegalAge, roleId, language} = req.query
+    let queries = {};
+
+    if (username) queries = Object.assign({}, queries, {username: {[Op.substring]: username}});
+    if (email) queries = Object.assign({}, queries, {email: {[Op.substring]: email}});
+    if (isLegalAge) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const legalAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        queries = Object.assign({}, queries, {date_of_birth: {[Op.lte]: legalAgeDate}});
+    }
+    if (roleId) queries = Object.assign({}, queries, {roleId});
+    if (language) queries = Object.assign({}, queries, {language});
+
+    return queries;
+}
 
 exports.getUser = async (id) => {
     if (!id) {
@@ -94,7 +100,7 @@ exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_b
                 roleId
             },
             {
-                where: { id },
+                where: {id},
             },
         );
 
@@ -177,7 +183,7 @@ const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
         const actionId = newUser.isDisabled ? Action.disable_user : Action.enable_user;
         await historyService.createHistory(
             actionId,
-            { user_id: newUser.id },
+            {user_id: newUser.id},
             dummyUserId
         );
     }

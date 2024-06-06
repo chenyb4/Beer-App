@@ -9,8 +9,8 @@ exports.getRole = async (req, res) => {
             roles = await roleService.getRole(id);
 
         } else {
-            roles = await roleService.getRoles(req);
-            roles = await paginationService.addPaginationProperties(roles, roles.length, req);
+            const {returnedRoles, total} = await roleService.getRoles(req);
+            roles = await paginationService.addPaginationProperties(returnedRoles, total, req);
         }
         res.status(200).json(roles);
     } catch (err) {

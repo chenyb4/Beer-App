@@ -9,8 +9,8 @@ exports.getOrder = async (req, res) => {
             orders = await orderService.getOrder(id);
 
         } else {
-            orders = await orderService.getAllOrders(req);
-            orders = await paginationService.addPaginationProperties(orders, orders.length, req);
+            const {returnedOrders, total} = await orderService.getAllOrders(req);
+            orders = await paginationService.addPaginationProperties(returnedOrders, total, req);
 
         }
         res.status(200).json(orders);

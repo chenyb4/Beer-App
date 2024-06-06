@@ -7,8 +7,9 @@ const {Action} = require('../enums/Action')
 // Get all products
 exports.getAllProducts = async (req) => {
     let query = await paginationService.getQuery(req)
-
-    return await db.Product.findAll(query);
+    const products = await db.Product.findAll(query)
+    const total = await db.Product.count()
+    return {returnedProducts: products, total};
 }
 
 // Get one product

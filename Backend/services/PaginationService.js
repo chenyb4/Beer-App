@@ -1,4 +1,3 @@
-const collect = require('collect.js')
 
 exports.addPaginationProperties = async function (collection, total, request) {
     let page = getPage(request) - 1;
@@ -17,6 +16,7 @@ exports.addPaginationProperties = async function (collection, total, request) {
     json.meta = {
         current_page: page + 1,
         page_size: pageSize,
+        total: total
     };
     return json;
 }
