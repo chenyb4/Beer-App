@@ -3,7 +3,7 @@
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
     import {fly} from 'svelte/transition';
-    import { createProduct, updateAmountInStock } from "$lib/service/inventory";
+    import {updateAmountInStock } from "$lib/service/inventory";
 
     export let openAddProductStockDialog = false;
     export let amount_in_stock;
