@@ -10,7 +10,7 @@
     export let onClose = async function(){};
 
     let name = "";
-    let price_in_credits = 0;
+    let price_in_credits = 1;
     let amount_in_stock = 0;
     let EAN = "";
     let helper = "";
@@ -26,7 +26,10 @@
             missingFields.push($t("inventory_management.credits"));
         }
         if (amount_in_stock.length === 0) {
-            missingFields.push($t("inventory_management.amount_in_stock"));
+            missingFields.push($t("inventory_management.stock"));
+        }
+        if (parseInt(amount_in_stock) < 0) {
+            missingFields.push($t("inventory_management.minusStock"));
         }
         if (EAN.length === 0) {
             missingFields.push($t("inventory_management.ean"));

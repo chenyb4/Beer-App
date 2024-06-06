@@ -3,7 +3,10 @@
   "name": "Name",
   "credits": "Number of credits",
   "stock": "Stock",
+  "minusStock": "Stock should not be smaller than zero",
   "ean": "EAN-number",
   "addProduct": "Add a new type of product",
-  "helper": "You forgot these input fields"
+  "addProductStock": "Add stock to product",
+  "helper": "These input fields are wrong",
+  "addProductStockButton": "Add stock"
 }

@@ -8,10 +8,10 @@ import { getProducts, updateAmountInStock } from "$lib/service/inventory";
 import {t} from "$lib/translations/index.js";
 import { TableBody, TableBodyRow } from "flowbite-svelte";
 import { CirclePlusSolid } from "flowbite-svelte-icons";
+  import EditProductStock from "$lib/components/AddProductStock.svelte";
 
 
  /** @type {import('./$types').PageData} */
-  // @ts-ignore
   export let data;
   $: products = data.products.data;
 
@@ -21,6 +21,9 @@ import { CirclePlusSolid } from "flowbite-svelte-icons";
   const iconStyle = "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
   let openCreateProductDialog = false;
+  let openAddProductStockDialog = false;
+
+  let currentProduct;
 
   async function changeProducts(page = 1, pageSize = 10) {
         const response = await getProducts(page, pageSize);
@@ -29,9 +32,14 @@ import { CirclePlusSolid } from "flowbite-svelte-icons";
     }
 
 function handleOpenCreateProductDialog(){
-        updateAmountInStock(100, 1);
         openCreateProductDialog = false;
         openCreateProductDialog = true;
+}
+
+function handleAddProductStockDialog(product) {
+        currentProduct = product;
+        openAddProductStockDialog = false;
+        openAddProductStockDialog = true;
 }
 </script>
 
@@ -42,6 +50,7 @@ function handleOpenCreateProductDialog(){
     />
 </div>
 <CreateProduct openCreateProductDialog={openCreateProductDialog} onClose={changeProducts}/>
+<EditProductStock openAddProductStockDialog={openAddProductStockDialog} onClose={changeProducts} product={currentProduct}></EditProductStock>
 <TablePage {pages} {currentPage} changeData={changeProducts} title={$t("inventory_management.title")}>
     <TableHeader headerValues= {[
     $t("inventory_management.name"),
@@ -53,7 +62,7 @@ function handleOpenCreateProductDialog(){
         <TableBodyRow>
             <TableCell position="first">{product.name}</TableCell>
             <TableCell position="middle">{product.amount_in_stock}</TableCell>
-            <TableCell position="last"><button><CirclePlusSolid class="{iconStyle}"></CirclePlusSolid></button></TableCell>
+            <TableCell position="last"><button on:click={handleAddProductStockDialog(product)}><CirclePlusSolid class="{iconStyle}"></CirclePlusSolid></button></TableCell>
         </TableBodyRow>
         {/each}
     </TableBody>
