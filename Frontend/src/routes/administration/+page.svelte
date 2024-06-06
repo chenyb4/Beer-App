@@ -26,6 +26,7 @@
     import SendQRModal from "$lib/components/ResponseModal.svelte";
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import UpdateStudentRoleModal from "$lib/components/UpdateStudentRoleModal.svelte";
+    import UpdateStudent from "$lib/components/UpdateStudent.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -57,7 +58,7 @@
     }
 
     function getRole(role = 0) {
-        const foundRole = roles.find(0 r => r.id === role);
+        const foundRole = roles.find(r => r.id === role);
         return foundRole ? foundRole.name : "No role assigned!";
     }
 
@@ -98,6 +99,7 @@
         currentPage = page;
     }
 
+
     const iconStyle = "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
     let openCreateUserDialog = false;
@@ -108,7 +110,7 @@
     }
 
     let openUpdateStudentRoleModal = false;
-    let selectedUser = {"id": 0, "username": "User not defined", "roleId": 0};
+    let selectedUser = {"id": 0, "username": "User not defined", "roleId": 0, "date_of_birth": "", "email":""};
     let selectedRole = 0;
     function handleChangeUserRole(user = {"id": 0, "username": "User not defined", "roleId": 0}){
         if (user.id === 0) return;
@@ -117,7 +119,16 @@
         openUpdateStudentRoleModal = true;
         selectedUser = user;
     }
+
+    let openUpdateStudentModal = false;
+    function handleChangeUser(user = {"id": 0, "username": "User not defined","date_of_birth": "", "roleId": 0}){
+        user.date_of_birth = new Date(user.date_of_birth).toISOString().split('T')[0];
+        selectedUser = user;
+        openUpdateStudentModal = false;
+        openUpdateStudentModal = true;
+    }
 </script>
+<UpdateStudent user={selectedUser} openUpdateUserDialog={openUpdateStudentModal} onClose={changeUsers}/>
 <CreateStudent openCreateUserDialog={openCreateUserDialog} onClose={changeUsers}/>
 <UpdateStudentRoleModal selectedRoleId={selectedRole} roles={roles} modalOpen={openUpdateStudentRoleModal} user={selectedUser} onClose={changeUsers}/>
 <SendQRModal showModal={openSentQRModal} modalText={textSentQRModal} modalTitle={$t("administration.qrRecreation")} />
@@ -169,7 +180,7 @@
                             <Button class="p-0" on:click={() => handleChangeUserRole(user)}>
                                 <UserSettingsSolid class={iconStyle} />
                             </Button>
-                            <Button class="p-0">
+                            <Button class="p-0" on:click={() => handleChangeUser(user)}>
                                 <UserEditSolid class={iconStyle}/>
                             </Button>
                             <Button class="p-0" on:click={() => handleDeleteUser(user)}>
