@@ -12,5 +12,7 @@
   "noMailSent": "Sending mail has failed!\nQR code wil download now. \nSent this QR to the following email: ",
   "mailSent": "Mail has been send for student: ",
   "userCreated": "An user is created!",
-  "qrRecreation": "The QR code has been recreated!"
+  "qrRecreation": "The QR code has been recreated!",
+  "edit": "Edit user ",
+  "changeRole": "Role: "
 }

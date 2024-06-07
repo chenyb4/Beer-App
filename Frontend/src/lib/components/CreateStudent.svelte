@@ -14,7 +14,7 @@
 
     let studentNumber = "";
     let email = "";
-    let date_of_birth = new Date().toISOString().split('T')[0];
+    $: date_of_birth = new Date().toISOString().split('T')[0];
     let helper = "";
     $: hideHelper = true;
     let showCreatedUserModal = false;
