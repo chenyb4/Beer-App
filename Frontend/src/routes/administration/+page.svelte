@@ -5,7 +5,7 @@
     import {handleSendMailResponse} from "$lib/service/QR.js";
     import TablePage from "$lib/components/table/TablePage.svelte"
     import {
-        Button,
+        Button, Input,
         Modal,
         Popover,
         TableBody,
@@ -27,6 +27,7 @@
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import UpdateStudentRoleModal from "$lib/components/UpdateStudentRoleModal.svelte";
     import UpdateStudent from "$lib/components/UpdateStudent.svelte";
+    import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -40,7 +41,8 @@
     let modalText = "";
     let modalOpen = false;
     let modalTextOk = "Yes";
-    let modalFunction = async function(){};
+    let modalFunction = async function () {
+    };
 
     let openSentQRModal = false;
     let textSentQRModal = "";
@@ -69,7 +71,7 @@
         modalTitle = "Resending QR code";
         modalText = "Are you certain to resend and regenerate QR code of " + user.username + "?";
         modalTextOk = "Resend QR";
-        modalFunction = async function(){
+        modalFunction = async function () {
             let responseQR = await getQRandSendMail(user.id);
             textSentQRModal = handleSendMailResponse(responseQR.sentMail, user, responseQR.qr);
             openSentQRModal = false;
@@ -77,7 +79,7 @@
         };
     }
 
-    function handleDeleteUser(user = undefined){
+    function handleDeleteUser(user = undefined) {
         if (user === undefined) {
             modalOpen = true;
             modalTitle = "User not found!";
@@ -86,15 +88,16 @@
             modalOpen = true;
             modalTitle = "Deleting user";
             modalText = "Are you sure to delete the user?";
-            modalFunction = async function(){
+            modalFunction = async function () {
                 await deleteUser(user);
                 await changeUsers();
             };
         }
     }
 
-    async function changeUsers(page = 1, pageSize = 10) {
-        const response = await getUsers(page, pageSize);
+    let pageSize = 10;
+    async function changeUsers(page = 1) {
+        const response = await getUsers(page, pageSize, filterUsername, filterEmail, filterIsLegalAge, filterLanguage, filterRole);
         users = response.data;
         currentPage = page;
     }
@@ -104,15 +107,16 @@
 
     let openCreateUserDialog = false;
 
-    function handleOpenCreateUserDialog(){
+    function handleOpenCreateUserDialog() {
         openCreateUserDialog = false;
         openCreateUserDialog = true;
     }
 
     let openUpdateStudentRoleModal = false;
-    let selectedUser = {"id": 0, "username": "User not defined", "roleId": 0, "date_of_birth": "", "email":""};
+    let selectedUser = {"id": 0, "username": "User not defined", "roleId": 0, "date_of_birth": "", "email": ""};
     let selectedRole = 0;
-    function handleChangeUserRole(user = {"id": 0, "username": "User not defined", "roleId": 0}){
+
+    function handleChangeUserRole(user = {"id": 0, "username": "User not defined", "roleId": 0}) {
         if (user.id === 0) return;
         selectedRole = user.roleId;
         openUpdateStudentRoleModal = false;
@@ -121,17 +125,25 @@
     }
 
     let openUpdateStudentModal = false;
-    function handleChangeUser(user = {"id": 0, "username": "User not defined","date_of_birth": "", "roleId": 0}){
+
+    function handleChangeUser(user = {"id": 0, "username": "User not defined", "date_of_birth": "", "roleId": 0}) {
         user.date_of_birth = new Date(user.date_of_birth).toISOString().split('T')[0];
         selectedUser = user;
         openUpdateStudentModal = false;
         openUpdateStudentModal = true;
     }
+
+    let filterUsername = "";
+    let filterEmail = "";
+    let filterIsLegalAge = 0;
+    let filterLanguage = -1;
+    let filterRole = 0;
 </script>
 <UpdateStudent user={selectedUser} openUpdateUserDialog={openUpdateStudentModal} onClose={changeUsers}/>
 <CreateStudent openCreateUserDialog={openCreateUserDialog} onClose={changeUsers}/>
-<UpdateStudentRoleModal selectedRoleId={selectedRole} roles={roles} modalOpen={openUpdateStudentRoleModal} user={selectedUser} onClose={changeUsers}/>
-<SendQRModal showModal={openSentQRModal} modalText={textSentQRModal} modalTitle={$t("administration.qrRecreation")} />
+<UpdateStudentRoleModal selectedRoleId={selectedRole} roles={roles} modalOpen={openUpdateStudentRoleModal}
+                        user={selectedUser} onClose={changeUsers}/>
+<SendQRModal showModal={openSentQRModal} modalText={textSentQRModal} modalTitle={$t("administration.qrRecreation")}/>
 <Modal title={modalTitle} bind:open={modalOpen} autoclose>
     {modalText}
     <svelte:fragment slot="footer">
@@ -145,6 +157,17 @@
             onCTAButtonClickFn={handleOpenCreateUserDialog}
     />
 </div>
+<select bind:value={pageSize} on:change={() => changeUsers()}  class="absolute right-10 top-10 rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+    <option value={10}>
+        10
+    </option>
+    <option value={25}>
+        25
+    </option>
+    <option value={50}>
+        50
+    </option>
+</select>
 <TablePage {pages} {currentPage} changeData={changeUsers} title="Student administration">
     <TableHeader headerValues={[
                 "Username/ Student number",
@@ -152,8 +175,59 @@
                 "Role",
                 "Above 18",
                 "Preferred language",
-                ""]}/>
+                ""
+                ]} />
     <TableBody>
+        <TableBodyRow>
+            <TableCellWithInputs position="first">
+                <Input id="username" bind:value={filterUsername} class="w-full" placeholder="Username..."/>
+            </TableCellWithInputs>
+            <TableCellWithInputs position="middle">
+                <Input id="email" class="w-full" bind:value={filterEmail} placeholder="Email..."/>
+            </TableCellWithInputs>
+            <TableCellWithInputs position="middle">
+                <select bind:value={filterRole} id="role" class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+                    {#each roles as role}
+                        <option value={role.id}>
+                            {role.name}
+                        </option>
+                    {/each}
+                    <option value={0}>
+                        Not selected
+                    </option>
+                </select>
+            </TableCellWithInputs>
+            <TableCellWithInputs position="middle">
+                <select bind:value={filterIsLegalAge} id="IsLegalAge" class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+                    <option value={true}>
+                        Yes
+                    </option>
+                    <option value={false}>
+                        No
+                    </option>
+                    <option value={0}>
+                        Not selected
+                    </option>
+                </select>
+            </TableCellWithInputs>
+            <TableCellWithInputs position="middle">
+                <select bind:value={filterLanguage} id="language" class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+                    {#each languages as language, index}
+                        <option value={index}>
+                            {language}
+                        </option>
+                    {/each}
+                    <option value={-1}>
+                        Not selected
+                    </option>
+                </select>
+            </TableCellWithInputs>
+            <TableCellWithInputs position="last">
+                <Button class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center" on:click={() => changeUsers()}>
+                    Filter
+                </Button>
+            </TableCellWithInputs>
+        </TableBodyRow>
         {#if users.length > 0}
             {#each users as user}
                 <TableBodyRow>
@@ -178,7 +252,7 @@
                                 <QrCodeOutline class={iconStyle}/>
                             </Button>
                             <Button class="p-0" on:click={() => handleChangeUserRole(user)}>
-                                <UserSettingsSolid class={iconStyle} />
+                                <UserSettingsSolid class={iconStyle}/>
                             </Button>
                             <Button class="p-0" on:click={() => handleChangeUser(user)}>
                                 <UserEditSolid class={iconStyle}/>
