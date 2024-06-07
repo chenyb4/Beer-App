@@ -72,3 +72,40 @@ export async function createProduct(name, price_in_credits, amount_in_stock, EAN
     }
   }
 
+  export async function updateProduct(product, name = product.name, price_in_credits = product.price_in_credits, amount_in_stock = product.amount_in_stock, EAN = product.EAN) {
+    try {
+      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products/?id=${product.id}`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        method: "PUT",
+        body: JSON.stringify({name, price_in_credits, amount_in_stock, EAN})
+    });
+  
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    console.log(await response.json());
+    } catch (error) {
+      console.error("Failed to edit product", error);
+    }
+  }
+
+  export async function deleteProduct(productID) {
+    try {
+      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products/?id=${productID}`, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "DELETE"
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      console.log("Product deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete product", error);
+    }
+  }
