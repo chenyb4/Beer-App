@@ -10,5 +10,9 @@
   "emailText": "Email",
   "date_of_birthText": "Geboorte datum",
   "noMailSent": "Versturen van mail is gefaald!\nQR code wordt nu gedownload. \nVerstuur QR naar volgende email: ",
-  "sentMail": "Mail is verstuurd naar student: "
+  "mailSent": "Mail is verstuurd naar student: ",
+  "userCreated": "Een gebruiker is aangemaakt!",
+  "qrRecreation": "De QR code is opnieuw aangemaakt!",
+  "edit": "Verander gebruiker ",
+  "changeRole": "Rol: "
 }

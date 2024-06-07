@@ -1,11 +1,15 @@
 const db = require('../database')
+const paginationService = require("./PaginationService");
 const historyService = require("./HistoryService");
 const {Action} = require('../enums/Action')
 
 
 // Get all products
-exports.getAllProducts = async () => {
-    return await db.Product.findAll();
+exports.getAllProducts = async (req) => {
+    let query = await paginationService.getQuery(req)
+    const products = await db.Product.findAll(query)
+    const total = await db.Product.count()
+    return {returnedProducts: products, total};
 }
 
 // Get one product

@@ -5,6 +5,8 @@
     import {createUser} from "$lib/service/administration";
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
+    import SendQRModal from "$lib/components/ResponseModal.svelte";
+    import {handleSendMailResponse} from "$lib/service/QR.js";
 
     export let openCreateUserDialog = false;
 
@@ -12,7 +14,7 @@
 
     let studentNumber = "";
     let email = "";
-    let date_of_birth = new Date().toISOString().split('T')[0];
+    $: date_of_birth = new Date().toISOString().split('T')[0];
     let helper = "";
     $: hideHelper = true;
     let showCreatedUserModal = false;
@@ -43,38 +45,23 @@
             return;
         }
 
-        function downloadBase64File(base64 = "", fileName = "QR.png") {
-            const link = document.createElement('a');
-            link.href = base64;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
         const response = await createUser(studentNumber, email, date_of_birth)
         if (response){
             let responseQR = await getQRandSendMail(response.user.id);
+            createdUserModalText = handleSendMailResponse(responseQR.sentMail, response.user, responseQR.qr);
             openCreateUserDialog = false;
+            showCreatedUserModal = false;
             showCreatedUserModal = true;
-            if (!responseQR.sentMail){
-                downloadBase64File(responseQR.qr, 'QR code of ' + response.user.username + '.png');
-                createdUserModalText = $t("administration.noMailSent") + `<a href='mailto:${response.user.email}'>${response.user.email}</a>`;
-            } else {
-                createdUserModalText = $t("administration.mailSent") + response.user.username;
-            }
         } else {
             alert("User cannot be created");
         }
         await onClose();
     }
+
+
 </script>
-<Modal title="Created user!" bind:open={showCreatedUserModal} autoclose>
-    <p class="text-base leading-relaxed text-light-text dark:text-dark-text">
-        {@html createdUserModalText}
-    </p>
-</Modal>
-<Modal bind:open={openCreateUserDialog} autoclose>
+<SendQRModal showModal={showCreatedUserModal} modalText={createdUserModalText} modalTitle={$t("administration.userCreated")} />
+<Modal bind:open={openCreateUserDialog}>
     <span class="text-3xl text-light-text dark:text-dark-text">{$t("administration.addUser")}</span>
     {#if !hideHelper}
         <Alert class="bg-light-s_bg dark:bg-dark-s_bg mt-2 border-1" color="red" dismissable transition={fly}>

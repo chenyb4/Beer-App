@@ -1,19 +1,19 @@
 const db = require('../database')
+const paginationService = require("./PaginationService");
 const productService = require("./ProductService");
 const userService = require("./UserService");
 const {Action} = require('../enums/Action')
-const { Op } = require('sequelize');
+const {Op} = require('sequelize');
 
-exports.getHistories = async (whereOrClause) => {
-    if (whereOrClause) {
-        return await db.History.findAll({
-            where: {
-                [Op.or]: whereOrClause
-            }
-        })
-    } else {
-        return await db.History.findAll()
-    }
+exports.getHistories = async (req, whereOrClause) => {
+    let query = await paginationService.getQuery(req)
+    let queries = {}
+    if (whereOrClause) queries = Object.assign({}, queries, {[Op.or]: whereOrClause})
+    query = Object.assign({}, query, {where: queries});
+    const histories = await db.History.findAll(query)
+    const total = await db.History.count({where: queries})
+
+    return {returnedHistories: histories, total}
 };
 
 exports.getHistory = async (id) => {
@@ -107,7 +107,10 @@ exports.undo = async () => {
             break;
         case Action.enable_user: // enable user
         case Action.disable_user: // disable user - if action === 4 then pass true else pass false
-            await userService.updateUser({id: actionDetails.user_id, isDisabled: lastUndo.action === Action.enable_user})
+            await userService.updateUser({
+                id: actionDetails.user_id,
+                isDisabled: lastUndo.action === Action.enable_user
+            })
     }
 
     return lastUndo;
@@ -120,7 +123,7 @@ exports.convertHistory = function convertHistory(history) {
 
 exports.convertAction = function convertAction(action) {
     const actions = db.History.getAttributes().action.values;
-    if(isNaN(action)) {
+    if (isNaN(action)) {
         return actions.indexOf(action)
     }
     return actions[action];

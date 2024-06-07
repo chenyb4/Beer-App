@@ -2,10 +2,8 @@
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
     import CreateStudent from "$lib/components/CreateStudent.svelte";
+    import {handleSendMailResponse} from "$lib/service/QR.js";
     import TablePage from "$lib/components/table/TablePage.svelte"
-
-
-
     import {
         Button,
         Modal,
@@ -25,6 +23,10 @@
     import {deleteUser, getUsers} from "$lib/service/administration.js";
     import TableHeader from "$lib/components/table/TableHeader.svelte";
     import TableCell from "$lib/components/table/TableCell.svelte";
+    import SendQRModal from "$lib/components/ResponseModal.svelte";
+    import {getQRandSendMail} from "$lib/service/emailService.js";
+    import UpdateStudentRoleModal from "$lib/components/UpdateStudentRoleModal.svelte";
+    import UpdateStudent from "$lib/components/UpdateStudent.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -34,12 +36,14 @@
     let currentPage = 1;
 
     const roles = data.roles.data;
-
     let modalTitle = "";
     let modalText = "";
     let modalOpen = false;
     let modalTextOk = "Yes";
     let modalFunction = async function(){};
+
+    let openSentQRModal = false;
+    let textSentQRModal = "";
 
     // Calculate if the user is above 18
     function isAbove18(dob = new Date()) {
@@ -53,18 +57,24 @@
         return age >= 18;
     }
 
-    function getRole(role = undefined) {
-        if (role === undefined)
-            return "No role assigned!";
-        return roles[role];
+    function getRole(role = 0) {
+        const foundRole = roles.find(r => r.id === role);
+        return foundRole ? foundRole.name : "No role assigned!";
     }
 
-    function handleResendQR(user = undefined) {
-        if (user === undefined) return;
+
+    function handleResendQR(user = {"username": "User not found", "id": 0}) {
+        if (user === undefined || (user.id === 0)) return;
         modalOpen = true;
         modalTitle = "Resending QR code";
         modalText = "Are you certain to resend and regenerate QR code of " + user.username + "?";
         modalTextOk = "Resend QR";
+        modalFunction = async function(){
+            let responseQR = await getQRandSendMail(user.id);
+            textSentQRModal = handleSendMailResponse(responseQR.sentMail, user, responseQR.qr);
+            openSentQRModal = false;
+            openSentQRModal = true;
+        };
     }
 
     function handleDeleteUser(user = undefined){
@@ -89,6 +99,7 @@
         currentPage = page;
     }
 
+
     const iconStyle = "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
     let openCreateUserDialog = false;
@@ -97,8 +108,30 @@
         openCreateUserDialog = false;
         openCreateUserDialog = true;
     }
+
+    let openUpdateStudentRoleModal = false;
+    let selectedUser = {"id": 0, "username": "User not defined", "roleId": 0, "date_of_birth": "", "email":""};
+    let selectedRole = 0;
+    function handleChangeUserRole(user = {"id": 0, "username": "User not defined", "roleId": 0}){
+        if (user.id === 0) return;
+        selectedRole = user.roleId;
+        openUpdateStudentRoleModal = false;
+        openUpdateStudentRoleModal = true;
+        selectedUser = user;
+    }
+
+    let openUpdateStudentModal = false;
+    function handleChangeUser(user = {"id": 0, "username": "User not defined","date_of_birth": "", "roleId": 0}){
+        user.date_of_birth = new Date(user.date_of_birth).toISOString().split('T')[0];
+        selectedUser = user;
+        openUpdateStudentModal = false;
+        openUpdateStudentModal = true;
+    }
 </script>
+<UpdateStudent user={selectedUser} openUpdateUserDialog={openUpdateStudentModal} onClose={changeUsers}/>
 <CreateStudent openCreateUserDialog={openCreateUserDialog} onClose={changeUsers}/>
+<UpdateStudentRoleModal selectedRoleId={selectedRole} roles={roles} modalOpen={openUpdateStudentRoleModal} user={selectedUser} onClose={changeUsers}/>
+<SendQRModal showModal={openSentQRModal} modalText={textSentQRModal} modalTitle={$t("administration.qrRecreation")} />
 <Modal title={modalTitle} bind:open={modalOpen} autoclose>
     {modalText}
     <svelte:fragment slot="footer">
@@ -126,7 +159,7 @@
                 <TableBodyRow>
                     <TableCell position="first">{user.username}</TableCell>
                     <TableCell position="middle">{user.email}</TableCell>
-                    <TableCell position="middle">{getRole(user.role)}</TableCell>
+                    <TableCell position="middle">{getRole(user.roleId)}</TableCell>
                     <TableCell position="middle">
                         <div>
                             {#if isAbove18(user.date_of_birth)}
@@ -144,10 +177,10 @@
                             <Button class="p-0" on:click={() => handleResendQR(user)}>
                                 <QrCodeOutline class={iconStyle}/>
                             </Button>
-                            <Button class="p-0">
-                                <UserSettingsSolid class={iconStyle}/>
+                            <Button class="p-0" on:click={() => handleChangeUserRole(user)}>
+                                <UserSettingsSolid class={iconStyle} />
                             </Button>
-                            <Button class="p-0">
+                            <Button class="p-0" on:click={() => handleChangeUser(user)}>
                                 <UserEditSolid class={iconStyle}/>
                             </Button>
                             <Button class="p-0" on:click={() => handleDeleteUser(user)}>
