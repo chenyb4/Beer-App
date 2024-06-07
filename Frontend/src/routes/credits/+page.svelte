@@ -5,7 +5,7 @@
 
 
     // Create reactive variables
-    let studentNumber = '';
+    let identifier = '';
     let amountOfCredits = 0;
     let price = 0;
 
@@ -71,12 +71,12 @@
         <!-- for the student number field -->
         <div class="mb-5 relative">
             <label for="student-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                {$t('credits.studentNumber')}
+                {$t('credits.identifier')}
             </label>
             <input
                     type="text"
                     id="student-number"
-                    bind:value={studentNumber}
+                    bind:value={identifier}
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
             />

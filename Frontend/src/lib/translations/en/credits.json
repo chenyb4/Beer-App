@@ -1,6 +1,7 @@
 {
   "title": "ADD CREDITS TO BALANCE",
   "studentNumber": "Student Number",
+  "identifier": "Identifier",
   "amountOfCredits": "Amount of Credits",
   "price": "Price",
   "confirm": "Confirm"
