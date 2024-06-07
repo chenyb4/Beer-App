@@ -16,6 +16,6 @@ body::before {
   background-image: url("src/lib/images/bottleskyline.svg");
   background-repeat: repeat-x;
   background-position: right 10% bottom -10px;
-  background-size: auto 12%;
+  background-size: auto 11%;
   z-index: -1; /* Ensure the background stays behind other content */
 }

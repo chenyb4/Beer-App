@@ -35,7 +35,7 @@
   {activeUrl}
   {activeClass}
   {nonActiveClass}
-  asideClass="min-w-64 flex flex-col"
+  asideClass="min-w-64 flex flex-col border-r-2 border-dark-p_foreground"
 >
   <SidebarWrapper divClass="bg-light-s_bg dark:bg-dark-s_bg h-full">
     <SidebarGroup>
