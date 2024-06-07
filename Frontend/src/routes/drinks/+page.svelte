@@ -40,15 +40,14 @@
   }
 
   function removeProductFromCart(product) {
-    selectedProducts = selectedProducts.filter(p => p.id !== product.id);
+    selectedProducts = selectedProducts.filter((p) => p.id !== product.id);
   }
-  
 
   function clearFields() {
     identifier = "";
     identifiedUser = "";
-    selectedProducts= "";
-    userName= "";
+    selectedProducts = "";
+    userName = "";
     drinksScanner = "";
   }
   onMount(() => {
@@ -117,10 +116,12 @@
                 <div
                   class="col-span-1 flex justify-center text-center items-center"
                 >
-                 <button on:click={removeProductFromCart(product)}><svelte:component
-                    this={TrashBinSolid}
-                    class="text-light-p_foreground h-full"
-                  /></button>
+                  <button on:click={removeProductFromCart(product)}
+                    ><svelte:component
+                      this={TrashBinSolid}
+                      class="text-light-p_foreground h-full"
+                    /></button
+                  >
                 </div>
               </div>
             {/each}
