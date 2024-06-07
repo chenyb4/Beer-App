@@ -3,7 +3,7 @@
 
   import { t } from "$lib/translations/index.js";
   import { onMount } from "svelte";
-  import DrinkSearchBar from "$lib/components/DrinkSearchBar.svelte";
+  import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { TrashBinSolid } from "flowbite-svelte-icons";
@@ -76,7 +76,7 @@
         {/if}
       </div>
       <div class=" w-72">
-        <DrinkSearchBar
+        <ProductSearchBar
           bind:value={drinksScanner}
           bind:selectedProduct={product}
           on:selectProduct={handleSelectProduct}
