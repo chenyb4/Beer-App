@@ -62,9 +62,9 @@
     }
 </script>
 
-<div>
+<div class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl">
     <!-- You can use `placeholders` and `modifiers` in your definitions (see docs) -->
-    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
+    <form class="lg:max-w-7xl mx-auto mt-1 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
         <h2 class="text-4xl font-extrabold dark:text-white mb-8">{$t('credits.title')}</h2>
 
 
