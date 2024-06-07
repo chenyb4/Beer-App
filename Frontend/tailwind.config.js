@@ -25,6 +25,7 @@ export default {
                     text: '#F4F7F5',
                     p_bg: '#38383C',
                     s_bg: '#28282C',
+                    input_bg: '#374151',
                 },
                 'light': {
                     50: '#00ffd3',
@@ -42,6 +43,7 @@ export default {
                     text: '#000000',
                     p_bg: '#ffffff',
                     s_bg: '#a9a9a9',
+                    input_bg: '#ffffff',
                 },
             }
         }
