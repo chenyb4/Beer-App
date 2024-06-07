@@ -17,10 +17,19 @@ export async function createUser(username, email, date_of_birth) {
         console.error("Failed to fetch user data:", error);
     }
 }
-export async function getUsers(page = 1, pageSize = 10) {
+export async function getUsers(page = 1, pageSize = 10, filterUsername = "", filterEmail = "", filterIsLegalAge = 0, filterLanguage = -1, filterRole = 0) {
+    let query = {};
+    query.page = page;
+    query.pageSize = pageSize;
+    if (filterUsername !== "") query.username = filterUsername;
+    if (filterEmail !== "") query.email = filterEmail;
+    if (filterIsLegalAge !== 0) query.isLegalAge = filterIsLegalAge;
+    if (filterLanguage !== -1) query.language = filterLanguage;
+    if (filterRole !== 0) query.roleId = filterRole;
+    const queryString = new URLSearchParams(query).toString();
     let env = import.meta.env;
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/users?pageSize=" + pageSize + "&page=" + page, {
+        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/users${queryString ? `?${queryString}` : ''}`, {
             headers: {
                 "Content-Type": "application/json"
             },
