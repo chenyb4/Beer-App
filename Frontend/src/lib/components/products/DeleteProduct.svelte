@@ -20,7 +20,7 @@
     if (!response) {
       openDeleteProductDialog = false;
     } else {
-      alert("Product cannot be updated");
+      alert("Product cannot be deleted");
     }
     await onClose();
   }
