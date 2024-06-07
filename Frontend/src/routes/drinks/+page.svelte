@@ -3,7 +3,7 @@
 
   import { t } from "$lib/translations/index.js";
   import { onMount } from "svelte";
-  import DrinkSearchBar from "$lib/components/DrinkSearchBar.svelte";
+  import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { TrashBinSolid } from "flowbite-svelte-icons";
@@ -40,15 +40,14 @@
   }
 
   function removeProductFromCart(product) {
-    selectedProducts = selectedProducts.filter(p => p.id !== product.id);
+    selectedProducts = selectedProducts.filter((p) => p.id !== product.id);
   }
-  
 
   function clearFields() {
     identifier = "";
     identifiedUser = "";
-    selectedProducts= "";
-    userName= "";
+    selectedProducts = "";
+    userName = "";
     drinksScanner = "";
   }
   onMount(() => {
@@ -78,7 +77,7 @@
           {/if}
         </div>
         <div class=" w-72">
-          <DrinkSearchBar
+          <ProductSearchBar
             bind:value={drinksScanner}
             bind:selectedProduct={product}
             on:selectProduct={handleSelectProduct}
@@ -117,10 +116,12 @@
                 <div
                   class="col-span-1 flex justify-center text-center items-center"
                 >
-                 <button on:click={removeProductFromCart(product)}><svelte:component
-                    this={TrashBinSolid}
-                    class="text-light-p_foreground h-full"
-                  /></button>
+                  <button on:click={removeProductFromCart(product)}
+                    ><svelte:component
+                      this={TrashBinSolid}
+                      class="text-light-p_foreground h-full"
+                    /></button
+                  >
                 </div>
               </div>
             {/each}
