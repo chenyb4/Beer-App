@@ -3,12 +3,12 @@ import CtaButton from "$lib/components/CtaButton.svelte";
 import TableCell from "$lib/components/table/TableCell.svelte";
 import TableHeader from "$lib/components/table/TableHeader.svelte";
 import TablePage from "$lib/components/table/TablePage.svelte";
-import CreateProduct from "$lib/components/CreateProduct.svelte";
+import CreateProduct from "$lib/components/products/CreateProduct.svelte";
 import { getProducts, updateAmountInStock } from "$lib/service/inventory";
 import {t} from "$lib/translations/index.js";
 import { TableBody, TableBodyRow } from "flowbite-svelte";
 import { CirclePlusSolid } from "flowbite-svelte-icons";
-  import EditProductStock from "$lib/components/AddProductStock.svelte";
+  import EditProductStock from "$lib/components/products/AddProductStock.svelte";
 
 
  /** @type {import('./$types').PageData} */
