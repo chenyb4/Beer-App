@@ -62,7 +62,7 @@ services:
       POSTGRES_PASSWORD: ${PGPASSWORD_TEST}
       POSTGRES_USER: ${POSTGRES_USER_TEST}
     ports:
-      - ${DBPORT}:${DBPORT}
+      - ${DBPORT_TEST}:${DBPORT}
     volumes:
       - beer-swipe-test-vol:/var/lib/postgresql/data
   sveltekit:
