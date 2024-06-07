@@ -63,6 +63,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     if (!username || !email || !date_of_birth) {
         throw new Error('Missing required fields');
     }
+    date_of_birth = new Date(Date.parse(date_of_birth)).setHours(0, 0, 0, 0)
 
     // For creating a student
     if (!password) {
@@ -88,6 +89,9 @@ exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_b
     if (!id || (!isDisabled && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
         throw new Error('Missing required fields or no update data provided');
     }
+
+    if(date_of_birth !== undefined) date_of_birth = new Date(Date.parse(date_of_birth)).setHours(0, 0, 0, 0)
+
 
     try {
         const oldUser = await this.getUser(id);
