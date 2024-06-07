@@ -59,12 +59,14 @@
     on:input={filterProductOptions}
     on:keydown={selectProductWithEnter}
   />
-  <div id="productOptions" class="block">
-    {#each filteredProductsOptions as product}
-      <button
-        class="border border-dark-300 w-full"
-        on:click={() => selectProduct(product)}>{product.name}</button
-      >
-    {/each}
+  <div class="relative">
+    <div id="productOptions" class="block absolute w-full">
+      {#each filteredProductsOptions as product}
+        <button
+          class="border border-dark-300 w-full bg-dark-900"
+          on:click={() => selectProduct(product)}>{product.name}</button
+        >
+      {/each}
+    </div>
   </div>
 </div>
