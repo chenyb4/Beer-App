@@ -1,6 +1,7 @@
 {
   "title": "TRANSACTION HISTORY",
   "studentNumber": "Student Number",
+  "buyer": "Buyer",
   "credits": "Credits",
   "barkeeper": "Barkeeper",
   "date": "Date"
