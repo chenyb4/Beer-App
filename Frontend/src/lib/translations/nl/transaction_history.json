@@ -2,8 +2,10 @@
   "title": "TRANSACTIEGESCHIEDENIS",
   "studentNumber": "Studentnummer",
   "buyer": "Koper",
-  "credits": "Kredieten",
-  "barkeeper": "Barman",
+  "credits": "Credits",
   "details": "Details",
-  "date": "Datum"
+  "barkeeper": "Barman",
+  "date": "Datum",
+  "product": "Product",
+  "quantity": "Hoeveelheid"
 }

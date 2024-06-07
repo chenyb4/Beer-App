@@ -5,5 +5,7 @@
   "credits": "Credits",
   "details": "Details",
   "barkeeper": "Barkeeper",
-  "date": "Date"
+  "date": "Date",
+  "product": "Product",
+  "quantity": "Quantity"
 }
