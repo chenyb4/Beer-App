@@ -3,28 +3,29 @@
     import CtaButton from "$lib/components/CtaButton.svelte";
     import PriceTitle from "$lib/components/PriceTitle.svelte";
 
+
     // Create reactive variables
     let studentNumber = '';
-    let amountOfCredits = 11;
-    let price = 10;
-
-    async function fetchDefaultCreditsAndPrice() {
-        const response = await fetch(
-            `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/credits?id=2`
-        );
-
-        if (response.ok) {
-            let resJson = await response.json();
-            amountOfCredits = resJson.default_amount;
-            price = resJson.price;
-        }
-    }
-
-    fetchDefaultCreditsAndPrice();
+    let amountOfCredits = 0;
+    let price = 0;
 
     // Initialize these values based on fetched data
     let creditIncrement = amountOfCredits;
     let priceIncrement = price;
+
+
+    /** @type {import('./$types').PageData} */
+    export let data;
+    let defaultCreditsInitial=data.defaultCredits;
+
+
+    //re-assign when there is data from the server for these values
+    amountOfCredits=defaultCreditsInitial.default_amount;
+    price=defaultCreditsInitial.price;
+
+    creditIncrement=defaultCreditsInitial.default_amount;
+    priceIncrement=defaultCreditsInitial.price;
+
 
     // Functions to handle increment and decrement
     function incrementCredits() {
@@ -61,9 +62,9 @@
     }
 </script>
 
-<div>
+<div class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl">
     <!-- You can use `placeholders` and `modifiers` in your definitions (see docs) -->
-    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
+    <form class="lg:max-w-7xl mx-auto mt-1 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
         <h2 class="text-4xl font-extrabold dark:text-white mb-8">{$t('credits.title')}</h2>
 
 
