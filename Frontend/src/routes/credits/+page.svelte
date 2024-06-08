@@ -2,6 +2,7 @@
     import { t } from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
     import PriceTitle from "$lib/components/PriceTitle.svelte";
+    import {addCreditsForAUser} from "$lib/service/credits.js";
 
 
     // Create reactive variables
@@ -41,20 +42,7 @@
     }
 
     async function updateCreditsForAUser() {
-        //todo:this call need to be fired when user is possible to be identified.
-        // const response = await fetch(
-        //     `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/user?id=1`,
-        //     {
-        //         method: "PUT",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify({
-        //             credits: amountOfCredits,
-        //             language: 0
-        //         })
-        //     }
-        // );
+       await addCreditsForAUser(identifier, amountOfCredits);
     }
 
     function onConfirmButtonClick() {

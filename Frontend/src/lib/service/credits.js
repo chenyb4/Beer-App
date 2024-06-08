@@ -33,13 +33,14 @@ export async function getDefaultCredits(){
     }
 }
 
-export async function addCreditsForAUser(id,creditsToAdd){
+export async function addCreditsForAUser(id, creditsToAdd) {
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/users?id=${id}`, {
+        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/users/credits?id=${id}`, {
             headers: {
                 "Content-Type": "application/json"
             },
-            method: "GET",
+            method: "PUT",
+            body: JSON.stringify({ amount: creditsToAdd })
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -49,3 +50,4 @@ export async function addCreditsForAUser(id,creditsToAdd){
         console.error("Failed to fetch products data:", error);
     }
 }
+
