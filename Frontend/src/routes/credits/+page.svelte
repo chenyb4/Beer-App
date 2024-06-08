@@ -51,6 +51,10 @@
     }
 
     function onConfirmButtonClick() {
+        if (!identifier.trim()) {
+            alert('Identifier is required.');
+            return;
+        }
         if (window.confirm('Are you sure you want to update the credits?')) {
             updateCreditsForAUser();
         }
@@ -58,7 +62,6 @@
 </script>
 
 <div class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl">
-    <!-- You can use `placeholders` and `modifiers` in your definitions (see docs) -->
     <form>
         <h2 class="text-4xl font-extrabold mb-8">{$t('credits.title')}</h2>
 
