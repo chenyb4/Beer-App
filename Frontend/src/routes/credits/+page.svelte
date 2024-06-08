@@ -42,11 +42,18 @@
     }
 
     async function updateCreditsForAUser() {
-       await addCreditsForAUser(identifier, amountOfCredits);
+        try {
+            await addCreditsForAUser(identifier, amountOfCredits);
+            alert('Action was successful');
+        } catch (error) {
+            alert('An error occurred while updating credits');
+        }
     }
 
     function onConfirmButtonClick() {
-        updateCreditsForAUser();
+        if (window.confirm('Are you sure you want to update the credits?')) {
+            updateCreditsForAUser();
+        }
     }
 </script>
 
