@@ -27,8 +27,11 @@ History.belongsTo(User)
 Role.hasMany(User)
 User.belongsTo(Role)
 
-User.hasMany(Order, {foreignKey: 'buyerId'})
-User.hasMany(Order, {foreignKey: 'sellerId'})
+User.hasMany(Order, {as: 'buyer', foreignKey: 'buyerId'})
+User.hasMany(Order, {as: 'seller', foreignKey: 'sellerId'})
+
+Order.belongsTo(User, {as: 'buyer', foreignKey: 'buyerId'})
+Order.belongsTo(User, {as: 'seller', foreignKey: 'sellerId'})
 
 db = {
     sequelize,
