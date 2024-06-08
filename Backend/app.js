@@ -35,6 +35,7 @@ const mailController = require('./services/MailService');
 app.get('/users', userController.getUser);
 app.post('/users', userController.createUser);
 app.put('/users', userController.updateUser);
+app.put('/users/credits', userController.incrementUserCredits);
 app.delete('/users', userController.deleteUser);
 
 app.get('/orders', orderController.getOrder);
