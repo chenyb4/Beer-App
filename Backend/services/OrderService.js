@@ -4,7 +4,12 @@ const productService = require('../services/ProductService');
 
 exports.getAllOrders = async (req) => {
     let query = await paginationService.getQuery(req)
-
+    query = Object.assign({}, query, {
+        include: [
+            {model: db.User, as: 'buyer', foreignKey: 'buyerId', attributes: ['username', 'email']},
+            {model: db.User, as: 'seller', foreignKey: 'sellerId', attributes: ['username', 'email']},
+        ]
+    });
     const orders = await db.Order.findAll(query);
     const total = await db.Order.count();
     return {returnedOrders: orders, total}
@@ -21,8 +26,8 @@ exports.getOrder = async (id, details = true) => {
                 model: db.Order_Product,
                 include: {model: db.Product},
             },
-                {model: db.User, as: 'buyer', foreignKey: 'buyerId', attributes: ['username', 'email']},
-                {model: db.User, as: 'seller', foreignKey: 'sellerId', attributes: ['username', 'email']},
+                {model: db.User, as: 'buyer', foreignKey: 'buyerId'},
+                {model: db.User, as: 'seller', foreignKey: 'sellerId'},
             ]
         });
         return await db.Order.findByPk(id);
