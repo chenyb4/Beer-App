@@ -1,5 +1,5 @@
 <script>
-  import { Alert, Input, Label, Modal } from "flowbite-svelte";
+  import { Alert, Input, Label, Modal, Radio } from "flowbite-svelte";
   import { t } from "$lib/translations/index.js";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { fly } from "svelte/transition";
@@ -9,9 +9,11 @@
   export let product;
   export let onClose = async function () {};
 
-  let amount_in_stock = "";
+  let amount_in_stock = 0;
   let helper = "";
   $: hideHelper = true;
+
+  const options = [4, 6, 12, 24];
 
   async function handleSubmit() {
     if (amount_in_stock.length === 0) {
@@ -22,6 +24,7 @@
       parseInt(amount_in_stock) + parseInt(product.amount_in_stock);
     const response = await updateAmountInStock(amount_in_stock, product.id);
     if (!response) {
+      amount_in_stock = "";
       openAddProductStockDialog = false;
     } else {
       alert("Product cannot be changed");
@@ -47,19 +50,29 @@
     </Alert>
   {/if}
   <div class="mb-6">
-    <Label for="name-input" class="block mb-2"
+    <Label for="amount-input" class="block mb-2"
       >{$t("inventory_management.stock")}</Label
     >
+    <div class="flex flex-row my-2">
+      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>4</Radio>
+      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>6</Radio>
+      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>12</Radio>
+      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>24</Radio>
+    </div>
     <Input
       required
       bind:value={amount_in_stock}
-      id="name-input"
+      id="amount-input"
       size="lg"
       type="number"
     />
-  </div>
-  <CtaButton
-    captionText="{$t('inventory_management.addProductStock')} {product.name}"
-    onCTAButtonClickFn={handleSubmit}
-  />
-</Modal>
+    <div>
+      <CtaButton
+        captionText="{$t(
+          'inventory_management.addProductStock'
+        )} + {product.name}"
+        onCTAButtonClickFn={handleSubmit}
+      />
+    </div>
+  </div></Modal
+>
