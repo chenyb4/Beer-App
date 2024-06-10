@@ -2,10 +2,9 @@
     import {Alert, Input, Label, Modal, Select} from "flowbite-svelte";
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
-    import {updateUser} from "$lib/service/administration";
+    import {updateUser} from "$lib/service/administration.js";
     import {fly} from 'svelte/transition';
     import languages from "$lib/service/languages.json"
-    import {onMount} from "svelte";
 
     export let openUpdateUserDialog = false;
 

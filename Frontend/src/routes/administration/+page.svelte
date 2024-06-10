@@ -1,11 +1,11 @@
 <script>
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
-    import CreateStudent from "$lib/components/CreateStudent.svelte";
+    import CreateStudent from "$lib/components/administration/CreateStudent.svelte";
     import {handleSendMailResponse} from "$lib/service/QR.js";
     import TablePage from "$lib/components/table/TablePage.svelte"
     import {
-        Button, Input,
+        Button, ButtonGroup, Dropdown, DropdownItem, Input,
         Modal,
         Popover,
         TableBody,
@@ -15,7 +15,7 @@
     import {dateToString} from "$lib/service/dateToString.js";
     import {
         CheckCircleOutline,
-        CloseCircleOutline,
+        CloseCircleOutline, DotsVerticalOutline,
         QrCodeOutline,
         TrashBinSolid,
         UserEditSolid, UserSettingsSolid
@@ -25,9 +25,10 @@
     import TableCell from "$lib/components/table/TableCell.svelte";
     import SendQRModal from "$lib/components/ResponseModal.svelte";
     import {getQRandSendMail} from "$lib/service/emailService.js";
-    import UpdateStudentRoleModal from "$lib/components/UpdateStudentRoleModal.svelte";
-    import UpdateStudent from "$lib/components/UpdateStudent.svelte";
+    import UpdateStudentRoleModal from "$lib/components/administration/UpdateStudentRoleModal.svelte";
+    import UpdateStudent from "$lib/components/administration/UpdateStudent.svelte";
     import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
+    import CreateStudents from "$lib/components/administration/CreateStudents.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -96,20 +97,26 @@
     }
 
     let pageSize = 10;
+
     async function changeUsers(page = 1) {
         const response = await getUsers(page, pageSize, filterUsername, filterEmail, filterIsLegalAge, filterLanguage, filterRole);
         users = response.data;
         currentPage = page;
     }
 
-
     const iconStyle = "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
     let openCreateUserDialog = false;
+    let openCreateUsersDialog = false;
 
     function handleOpenCreateUserDialog() {
         openCreateUserDialog = false;
         openCreateUserDialog = true;
+    }
+
+    function handleOpenCreateUsersDialog() {
+        openCreateUsersDialog = false;
+        openCreateUsersDialog = true;
     }
 
     let openUpdateStudentRoleModal = false;
@@ -141,6 +148,7 @@
 </script>
 <UpdateStudent user={selectedUser} openUpdateUserDialog={openUpdateStudentModal} onClose={changeUsers}/>
 <CreateStudent openCreateUserDialog={openCreateUserDialog} onClose={changeUsers}/>
+<CreateStudents roles={roles} openCreateUsersDialog={openCreateUsersDialog} onClose={changeUsers}/>
 <UpdateStudentRoleModal selectedRoleId={selectedRole} roles={roles} modalOpen={openUpdateStudentRoleModal}
                         user={selectedUser} onClose={changeUsers}/>
 <SendQRModal showModal={openSentQRModal} modalText={textSentQRModal} modalTitle={$t("administration.qrRecreation")}/>
@@ -152,12 +160,26 @@
     </svelte:fragment>
 </Modal>
 <div class="fixed bottom-12 right-12 z-50">
-    <CtaButton
-            captionText={$t("administration.addUser")}
-            onCTAButtonClickFn={handleOpenCreateUserDialog}
-    />
+    <ButtonGroup
+            class="text-light-text dark:text-dark-text bg-light-p_foreground dark:bg-dark-p_foreground rounded-full">
+        <Button
+                class="bg-light-p_foreground dark:bg-dark-p_foreground"
+                on:click={handleOpenCreateUserDialog}>
+            {$t("administration.addUser")}
+        </Button>
+        <Button
+                class="bg-light-p_foreground dark:bg-dark-p_foreground p-1"
+        >
+            <DotsVerticalOutline class="dots-menu"/>
+        </Button>
+        <Dropdown placement="top" triggeredBy=".dots-menu" class="w-32">
+            <DropdownItem on:click={handleOpenCreateUsersDialog} class="text-center">{$t("administration.addUsers")}</DropdownItem>
+        </Dropdown>
+    </ButtonGroup>
 </div>
-<select bind:value={pageSize} on:change={() => changeUsers()}  class="absolute right-10 top-10 rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+
+<select bind:value={pageSize} on:change={() => changeUsers()}
+        class="absolute right-10 top-10 rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
     <option value={10}>
         10
     </option>
@@ -175,8 +197,9 @@
                 "Role",
                 "Above 18",
                 "Preferred language",
+                "credits",
                 ""
-                ]} />
+                ]}/>
     <TableBody>
         <TableBodyRow>
             <TableCellWithInputs position="first">
@@ -186,7 +209,8 @@
                 <Input id="email" class="w-full" bind:value={filterEmail} placeholder="Email..."/>
             </TableCellWithInputs>
             <TableCellWithInputs position="middle">
-                <select bind:value={filterRole} id="role" class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+                <select bind:value={filterRole} id="role"
+                        class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
                     {#each roles as role}
                         <option value={role.id}>
                             {role.name}
@@ -198,7 +222,8 @@
                 </select>
             </TableCellWithInputs>
             <TableCellWithInputs position="middle">
-                <select bind:value={filterIsLegalAge} id="IsLegalAge" class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+                <select bind:value={filterIsLegalAge} id="IsLegalAge"
+                        class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
                     <option value={true}>
                         Yes
                     </option>
@@ -211,7 +236,8 @@
                 </select>
             </TableCellWithInputs>
             <TableCellWithInputs position="middle">
-                <select bind:value={filterLanguage} id="language" class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
+                <select bind:value={filterLanguage} id="language"
+                        class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg">
                     {#each languages as language, index}
                         <option value={index}>
                             {language}
@@ -222,8 +248,10 @@
                     </option>
                 </select>
             </TableCellWithInputs>
+            <TableCellWithInputs position="middle" />
             <TableCellWithInputs position="last">
-                <Button class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center" on:click={() => changeUsers()}>
+                <Button class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
+                        on:click={() => changeUsers()}>
                     Filter
                 </Button>
             </TableCellWithInputs>
@@ -246,6 +274,7 @@
                         </div>
                     </TableCell>
                     <TableCell position="middle">{languages[(user.language)]}</TableCell>
+                    <TableCell position="middle">{user.credits}</TableCell>
                     <TableCell position="last">
                         <div class="flex gap-4">
                             <Button class="p-0" on:click={() => handleResendQR(user)}>
