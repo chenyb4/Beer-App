@@ -87,7 +87,7 @@ exports.addProductToOrder = async (orderId, productId, quantity) => {
                     await createNewOrderProduct(orderId, productId, quantity)
                 }
 
-                await productService.incrementProductStock(productId, -1 * quantity)
+                await productService.decrementProductStock(productId, quantity)
                 await this.incrementOrderPrice(orderId, product.price_in_credits, quantity)
 
             } catch (err) {
