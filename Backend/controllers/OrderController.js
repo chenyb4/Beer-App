@@ -54,7 +54,7 @@ exports.addProductToOrder = async (req, res) => {
 
 
     try {
-        const newOrderProduct = await orderService.addProductToOrder(id, productId, quantity)
+        const newOrderProduct = await orderService.addProductToOrder(id, productId, Number(quantity))
 
         res.status(200).json(newOrderProduct);
     } catch (err) {
