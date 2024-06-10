@@ -105,6 +105,9 @@ exports.undo = async () => {
         case Action.change_role: // change role
             await userService.updateUser({id: actionDetails.user_id, roleId: actionDetails.old_role_id})
             break;
+        case Action.sell_credits:
+            await userService.incrementUserCredits(actionDetails.buyerId, actionDetails.credits * -1);
+            break;
         case Action.enable_user: // enable user
         case Action.disable_user: // disable user - if action === 4 then pass true else pass false
             await userService.updateUser({

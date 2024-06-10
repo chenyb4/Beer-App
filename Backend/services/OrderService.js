@@ -4,8 +4,13 @@ const productService = require('../services/ProductService');
 
 exports.getAllOrders = async (req) => {
     let query = await paginationService.getQuery(req)
-
-    const orders =  await db.Order.findAll(query);
+    query = Object.assign({}, query, {
+        include: [
+            {model: db.User, as: 'buyer', foreignKey: 'buyerId', attributes: ['username', 'email']},
+            {model: db.User, as: 'seller', foreignKey: 'sellerId', attributes: ['username', 'email']},
+        ]
+    });
+    const orders = await db.Order.findAll(query);
     const total = await db.Order.count();
     return {returnedOrders: orders, total}
 };
@@ -17,14 +22,17 @@ exports.getOrder = async (id, details = true) => {
 
     try {
         if (details) return await db.Order.findByPk(id, {
-            include: {
+            include: [{
                 model: db.Order_Product,
-                include: {model: db.Product}
-            }
+                include: {model: db.Product},
+            },
+                {model: db.User, as: 'buyer', foreignKey: 'buyerId'},
+                {model: db.User, as: 'seller', foreignKey: 'sellerId'},
+            ]
         });
         return await db.Order.findByPk(id);
     } catch (err) {
-        throw new Error('Failed to get order');
+        throw new Error('Failed to get order. ' + err.message);
     }
 };
 

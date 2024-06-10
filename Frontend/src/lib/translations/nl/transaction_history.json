@@ -1,4 +1,11 @@
 {
-  "title": "Dit is een Nederlandse titel",
-  "text": "Hallo!"
+  "title": "TRANSACTIEGESCHIEDENIS",
+  "studentNumber": "Studentnummer",
+  "buyer": "Koper",
+  "credits": "Credits",
+  "details": "Details",
+  "barkeeper": "Barman",
+  "date": "Datum",
+  "product": "Product",
+  "quantity": "Hoeveelheid"
 }
