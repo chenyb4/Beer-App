@@ -2,29 +2,31 @@
     import { t } from "$lib/translations/index.js";
     import CtaButton from "$lib/components/CtaButton.svelte";
     import PriceTitle from "$lib/components/PriceTitle.svelte";
+    import {addCreditsForAUser} from "$lib/service/credits.js";
+
 
     // Create reactive variables
-    let studentNumber = '';
-    let amountOfCredits = 11;
-    let price = 10;
-
-    async function fetchDefaultCreditsAndPrice() {
-        const response = await fetch(
-            `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/credits?id=2`
-        );
-
-        if (response.ok) {
-            let resJson = await response.json();
-            amountOfCredits = resJson.default_amount;
-            price = resJson.price;
-        }
-    }
-
-    fetchDefaultCreditsAndPrice();
+    let identifier = '';
+    let amountOfCredits = 0;
+    let price = 0;
 
     // Initialize these values based on fetched data
     let creditIncrement = amountOfCredits;
     let priceIncrement = price;
+
+
+    /** @type {import('./$types').PageData} */
+    export let data;
+    let defaultCreditsInitial=data.defaultCredits;
+
+
+    //re-assign when there is data from the server for these values
+    amountOfCredits=defaultCreditsInitial.default_amount;
+    price=defaultCreditsInitial.price;
+
+    creditIncrement=defaultCreditsInitial.default_amount;
+    priceIncrement=defaultCreditsInitial.price;
+
 
     // Functions to handle increment and decrement
     function incrementCredits() {
@@ -40,42 +42,39 @@
     }
 
     async function updateCreditsForAUser() {
-        //todo:this call need to be fired when user is possible to be identified.
-        // const response = await fetch(
-        //     `http://${process.env.VITE_APIURL}:${process.env.VITE_APIPORT}/user?id=1`,
-        //     {
-        //         method: "PUT",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify({
-        //             credits: amountOfCredits,
-        //             language: 0
-        //         })
-        //     }
-        // );
+        try {
+            await addCreditsForAUser(identifier, amountOfCredits);
+            alert('Action was successful');
+        } catch (error) {
+            alert('An error occurred while updating credits');
+        }
     }
 
     function onConfirmButtonClick() {
-        updateCreditsForAUser();
+        if (!identifier.trim()) {
+            alert('Identifier is required.');
+            return;
+        }
+        if (window.confirm('Are you sure you want to update the credits?')) {
+            updateCreditsForAUser();
+        }
     }
 </script>
 
-<div>
-    <!-- You can use `placeholders` and `modifiers` in your definitions (see docs) -->
-    <form class="lg:max-w-7xl mx-auto mt-10 bg-light-s_bg dark:bg-dark-s_bg p-12 rounded-lg mr-3">
-        <h2 class="text-4xl font-extrabold dark:text-white mb-8">{$t('credits.title')}</h2>
+<div class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl">
+    <form>
+        <h2 class="text-4xl font-extrabold mb-8">{$t('credits.title')}</h2>
 
 
         <!-- for the student number field -->
         <div class="mb-5 relative">
             <label for="student-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                {$t('credits.studentNumber')}
+                {$t('credits.identifier')}
             </label>
             <input
                     type="text"
                     id="student-number"
-                    bind:value={studentNumber}
+                    bind:value={identifier}
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
             />

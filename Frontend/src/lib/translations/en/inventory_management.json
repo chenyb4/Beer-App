@@ -6,7 +6,13 @@
   "minusStock": "Stock should not be smaller than zero",
   "ean": "EAN-number",
   "addProduct": "Add a new type of product",
-  "addProductStock": "Add stock to product",
+  "addProductStock": "Add stock to",
+  "editProduct":"Edit",
   "helper": "These input fields are wrong",
-  "addProductStockButton": "Add stock"
+  "addProductStockButton": "Add stock",
+  "deleteProduct": "Delete",
+  "areYouSure": "Are you sure you want to delete the following product:",
+  "yes": "Yes",
+  "no": "No",
+  "keepProduct": "Cancel" 
 }

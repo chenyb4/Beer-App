@@ -37,6 +37,7 @@ const authService = require("./services/AuthService");
 app.get('/users', authService.authenticateToken, userController.getUser);
 app.post('/users', authService.authenticateToken, userController.createUser);
 app.put('/users', authService.authenticateToken, userController.updateUser);
+app.put('/users/credits', authService.authenticateToken, userController.incrementUserCredits);
 app.delete('/users', authService.authenticateToken, userController.deleteUser);
 
 app.get('/orders', authService.authenticateToken, orderController.getOrder);

@@ -1,4 +1,11 @@
 {
-  "title": "This is a credits English title",
-  "text": "Credits!"
+  "title": "TRANSACTION HISTORY",
+  "studentNumber": "Student Number",
+  "buyer": "Buyer",
+  "credits": "Credits",
+  "details": "Details",
+  "barkeeper": "Barkeeper",
+  "date": "Date",
+  "product": "Product",
+  "quantity": "Quantity"
 }

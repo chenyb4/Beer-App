@@ -1,6 +1,7 @@
 {
   "title": "KREDIETEN TOEVOEGEN AAN SALDO",
   "studentNumber": "Studentnummer",
+  "identifier": "Identificatie",
   "amountOfCredits": "Aantal Kredieten",
   "price": "Prijs",
   "confirm": "Bevestigen"
