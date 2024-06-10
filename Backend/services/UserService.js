@@ -119,22 +119,23 @@ exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_b
     }
 };
 
-exports.incrementUserCredits = async (id, amount) => {
+exports.incrementUserCredits = async (id, amount, undo = false) => {
     if (!id || !amount) throw new Error('Missing required fields or no update data provided');
     try {
         const user = await db.User.increment({credits: amount}, {where: {id}});
 
-        const dummyUserId = 1   // The dummy user always has id number 1 -- will be changed
+        if (!undo) {
+            const dummyUserId = 1   // The dummy user always has id number 1 -- will be changed
+            await historyService.createHistory(
+                Action.sell_credits,
+                {
+                    buyerId: id,
+                    credits: amount
+                },
+                dummyUserId
+            );
+        }
 
-
-        await historyService.createHistory(
-            Action.sell_credits,
-            {
-                buyerId: id,
-                credits: amount
-            },
-            dummyUserId
-        );
 
         return user
 
