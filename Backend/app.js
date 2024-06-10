@@ -68,6 +68,7 @@ app.delete('/products', productController.deleteProduct)
 app.post('/mail', mailController.sendmail);
 
 app.post('/login', authController.login)
+app.post('/register', authController.register);
 
 async function authenticate() {
   try {
@@ -111,7 +112,7 @@ async function loadDummyData() {
     await db.User.create({
       username: "dummy",
       email: "dummy@dummy.nl",
-      password: "password",
+      password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
       date_of_birth: "2024-05-23 13:03:32.289",
       roleId: 1
     });
