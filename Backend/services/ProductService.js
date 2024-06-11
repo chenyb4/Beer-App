@@ -26,12 +26,12 @@ exports.getProduct = async (id) => {
 }
 
 // Create product
-exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN) => {
-    if (!name || !price_in_credits || !amount_in_stock || !EAN) {
-        throw new Error('Missing required fields: ');
+exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN, isAlcoholic) => {
+    if (!name || !price_in_credits || !amount_in_stock || !EAN || !isAlcoholic) {
+        throw new Error('Missing one of the required fields: name, price_in_credits, amount_in_stock, EAN or isAlcoholic');
     }
     try {
-        return db.Product.create({name, price_in_credits, amount_in_stock, EAN});
+        return db.Product.create({name, price_in_credits, amount_in_stock, EAN, isAlcoholic});
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create product');

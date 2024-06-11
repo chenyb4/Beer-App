@@ -22,10 +22,10 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
-    const {name, price_in_credits, amount_in_stock, EAN} = req.body;
+    const {name, price_in_credits, amount_in_stock, EAN, isAlcoholic} = req.body;
 
     try {
-        const newProduct = await productService.createProduct(name, price_in_credits, amount_in_stock, EAN);
+        const newProduct = await productService.createProduct(name, price_in_credits, amount_in_stock, EAN, isAlcoholic);
         res.status(201).json(newProduct);
     } catch (err) {
         console.error(err);
