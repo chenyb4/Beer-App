@@ -25,6 +25,9 @@ Order_Product.belongsTo(Order)
 User.hasMany(History)
 History.belongsTo(User)
 
+User.hasMany(History, {as: 'undoUser', foreignKey: 'undoUserId'})
+History.belongsTo(User, {as: 'undoUser', foreignKey: 'undoUserId'})
+
 Product.hasMany(History)
 History.belongsTo(Product)
 

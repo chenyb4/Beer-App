@@ -5,6 +5,5 @@ exports.Action = {
     change_role: 'change_role',
     enable_user: 'enable_user',
     disable_user: 'disable_user',
-    sell_credits: 'sell_credits',
-    undo: 'undo'
+    sell_credits: 'sell_credits'
 }
