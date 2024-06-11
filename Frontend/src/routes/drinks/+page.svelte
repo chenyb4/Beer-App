@@ -1,29 +1,41 @@
 <script>
-  // @ts-nocheck
-
   import { t } from "$lib/translations/index.js";
   import { onMount } from "svelte";
   import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { TrashBinSolid } from "flowbite-svelte-icons";
-  import { createOrder } from "$lib/service/orders";
+  import { addProductsToOrder, createOrder } from "$lib/service/orders";
 
-  let ref;
+  let ref = {};
   let identifiedUser;
-  let identifier;
-  let userName;
-  let drinksScanner;
-  let product;
+  let identifier = "";
+  let userName = "";
+  let drinksScanner = "";
+  let product = {};
   let selectedProducts = [];
   let errorMessage = "";
+  let productCart = new Map();
 
   function handleSelectProduct(event) {
     const selectedProduct = event.detail.product;
-    selectedProducts = [...selectedProducts, selectedProduct];
+
+    if (productCart.has(selectedProduct.id)) {
+      productCart.set(selectedProduct.id, {
+        ...selectedProduct,
+        quantity: productCart.get(selectedProduct.id).quantity + 1,
+      });
+    } else {
+      productCart.set(selectedProduct.id, {
+        ...selectedProduct,
+        quantity: 1,
+      });
+    }
+
+    selectedProducts = Array.from(productCart.values());
   }
 
-  function handleSubmitOrder() {
+  async function handleSubmitOrder() {
     if (!identifiedUser) {
       errorMessage = "User must be identified before submitting an order.";
       return;
@@ -35,21 +47,39 @@
       return;
     }
     errorMessage = "";
-    createOrder(identifiedUser.id, selectedProducts);
+    const order = await createOrder(identifiedUser.id);
+    if (order) {
+      await addProductsToOrder(order.id, productCart);
+    }
+
     clearFields();
   }
 
   function removeProductFromCart(product) {
-    selectedProducts = selectedProducts.filter((p) => p.id !== product.id);
+    if (productCart.has(product.id)) {
+      let currentProduct = productCart.get(product.id);
+      if (currentProduct.quantity > 1) {
+        productCart.set(product.id, {
+          ...currentProduct,
+          quantity: currentProduct.quantity - 1,
+        });
+      } else {
+        productCart.delete(product.id);
+      }
+    }
+
+    selectedProducts = Array.from(productCart.values());
   }
 
   function clearFields() {
     identifier = "";
     identifiedUser = "";
-    selectedProducts = "";
+    selectedProducts = [];
     userName = "";
     drinksScanner = "";
+    productCart.clear();
   }
+
   onMount(() => {
     ref.focus();
   });
@@ -108,12 +138,12 @@
               <div
                 class="col-span-2 flex justify-center text-center items-center"
               >
-                1
+                {product.quantity}
               </div>
               <div
                 class="col-span-1 flex justify-center text-center items-center"
               >
-                <button on:click={removeProductFromCart(product)}
+                <button on:click={() => removeProductFromCart(product)}
                   ><svelte:component
                     this={TrashBinSolid}
                     class="text-light-p_foreground h-full"
