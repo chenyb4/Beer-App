@@ -121,7 +121,8 @@ async function loadDummyData() {
       name: 'beer',
       price_in_credits: 1,
       amount_in_stock: 24,
-      EAN: '12345678910'
+      EAN: '12345678910',
+      isAlcoholic: true
     })
     await db.Order.create({
       amount_of_credits: 4
