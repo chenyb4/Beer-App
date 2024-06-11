@@ -38,7 +38,35 @@ services:
       - ${DBPORT}:${DBPORT}
     volumes:
       - beer-swipe-vol:/var/lib/postgresql/data
+  test:
+    build: ./Backend
+    environment:
+      PGPASSWORD: ${PGPASSWORD_TEST}
+      POSTGRES_USER: ${POSTGRES_USER_TEST}
+      DBURL: ${DBURL_TEST}
+      DBPORT: ${DBPORT}
+      FEURL: ${FEURL}
+      FEPORT: ${FEPORT}
+      DOCKERFEURL: ${DOCKERFEURL}
 
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SECURE: ${SMTP_SECURE}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_TLS_REJECT_UNAUTHORIZED: ${SMTP_TLS_REJECT_UNAUTHORIZED}
+      EMAIL_FROM: ${EMAIL_FROM}
+    command: npm run test
+  db-test:
+    image: postgres
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: ${PGPASSWORD_TEST}
+      POSTGRES_USER: ${POSTGRES_USER_TEST}
+    ports:
+      - ${DBPORT_TEST}:${DBPORT}
+    volumes:
+      - beer-swipe-test-vol:/var/lib/postgresql/data
   sveltekit:
     build: ./Frontend
     ports:
@@ -51,5 +79,6 @@ services:
 
 volumes:
   beer-swipe-vol:
+  beer-swipe-test-vol:
 
 

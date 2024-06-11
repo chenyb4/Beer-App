@@ -24,6 +24,10 @@ Order_Product.belongsTo(Order)
 
 User.hasMany(History)
 History.belongsTo(User)
+
+Product.hasMany(History)
+History.belongsTo(Product)
+
 Role.hasMany(User)
 User.belongsTo(Role)
 

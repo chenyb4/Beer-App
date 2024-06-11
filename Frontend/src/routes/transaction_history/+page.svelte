@@ -49,14 +49,14 @@
     <TableBody>
         {#each allOrders as entry}
             <TableBodyRow>
-                <TableCell position="first">{entry.buyerId}</TableCell>
+                <TableCell position="first">{entry.buyer.email}</TableCell>
                 <TableCell position="middle">{entry.amount_of_credits}</TableCell>
                 <TableCell position="middle">
                     <Button class="p-0" on:click={()=>openModal(entry.id)}>
                         <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
                     </Button>
                 </TableCell>
-                <TableCell position="middle">{entry.sellerId}</TableCell>
+                <TableCell position="middle">{entry.seller.username}</TableCell>
                 <TableCell position="last">{entry.createdAt}</TableCell>
             </TableBodyRow>
         {/each}
