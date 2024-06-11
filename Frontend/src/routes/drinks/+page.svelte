@@ -19,17 +19,29 @@
 
   function handleSelectProduct(event) {
     const selectedProduct = event.detail.product;
+    const stockAmount = selectedProduct.amount_in_stock;
 
     if (productCart.has(selectedProduct.id)) {
-      productCart.set(selectedProduct.id, {
-        ...selectedProduct,
-        quantity: productCart.get(selectedProduct.id).quantity + 1,
-      });
+      const currentQuantity = productCart.get(selectedProduct.id).quantity;
+      if (currentQuantity < stockAmount) {
+        productCart.set(selectedProduct.id, {
+          ...selectedProduct,
+          quantity: currentQuantity + 1,
+        });
+      } else {
+        alert("Product quantity exceeds stock amount.");
+        return;
+      }
     } else {
-      productCart.set(selectedProduct.id, {
-        ...selectedProduct,
-        quantity: 1,
-      });
+      if (stockAmount > 0) {
+        productCart.set(selectedProduct.id, {
+          ...selectedProduct,
+          quantity: 1,
+        });
+      } else {
+        alert("Product is out of stock.");
+        return;
+      }
     }
 
     selectedProducts = Array.from(productCart.values());
@@ -86,7 +98,7 @@
 </script>
 
 <div class="w-full h-full">
-  <div class="bg-dark-900 m-4 rounded-xl">
+  <div class="bg-dark-900 m-4 rounded-xl h-[85%] flex flex-col justify-between">
     <h2 class="p-4 font-bold">{$t("drinks.title")}</h2>
     <div class="flex flex-col mx-4">
       <div class="flex flex-row justify-between">
@@ -105,7 +117,7 @@
           </div>
         {/if}
       </div>
-      <div class=" w-72">
+      <div class="w-72">
         <ProductSearchBar
           bind:value={drinksScanner}
           bind:selectedProduct={product}
@@ -113,7 +125,7 @@
         />
       </div>
       <div
-        class="bg-dark-800 w-full my-6 flex flex-col h-72 rounded-xl overflow-auto"
+        class="bg-dark-800 w-full mt-6 flex flex-col h-80 rounded-xl overflow-auto"
       >
         <div class="px-4 py-2">
           <div class="grid grid-cols-6 gap-2 font-bold">
@@ -155,9 +167,11 @@
         </div>
       </div>
       {#if errorMessage}
-        <p class="text-red-400 px-4">{errorMessage}</p>
+        <p class="text-red-400 px-3">{errorMessage}</p>
       {/if}
-      <CtaButton captionText="Submit" onCTAButtonClickFn={handleSubmitOrder}
+    </div>
+    <div class="flex justify-end mb-4 mr-4">
+      <CtaButton captionText="SUBMIT" onCTAButtonClickFn={handleSubmitOrder}
       ></CtaButton>
     </div>
   </div>
