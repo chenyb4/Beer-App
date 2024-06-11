@@ -60,12 +60,8 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
             },
         );
         const updatedProduct = await this.getProduct(id);
-        const dummyUserId = 1  // The dummy user always has id number 1 -- will be changed
-        if (oldProduct.amount_in_stock < updatedProduct.amount_in_stock) {
-            await historyService.createHistory(Action.increase_product_stock, {"product_id": id}, dummyUserId)
-        } else if (oldProduct.amount_in_stock > updatedProduct.amount_in_stock) {
-            await historyService.createHistory(Action.decrease_product_stock, {"product_id": id}, dummyUserId)
-        }
+        const amountChanged = updatedProduct.amount_in_stock - oldProduct.amount_in_stock
+        await createProductStockHistory(id, amountChanged)
 
         return updatedProduct;
     } catch (err) {
@@ -74,8 +70,32 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
     }
 }
 
-exports.incrementProductStock = async (id, amount) => {
-    return await db.Product.increment({amount_in_stock: amount}, {where: {id}})
+async function createProductStockHistory(id, amountChanged) {
+    const dummyUserId = 1  // The dummy user always has id number 1 -- will be changed
+
+    if (amountChanged > 0) {
+        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amountChanged}, dummyUserId, id)
+    } else if (amountChanged < 0) {
+        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amountChanged * -1}, dummyUserId, id)
+    }
+}
+
+exports.incrementProductStock = async (id, amount, undo = false) => {
+    const product = await db.Product.increment({amount_in_stock: amount}, {where: {id}});
+    if (!undo) {
+        const dummyUserId = 1;  // The dummy user always has id number 1 -- will be changed
+        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amount}, dummyUserId, id);
+    }
+    return product;
+}
+
+exports.decrementProductStock = async (id, amount, undo = false) => {
+    const product = await db.Product.decrement({amount_in_stock: amount}, {where: {id}});
+    if (!undo) {
+        const dummyUserId = 1;  // The dummy user always has id number 1 -- will be changed
+        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amount}, dummyUserId, id);
+    }
+    return product;
 }
 
 exports.deleteProduct = async (id) => {

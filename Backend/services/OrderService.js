@@ -1,12 +1,36 @@
 const db = require('../database')
 const paginationService = require("./PaginationService");
 const productService = require('../services/ProductService');
+const {Op} = require("sequelize");
 
 exports.getAllOrders = async (req) => {
+    const {sellerId, buyerId, createdAt} = req.query
     let query = await paginationService.getQuery(req)
+    query = Object.assign({}, query, {
+        include: [
+            {model: db.User, as: 'buyer', foreignKey: 'buyerId', attributes: ['username', 'email']},
+            {model: db.User, as: 'seller', foreignKey: 'sellerId', attributes: ['username', 'email']},
+        ]
+    });
+    let queries = {}
+    if (sellerId !== undefined) queries = Object.assign({}, queries, {sellerId});
+    if (buyerId !== undefined) queries = Object.assign({}, queries, {buyerId});
+    if (createdAt !== undefined) {
+        const formattedDate = new Date(Date.parse(createdAt)).setHours(0, 0, 0, 0)
+        queries = Object.assign({}, queries, {
+            createdAt: {
+                [Op.and]: {
+                    [Op.gte]: formattedDate, // Greater than or equal to start of day
+                    [Op.lt]: formattedDate + (24 * 60 * 60 * 1000), // Less than next day
+                }
+            }
+        });
+    }
+    query = Object.assign({}, query, {where: queries});
+
 
     const orders = await db.Order.findAll(query);
-    const total = await db.Order.count();
+    const total = await db.Order.count({where: queries});
     return {returnedOrders: orders, total}
 };
 
@@ -21,8 +45,8 @@ exports.getOrder = async (id, details = true) => {
                 model: db.Order_Product,
                 include: {model: db.Product},
             },
-                {model: db.User, as: 'buyer', foreignKey: 'buyerId', attributes: ['username', 'email']},
-                {model: db.User, as: 'seller', foreignKey: 'sellerId', attributes: ['username', 'email']},
+                {model: db.User, as: 'buyer', foreignKey: 'buyerId'},
+                {model: db.User, as: 'seller', foreignKey: 'sellerId'},
             ]
         });
         return await db.Order.findByPk(id);
@@ -82,7 +106,7 @@ exports.addProductToOrder = async (orderId, productId, quantity) => {
                     await createNewOrderProduct(orderId, productId, quantity)
                 }
 
-                await productService.incrementProductStock(productId, -1 * quantity)
+                await productService.decrementProductStock(productId, quantity)
                 await this.incrementOrderPrice(orderId, product.price_in_credits, quantity)
 
             } catch (err) {
