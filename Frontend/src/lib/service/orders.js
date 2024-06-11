@@ -1,5 +1,6 @@
 let env = import.meta.env;
 
+
 export async function createOrder(buyerId) {
     let sellerId = 1; //Should be gotten from the loggedIn user
     try {
@@ -21,11 +22,6 @@ export async function createOrder(buyerId) {
 }
 
 export async function addProductsToOrder(orderId, productCart) {
-    const url = `http://localhost:8080/orders/products?id=${orderId}`;
-
-    console.log(orderId);
-
-  
     for (let [productId, productDetails] of productCart) {
       const productData = {
         productId: productId,
@@ -33,8 +29,8 @@ export async function addProductsToOrder(orderId, productCart) {
       };
       console.log(productData)
   
-      const response = await fetch(url, {
-        method: 'POST', // Change to the appropriate method (POST, PUT, etc.)
+      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/orders/products?id=${orderId}`, {
+        method: 'PUT', // Change to the appropriate method (POST, PUT, etc.)
         headers: {
           'Content-Type': 'application/json'
         },

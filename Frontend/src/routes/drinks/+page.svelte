@@ -48,11 +48,11 @@
     }
     errorMessage = "";
     const order = await createOrder(identifiedUser.id);
+    console.log(order);
     if (order) {
       await addProductsToOrder(order.id, productCart);
+      clearFields();
     }
-
-    clearFields();
   }
 
   function removeProductFromCart(product) {
