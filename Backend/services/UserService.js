@@ -4,6 +4,7 @@ const {Op} = require("sequelize");
 const paginationService = require("./PaginationService");
 const historyService = require("./HistoryService");
 const {Action} = require('../enums/Action')
+const salt = 10;
 
 exports.getAllUsers = async (req) => {
     let query = await paginationService.getQuery(req)
@@ -75,7 +76,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
         }
     }
     // For creating an executive
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     try {
         return await db.User.create({username, email, password: hashedPassword, date_of_birth});
@@ -180,7 +181,7 @@ exports.createUserIdentifier = async (id, baseCase = 0) => {
 }
 
 async function hashValue(value) {
-    return await bcrypt.hash(value, 10);
+    return await bcrypt.hash(value, salt);
 }
 
 exports.convertUser = (user) => {
