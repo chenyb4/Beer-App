@@ -1,5 +1,5 @@
 <script>
-  import { Alert, Input, Label, Modal, Radio } from "flowbite-svelte";
+  import { Alert, Input, Label, Modal, Radio, Select } from "flowbite-svelte";
   import { t } from "$lib/translations/index.js";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { fly } from "svelte/transition";
@@ -9,11 +9,16 @@
   export let product;
   export let onClose = async function () {};
 
-  let amount_in_stock = 0;
+  let amount_in_stock = 24;
   let helper = "";
   $: hideHelper = true;
 
-  const options = [4, 6, 12, 24];
+  const options = [
+    { name: 4, value: 4 },
+    { name: 6, value: 6 },
+    { name: 12, value: 12 },
+    { name: 24, value: 24 },
+  ];
 
   async function handleSubmit() {
     if (amount_in_stock.length === 0) {
@@ -53,12 +58,12 @@
     <Label for="amount-input" class="block mb-2"
       >{$t("inventory_management.stock")}</Label
     >
-    <div class="flex flex-row my-2">
-      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>4</Radio>
-      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>6</Radio>
-      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>12</Radio>
-      <Radio class="pr-4 h-full text-xl" bind:group={amount_in_stock}>24</Radio>
-    </div>
+    <Select
+      id="amount-input"
+      class="block mb-2"
+      items={options}
+      bind:value={amount_in_stock}
+    ></Select>
     <Input
       required
       bind:value={amount_in_stock}
