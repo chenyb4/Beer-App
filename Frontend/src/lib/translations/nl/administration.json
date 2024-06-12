@@ -14,5 +14,8 @@
   "userCreated": "Een gebruiker is aangemaakt!",
   "qrRecreation": "De QR code is opnieuw aangemaakt!",
   "edit": "Verander gebruiker ",
-  "changeRole": "Rol: "
+  "changeRole": "Rol: ",
+  "credits": "Credits: ",
+  "addUsers": "Meerdere gebruikers toevoegen",
+  "language": "Taal voorkeur: "
 }

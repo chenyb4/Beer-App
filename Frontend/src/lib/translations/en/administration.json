@@ -14,5 +14,8 @@
   "userCreated": "An user is created!",
   "qrRecreation": "The QR code has been recreated!",
   "edit": "Edit user ",
-  "changeRole": "Role: "
+  "changeRole": "Role: ",
+  "credits": "Credits: ",
+  "addUsers": "Add multiple users",
+  "language": "Preferred language: "
 }
