@@ -30,41 +30,46 @@ const historyController = require('./controllers/HistoryController');
 const creditController = require('./controllers/CreditController');
 const roleController = require('./controllers/RoleController');
 const mailController = require('./services/MailService');
+const authController = require("./controllers/AuthController");
+const authService = require("./services/AuthService");
 
 
-app.get('/users', userController.getUser);
-app.post('/users', userController.createUser);
-app.put('/users', userController.updateUser);
-app.put('/users/credits', userController.incrementUserCredits);
-app.delete('/users', userController.deleteUser);
+app.get('/users', authService.authenticateToken, userController.getUser);
+app.post('/users', authService.authenticateToken, userController.createUser);
+app.put('/users', authService.authenticateToken, userController.updateUser);
+app.put('/users/credits', authService.authenticateToken, userController.incrementUserCredits);
+app.delete('/users', authService.authenticateToken, userController.deleteUser);
 
-app.get('/orders', orderController.getOrder);
-app.post('/orders', orderController.createOrder);
-app.put('/orders', orderController.updateOrder);
-app.put('/orders/products', orderController.addProductToOrder)
-app.delete('/orders', orderController.deleteOrder);
+app.get('/orders', authService.authenticateToken, orderController.getOrder);
+app.post('/orders', authService.authenticateToken, orderController.createOrder);
+app.put('/orders', authService.authenticateToken, orderController.updateOrder);
+app.put('/orders/products', authService.authenticateToken, orderController.addProductToOrder)
+app.delete('/orders', authService.authenticateToken, orderController.deleteOrder);
 
-app.get('/histories', historyController.getHistory);
-app.get('/histories/inventory', historyController.getInventoryHistory);
-app.post('/histories/undo', historyController.undo);
-app.post('/histories', historyController.createHistory);
-app.put('/histories', historyController.updateHistory);
-app.delete('/histories', historyController.deleteHistory);
+app.get('/histories', authService.authenticateToken, historyController.getHistory);
+app.get('/histories/inventory', authService.authenticateToken, historyController.getInventoryHistory);
+app.post('/histories/undo', authService.authenticateToken, historyController.undo);
+app.post('/histories', authService.authenticateToken, historyController.createHistory);
+app.put('/histories', authService.authenticateToken, historyController.updateHistory);
+app.delete('/histories', authService.authenticateToken, historyController.deleteHistory);
 
-app.get('/credits', creditController.getCredit);
-app.put('/credits', creditController.updateCredit);
+app.get('/credits', authService.authenticateToken, creditController.getCredit);
+app.put('/credits', authService.authenticateToken, creditController.updateCredit);
 
-app.get('/roles', roleController.getRole);
-app.post('/roles', roleController.createRole);
-app.put('/roles', roleController.updateRole);
-app.delete('/roles', roleController.deleteRole);
+app.get('/roles', authService.authenticateToken, roleController.getRole);
+app.post('/roles', authService.authenticateToken, roleController.createRole);
+app.put('/roles', authService.authenticateToken, roleController.updateRole);
+app.delete('/roles', authService.authenticateToken, roleController.deleteRole);
 
-app.get('/products', productController.getProducts);
-app.post('/products', productController.createProduct);
-app.put('/products', productController.updateProduct);
-app.delete('/products', productController.deleteProduct)
+app.get('/products', authService.authenticateToken, productController.getProducts);
+app.post('/products', authService.authenticateToken, productController.createProduct);
+app.put('/products', authService.authenticateToken, productController.updateProduct);
+app.delete('/products', authService.authenticateToken, productController.deleteProduct)
 
-app.post('/mail', mailController.sendmail);
+app.post('/mail', authService.authenticateToken, mailController.sendmail);
+
+app.post('/login', authController.login)
+app.post('/register', authController.register);
 
 async function authenticate() {
   try {
@@ -108,7 +113,7 @@ async function loadDummyData() {
     await db.User.create({
       username: "dummy",
       email: "dummy@dummy.nl",
-      password: "password",
+      password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
       date_of_birth: "2024-05-23 13:03:32.289",
       roleId: 1
     });
@@ -116,7 +121,8 @@ async function loadDummyData() {
       name: 'beer',
       price_in_credits: 1,
       amount_in_stock: 24,
-      EAN: '12345678910'
+      EAN: '12345678910',
+      isAlcoholic: true
     })
     await db.Order.create({
       amount_of_credits: 4

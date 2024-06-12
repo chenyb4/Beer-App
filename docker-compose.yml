@@ -14,6 +14,8 @@ services:
       FEURL: ${FEURL}
       FEPORT: ${FEPORT}
       DOCKERFEURL: ${DOCKERFEURL}
+      TOKEN_SECRET: ${TOKEN_SECRET}
+      NODE_ENV: ${ENVIRONMENT}
 
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}

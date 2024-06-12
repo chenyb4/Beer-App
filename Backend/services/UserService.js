@@ -4,6 +4,7 @@ const {Op} = require("sequelize");
 const paginationService = require("./PaginationService");
 const historyService = require("./HistoryService");
 const {Action} = require('../enums/Action')
+const salt = 10;
 
 exports.getAllUsers = async (req) => {
     let query = await paginationService.getQuery(req)
@@ -75,7 +76,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
         }
     }
     // For creating an executive
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     try {
         return await db.User.create({username, email, password: hashedPassword, date_of_birth});
@@ -85,12 +86,22 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     }
 };
 
-exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_birth, language, roleId}) => {
+exports.updateUser = async ({
+                                id,
+                                isDisabled,
+                                username,
+                                email,
+                                credits,
+                                date_of_birth,
+                                language,
+                                roleId,
+                                loggedInUserId
+                            }) => {
     if (!id || (!isDisabled && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
         throw new Error('Missing required fields or no update data provided');
     }
 
-    if(date_of_birth !== undefined) date_of_birth = new Date(Date.parse(date_of_birth)).setHours(0, 0, 0, 0)
+    if (date_of_birth !== undefined) date_of_birth = new Date(Date.parse(date_of_birth)).setHours(0, 0, 0, 0)
 
 
     try {
@@ -111,7 +122,7 @@ exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_b
         );
 
         const newUser = await this.getUser(id);
-        await createHistoryEntryIfNecessary(oldUser, newUser);
+        await createHistoryEntryIfNecessary(oldUser, newUser, loggedInUserId);
         return newUser;
     } catch (err) {
         console.error(err);
@@ -119,22 +130,19 @@ exports.updateUser = async ({id, isDisabled, username, email, credits, date_of_b
     }
 };
 
-exports.incrementUserCredits = async (id, amount, undo = false) => {
+exports.incrementUserCredits = async (id, amount, loggedInUserId) => {
     if (!id || !amount) throw new Error('Missing required fields or no update data provided');
     try {
         const user = await db.User.increment({credits: amount}, {where: {id}});
 
-        if (!undo) {
-            const dummyUserId = 1   // The dummy user always has id number 1 -- will be changed
-            await historyService.createHistory(
-                Action.sell_credits,
-                {
-                    buyerId: id,
-                    credits: amount
-                },
-                dummyUserId
-            );
-        }
+        await historyService.createHistory(
+            Action.sell_credits,
+            {
+                buyerId: id,
+                credits: amount
+            },
+            loggedInUserId
+        );
 
 
         return user
@@ -180,7 +188,7 @@ exports.createUserIdentifier = async (id, baseCase = 0) => {
 }
 
 async function hashValue(value) {
-    return await bcrypt.hash(value, 10);
+    return await bcrypt.hash(value, salt);
 }
 
 exports.convertUser = (user) => {
@@ -196,9 +204,7 @@ exports.convertLanguage = (language) => {
     return languages[language];
 }
 
-const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
-    const dummyUserId = 1   // The dummy user always has id number 1 -- will be changed
-
+const createHistoryEntryIfNecessary = async (oldUser, newUser, loggedInUserId) => {
     if (oldUser.roleId !== newUser.roleId) {
         await historyService.createHistory(
             Action.change_role,
@@ -207,7 +213,7 @@ const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
                 old_role_id: oldUser.roleId,
                 new_role_id: newUser.roleId
             },
-            dummyUserId
+            loggedInUserId
         );
     }
 
@@ -216,7 +222,7 @@ const createHistoryEntryIfNecessary = async (oldUser, newUser) => {
         await historyService.createHistory(
             actionId,
             {user_id: newUser.id},
-            dummyUserId
+            loggedInUserId
         );
     }
 }
