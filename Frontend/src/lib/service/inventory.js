@@ -36,7 +36,6 @@ export async function loadProducts() {
 }
 
 export async function createProduct(name, price_in_credits, amount_in_stock, EAN, isAlcoholic) {
-  console.log(name, price_in_credits, amount_in_stock, EAN, isAlcoholic)
   try {
     const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products`, {
       headers: {
