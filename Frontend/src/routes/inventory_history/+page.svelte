@@ -6,39 +6,10 @@
     import TablePage from "$lib/components/table/TablePage.svelte";
 
 
-
-
-
-    // /** @type {import('./$types').PageData} */
-    // export let data;
-    // //this is an array of order objects
-    // let allOrders = data.allOrders.data;
-    // console.log(allOrders)
-
-
-    let inventoryHistory=[
-        {
-            drink:"beer",
-            amount:50,
-            barkeeper:"Danny",
-            date:"2025-5-5"
-        },
-        {
-            drink:"beer",
-            amount:50,
-            barkeeper:"Danny",
-            date:"2025-5-5"
-        },
-        {
-            drink:"beer",
-            amount:50,
-            barkeeper:"Danny",
-            date:"2025-5-5"
-        }
-    ]
-
-
-
+    /** @type {import('./$types').PageData} */
+    export let data;
+    //this is an array of order objects
+    let allInventoryHistories = data.allInventoryHistories.data;
 
 </script>
 
@@ -55,12 +26,12 @@
 
 
     <TableBody>
-        {#each inventoryHistory as entry}
+        {#each allInventoryHistories as entry}
             <TableBodyRow>
-                <TableCell position="first">{entry.drink}</TableCell>
-                <TableCell position="middle">{entry.amount}</TableCell>
-                <TableCell position="middle">{entry.barkeeper}</TableCell>
-                <TableCell position="last">{entry.date}</TableCell>
+                <TableCell position="first">{entry.productName}</TableCell>
+                <TableCell position="middle">{entry.description.inventory_change}</TableCell>
+                <TableCell position="middle">{entry.username}</TableCell>
+                <TableCell position="last">{entry.createdAt}</TableCell>
             </TableBodyRow>
         {/each}
     </TableBody>
