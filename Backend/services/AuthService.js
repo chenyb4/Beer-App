@@ -30,7 +30,7 @@ exports.authenticateToken = (req, res, next) => {
     // Check if the app is running in development mode
     if (process.env.NODE_ENV === 'development') {
         // For development, add a mock user to the request and bypass token verification
-        req.user = { username: 'dummy' };
+        req.user = { id: 1, username: 'dummy' };
         return next();
     }
 
