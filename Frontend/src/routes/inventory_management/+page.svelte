@@ -54,6 +54,7 @@
     price_in_credits: 0,
     amount_in_stock: 0,
     EAN: "",
+    isAlcoholic: "",
   };
 
   async function changeProducts(page = 1, pageSize = 6) {

@@ -14,5 +14,6 @@
   "areYouSure": "Are you sure you want to delete the following product:",
   "yes": "Yes",
   "no": "No",
-  "keepProduct": "Cancel" 
+  "keepProduct": "Cancel" ,
+  "isAlcoholic": "Is the product alcoholic?"
 }
