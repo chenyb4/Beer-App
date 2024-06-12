@@ -6,7 +6,7 @@
   import CreateProduct from "$lib/components/products/CreateProduct.svelte";
   import { getProducts } from "$lib/service/inventory";
   import { t } from "$lib/translations/index.js";
-  import { TableBody, TableBodyRow } from "flowbite-svelte";
+  import { Input, TableBody, TableBodyRow } from "flowbite-svelte";
   import {
     CirclePlusSolid,
     EditSolid,
@@ -15,6 +15,21 @@
   import AddProductStock from "$lib/components/products/AddProductStock.svelte";
   import UpdateProduct from "$lib/components/products/UpdateProduct.svelte";
   import DeleteProduct from "$lib/components/products/DeleteProduct.svelte";
+  import { onMount } from "svelte";
+
+  onMount(() => {
+    document.body.addEventListener(
+      "keydown",
+      function (event) {
+        products.forEach((product) => {
+          if (event === product.EAN) {
+            handleOpenAddProductStockDialog(product);
+          }
+        });
+      },
+      true
+    );
+  });
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -41,7 +56,7 @@
     EAN: "",
   };
 
-  async function changeProducts(page = 1, pageSize = 10) {
+  async function changeProducts(page = 1, pageSize = 6) {
     const response = await getProducts(page, pageSize);
     products = response.data;
     currentPage = page;
@@ -71,7 +86,7 @@
   }
 </script>
 
-<div class="fixed bottom-12 right-12 z-50">
+<div class="fixed bottom-28 right-12 z-50">
   <CtaButton
     captionText={$t("inventory_management.addProduct")}
     onCTAButtonClickFn={handleOpenCreateProductDialog}
@@ -93,38 +108,41 @@
   onClose={changeProducts}
   product={currentProduct}
 ></DeleteProduct>
-<TablePage
-  {pages}
-  {currentPage}
-  changeData={changeProducts}
-  title={$t("inventory_management.title")}
->
-  <TableHeader
-    headerValues={[
-      $t("inventory_management.name"),
-      $t("inventory_management.stock"),
-      "",
-    ]}
-  ></TableHeader>
-  <TableBody>
-    {#each products as product}
-      <TableBodyRow>
-        <TableCell position="first">{product.name}</TableCell>
-        <TableCell position="middle">{product.amount_in_stock}</TableCell>
-        <TableCell position="last"
-          ><div class="flex flex-row justify-evenly">
-            <button on:click={handleOpenAddProductStockDialog(product)}
-              ><CirclePlusSolid class={iconStyle}></CirclePlusSolid></button
-            >
-            <button on:click={handleOpenUpdateProductDialog(product)}>
-              <EditSolid class={iconStyle}></EditSolid>
-            </button>
-            <button on:click={handleDeleteProductDialog(product)}>
-              <TrashBinSolid class={iconStyle}></TrashBinSolid>
-            </button>
-          </div>
-        </TableCell>
-      </TableBodyRow>
-    {/each}
-  </TableBody>
-</TablePage>
+<div class="h-4/5 w-full">
+  <TablePage
+    {pages}
+    {currentPage}
+    pageSize={data.products.meta.page_size}
+    changeData={changeProducts}
+    title={$t("inventory_management.title")}
+  >
+    <TableHeader
+      headerValues={[
+        $t("inventory_management.name"),
+        $t("inventory_management.stock"),
+        "",
+      ]}
+    ></TableHeader>
+    <TableBody>
+      {#each products as product}
+        <TableBodyRow>
+          <TableCell position="first">{product.name}</TableCell>
+          <TableCell position="middle">{product.amount_in_stock}</TableCell>
+          <TableCell position="last"
+            ><div class="flex flex-row justify-evenly">
+              <button on:click={handleOpenAddProductStockDialog(product)}
+                ><CirclePlusSolid class={iconStyle}></CirclePlusSolid></button
+              >
+              <button on:click={handleOpenUpdateProductDialog(product)}>
+                <EditSolid class={iconStyle}></EditSolid>
+              </button>
+              <button on:click={handleDeleteProductDialog(product)}>
+                <TrashBinSolid class={iconStyle}></TrashBinSolid>
+              </button>
+            </div>
+          </TableCell>
+        </TableBodyRow>
+      {/each}
+    </TableBody>
+  </TablePage>
+</div>

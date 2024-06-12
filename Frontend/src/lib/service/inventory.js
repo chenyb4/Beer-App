@@ -18,7 +18,7 @@ export async function loadProducts() {
     }
   }
 
-  export async function getProducts(page = 1, pageSize = 10) {
+  export async function getProducts(page, pageSize) {
     try {
         const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products?pageSize=${pageSize}&page=${page}`, {
             headers: {
