@@ -23,14 +23,29 @@
   }
 
   function filterProductOptions() {
+    const isAdult = isAbove18(identifiedUser.date_of_birth);
     filteredProductsOptions = value
-      ? products.filter(
-          (product) =>
+      ? products.filter((product) => {
+          const matchesSearch =
             product.name.toLowerCase().includes(value.toLowerCase()) ||
-            product.EAN.includes(value)
-        )
+            product.EAN.includes(value);
+          const allowedProduct = isAdult || !product.isAlcoholic;
+          return matchesSearch && allowedProduct;
+        })
       : [];
     document.getElementById("productOptions").style.display = "block";
+  }
+
+  function isAbove18(dob = new Date()) {
+    console.log(dob);
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age >= 18;
   }
 
   function selectProduct(product) {
