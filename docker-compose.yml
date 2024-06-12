@@ -68,14 +68,10 @@ services:
     volumes:
       - beer-swipe-test-vol:/var/lib/postgresql/data
   sveltekit:
-    build: ./Frontend
+    build:
+      context: ./Frontend
     ports:
-      - ${FEPORT}:5173
-    environment:
-      VITE_APIURL: ${APIURL}
-      VITE_APIPORT: ${APIPORT}
-    #      NODE_ENV: production
-    command: npm run dev -- --host
+      - ${FEPORT}:4173
 
 volumes:
   beer-swipe-vol:

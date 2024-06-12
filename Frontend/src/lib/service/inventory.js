@@ -1,11 +1,7 @@
-import { t } from "$lib/translations";
-
-let env = import.meta.env;
-
 export async function loadProducts() {
     try {
       const response = await fetch(
-        `http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products`
+        `http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products`
       );
 
       if (!response.ok) {
@@ -20,7 +16,7 @@ export async function loadProducts() {
 
   export async function getProducts(page = 1, pageSize = 10) {
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products?pageSize=${pageSize}&page=${page}`, {
+        const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products?pageSize=${pageSize}&page=${page}`, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -37,7 +33,7 @@ export async function loadProducts() {
 
 export async function createProduct(name, price_in_credits, amount_in_stock, EAN) {
   try {
-    const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products`, {
+    const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products`, {
       headers: {
           "Content-Type": "application/json"
       },
@@ -55,7 +51,7 @@ export async function createProduct(name, price_in_credits, amount_in_stock, EAN
 }
   export async function updateAmountInStock(amount_in_stock, productID) {
     try {
-      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products/?id=${productID}`, {
+      const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products/?id=${productID}`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -74,7 +70,7 @@ export async function createProduct(name, price_in_credits, amount_in_stock, EAN
 
   export async function updateProduct(product, name = product.name, price_in_credits = product.price_in_credits, amount_in_stock = product.amount_in_stock, EAN = product.EAN) {
     try {
-      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products/?id=${product.id}`, {
+      const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products/?id=${product.id}`, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -93,7 +89,7 @@ export async function createProduct(name, price_in_credits, amount_in_stock, EAN
 
   export async function deleteProduct(productID) {
     try {
-      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/products/?id=${productID}`, {
+      const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/products/?id=${productID}`, {
         headers: {
           "Content-Type": "application/json"
         },

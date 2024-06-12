@@ -1,4 +1,4 @@
-FROM node:18.18.0-alpine as build
+FROM node:22-alpine3.19
 
 WORKDIR /app
 
@@ -8,8 +8,11 @@ RUN npm install
 
 COPY . .
 
+ENV VITE_APIURL=127.0.0.1
+ENV VITE_APIPORT=8080
+
 RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "preview" ]
+CMD ["npm", "run", "preview", "--", "--host"]

@@ -1,5 +1,3 @@
-let env = import.meta.env;
-
 export async function createOrder(buyerId, products) {
     let sellerId = 1; //Should be gotten from the loggedIn user
     let amount_of_credits = 0;
@@ -7,7 +5,7 @@ export async function createOrder(buyerId, products) {
         amount_of_credits += product.price_in_credits;
     });
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/orders", {
+        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/orders", {
             headers: {
                 "Content-Type": "application/json"
             },
