@@ -80,6 +80,7 @@
           bind:value={drinksScanner}
           bind:selectedProduct={product}
           on:selectProduct={handleSelectProduct}
+          bind:identifiedUser
         />
       </div>
       <div

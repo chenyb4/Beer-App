@@ -7,9 +7,20 @@
   export let filteredProductsOptions = [];
   export let value = "";
   export let selectedProduct;
+  export let identifiedUser;
+
+  let elementInputSearchbar;
 
   let products = [];
   const dispatch = createEventDispatcher();
+
+  $: if (elementInputSearchbar) {
+    if (identifiedUser) {
+      elementInputSearchbar.removeAttribute("disabled");
+    } else {
+      elementInputSearchbar.setAttribute("disabled", true);
+    }
+  }
 
   function filterProductOptions() {
     filteredProductsOptions = value
@@ -50,6 +61,8 @@
 <div id="searchBar" class="flex flex-col">
   <label class="pb-0.5" for="inputSearchBar">{$t("drinks.drinkScanner")}</label>
   <input
+    bind:this={elementInputSearchbar}
+    disabled
     class="dark:bg-dark-800 border-none rounded-lg"
     type="text"
     id="inputSearchBar"
