@@ -1,29 +1,53 @@
 <script>
-  // @ts-nocheck
-
   import { t } from "$lib/translations/index.js";
   import { onMount } from "svelte";
   import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { TrashBinSolid } from "flowbite-svelte-icons";
-  import { createOrder } from "$lib/service/orders";
+  import { addProductsToOrder, createOrder } from "$lib/service/orders";
 
-  let ref;
+  let ref = {};
   let identifiedUser;
-  let identifier;
-  let userName;
-  let drinksScanner;
-  let product;
+  let identifier = "";
+  let userName = "";
+  let drinksScanner = "";
+  let product = {};
   let selectedProducts = [];
   let errorMessage = "";
+  let productCart = new Map();
 
   function handleSelectProduct(event) {
     const selectedProduct = event.detail.product;
-    selectedProducts = [...selectedProducts, selectedProduct];
+    const stockAmount = selectedProduct.amount_in_stock;
+
+    if (productCart.has(selectedProduct.id)) {
+      const currentQuantity = productCart.get(selectedProduct.id).quantity;
+      if (currentQuantity < stockAmount) {
+        productCart.set(selectedProduct.id, {
+          ...selectedProduct,
+          quantity: currentQuantity + 1,
+        });
+      } else {
+        alert("Product quantity exceeds stock amount.");
+        return;
+      }
+    } else {
+      if (stockAmount > 0) {
+        productCart.set(selectedProduct.id, {
+          ...selectedProduct,
+          quantity: 1,
+        });
+      } else {
+        alert("Product is out of stock.");
+        return;
+      }
+    }
+
+    selectedProducts = Array.from(productCart.values());
   }
 
-  function handleSubmitOrder() {
+  async function handleSubmitOrder() {
     if (!identifiedUser) {
       errorMessage = "User must be identified before submitting an order.";
       return;
@@ -35,28 +59,46 @@
       return;
     }
     errorMessage = "";
-    createOrder(identifiedUser.id, selectedProducts);
-    clearFields();
+    const order = await createOrder(identifiedUser.id);
+    console.log(order);
+    if (order) {
+      await addProductsToOrder(order.id, productCart);
+      clearFields();
+    }
   }
 
   function removeProductFromCart(product) {
-    selectedProducts = selectedProducts.filter((p) => p.id !== product.id);
+    if (productCart.has(product.id)) {
+      let currentProduct = productCart.get(product.id);
+      if (currentProduct.quantity > 1) {
+        productCart.set(product.id, {
+          ...currentProduct,
+          quantity: currentProduct.quantity - 1,
+        });
+      } else {
+        productCart.delete(product.id);
+      }
+    }
+
+    selectedProducts = Array.from(productCart.values());
   }
 
   function clearFields() {
     identifier = "";
     identifiedUser = "";
-    selectedProducts = "";
+    selectedProducts = [];
     userName = "";
     drinksScanner = "";
+    productCart.clear();
   }
+
   onMount(() => {
     ref.focus();
   });
 </script>
 
 <div class="w-full h-full">
-  <div class="bg-dark-900 m-4 rounded-xl">
+  <div class="bg-dark-900 m-4 rounded-xl h-[85%] flex flex-col justify-between">
     <h2 class="p-4 font-bold">{$t("drinks.title")}</h2>
     <div class="flex flex-col mx-4">
       <div class="flex flex-row justify-between">
@@ -75,7 +117,7 @@
           </div>
         {/if}
       </div>
-      <div class=" w-72">
+      <div class="w-72">
         <ProductSearchBar
           bind:value={drinksScanner}
           bind:selectedProduct={product}
@@ -84,7 +126,7 @@
         />
       </div>
       <div
-        class="bg-dark-800 w-full my-6 flex flex-col h-72 rounded-xl overflow-auto"
+        class="bg-dark-800 w-full mt-6 flex flex-col h-80 rounded-xl overflow-auto"
       >
         <div class="px-4 py-2">
           <div class="grid grid-cols-6 gap-2 font-bold">
@@ -109,12 +151,12 @@
               <div
                 class="col-span-2 flex justify-center text-center items-center"
               >
-                1
+                {product.quantity}
               </div>
               <div
                 class="col-span-1 flex justify-center text-center items-center"
               >
-                <button on:click={removeProductFromCart(product)}
+                <button on:click={() => removeProductFromCart(product)}
                   ><svelte:component
                     this={TrashBinSolid}
                     class="text-light-p_foreground h-full"
@@ -126,9 +168,11 @@
         </div>
       </div>
       {#if errorMessage}
-        <p class="text-red-400 px-4">{errorMessage}</p>
+        <p class="text-red-400 px-3">{errorMessage}</p>
       {/if}
-      <CtaButton captionText="Submit" onCTAButtonClickFn={handleSubmitOrder}
+    </div>
+    <div class="flex justify-end mb-4 mr-4">
+      <CtaButton captionText="SUBMIT" onCTAButtonClickFn={handleSubmitOrder}
       ></CtaButton>
     </div>
   </div>
