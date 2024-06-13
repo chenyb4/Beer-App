@@ -11,9 +11,10 @@ export const actions = {
 		try {
 			const userToken = await login(username, password);
 			cookies.set('jwt', userToken, {path: '/'});
+			return true;
 		  } catch (error) {
 			console.log(error);
-		  }
-		  return { success: true };
+			return false;
+		  }		  
 	}
 };

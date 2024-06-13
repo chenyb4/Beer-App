@@ -18,16 +18,27 @@
       return;
     }
     loading = true;
-    try {
-      const userToken = await login(username, password);
-      localStorage.setItem("token", userToken);
-      token.set(userToken);
-      errorMessage = "";
-      setTimeout(() => {
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+
+    const response = await fetch("/login", {
+      method: "POST",
+      body: formData,
+    });
+    if (response.ok) {
+      const result = await response.json();
+      console.log(result.data);
+      if (result.data == "[true]") {
+        setTimeout(() => {
+          loading = false;
+          goto("/");
+        }, 2500);
+      } else {
         loading = false;
-        goto("/");
-      }, 2500);
-    } catch (error) {
+        errorMessage = $t("login.notCorrect");
+      }
+    } else {
       loading = false;
       errorMessage = $t("login.notCorrect");
     }
@@ -47,40 +58,39 @@
     <div class="m-auto h-[50%] w-[45%] bg-dark-800 rounded-xl flex relative">
       <div class="h-full flex-1 flex flex-col justify-start p-6">
         <h1 class="text-white text-2xl mb-10">Welcome back!</h1>
-        <form method="POST">
-          <Label for="username" class="text-white mb-2">Username:</Label>
-          <Input
-            required
-            type="text"
-            id="username"
-            name="username"
-            class="bg-dark-900 border-none mb-4 text-white"
-            bind:value={username}
-          ></Input>
-          <Label for="password" class="text-white mb-2">Password:</Label>
-          <Input
-            required
-            type="password"
-            id="password"
-            name="password"
-            class="bg-dark-900 border-none text-white"
-            bind:value={password}
-          ></Input>
-          <div
-            class="text-red-400 mt-4 text-sm h-4 {errorMessage
-              ? 'visible'
-              : 'invisible'}"
-          >
-            {errorMessage}
-          </div>
-          <button
-            type="submit"
-            class="bg-dark-p_foreground p-4 rounded-full mt-8"
-            disabled={loading}
-          >
-            LOGIN
-          </button>
-        </form>
+        <Label for="username" class="text-white mb-2">Username:</Label>
+        <Input
+          required
+          type="text"
+          id="username"
+          name="username"
+          class="bg-dark-900 border-none mb-4 text-white"
+          bind:value={username}
+        ></Input>
+        <Label for="password" class="text-white mb-2">Password:</Label>
+        <Input
+          required
+          type="password"
+          id="password"
+          name="password"
+          class="bg-dark-900 border-none text-white"
+          bind:value={password}
+        ></Input>
+        <div
+          class="text-red-400 mt-4 text-sm h-4 {errorMessage
+            ? 'visible'
+            : 'invisible'}"
+        >
+          {errorMessage}
+        </div>
+        <button
+          on:click={handleLogin}
+          type="submit"
+          class="bg-dark-p_foreground p-4 rounded-full mt-8"
+          disabled={loading}
+        >
+          LOGIN
+        </button>
       </div>
 
       <div class="h-[90%] w-0.5 bg-dark-900 flex items-center my-3"></div>
