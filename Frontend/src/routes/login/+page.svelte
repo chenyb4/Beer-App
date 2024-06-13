@@ -47,37 +47,40 @@
     <div class="m-auto h-[50%] w-[45%] bg-dark-800 rounded-xl flex relative">
       <div class="h-full flex-1 flex flex-col justify-start p-6">
         <h1 class="text-white text-2xl mb-10">Welcome back!</h1>
-        <Label for="username" class="text-white mb-2">Username:</Label>
-        <Input
-          required
-          type="text"
-          id="username"
-          class="bg-dark-900 border-none mb-4 text-white"
-          bind:value={username}
-        ></Input>
-        <Label for="password" class="text-white mb-2">Password:</Label>
-        <Input
-          required
-          type="password"
-          id="password"
-          class="bg-dark-900 border-none text-white"
-          bind:value={password}
-        ></Input>
-        <div
-          class="text-red-400 mt-4 text-sm h-4 {errorMessage
-            ? 'visible'
-            : 'invisible'}"
-        >
-          {errorMessage}
-        </div>
-        <Button
-          type="button"
-          class="bg-dark-p_foreground p-4 rounded-full mt-8"
-          on:click={handleLogin}
-          disabled={loading}
-        >
-          LOGIN
-        </Button>
+        <form method="POST">
+          <Label for="username" class="text-white mb-2">Username:</Label>
+          <Input
+            required
+            type="text"
+            id="username"
+            name="username"
+            class="bg-dark-900 border-none mb-4 text-white"
+            bind:value={username}
+          ></Input>
+          <Label for="password" class="text-white mb-2">Password:</Label>
+          <Input
+            required
+            type="password"
+            id="password"
+            name="password"
+            class="bg-dark-900 border-none text-white"
+            bind:value={password}
+          ></Input>
+          <div
+            class="text-red-400 mt-4 text-sm h-4 {errorMessage
+              ? 'visible'
+              : 'invisible'}"
+          >
+            {errorMessage}
+          </div>
+          <button
+            type="submit"
+            class="bg-dark-p_foreground p-4 rounded-full mt-8"
+            disabled={loading}
+          >
+            LOGIN
+          </button>
+        </form>
       </div>
 
       <div class="h-[90%] w-0.5 bg-dark-900 flex items-center my-3"></div>
