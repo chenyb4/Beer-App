@@ -19,3 +19,7 @@ body::before {
   background-size: auto 11%;
   z-index: -1; /* Ensure the background stays behind other content */
 }
+
+html {
+  font-family: "Lato", sans-serif;
+}

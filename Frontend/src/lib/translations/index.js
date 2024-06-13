@@ -98,6 +98,18 @@ export const config = {
             routes: ['/transaction_history'],
             loader: async () => (await import('./nl/transaction_history.json')).default,
         },
+        {
+            locale: 'en',
+            key: 'login',
+            routes: ['/login'],
+            loader: async () => (await import('./en/login.json')).default,
+        },
+        {
+            locale: 'nl',
+            key: 'login',
+            routes: ['/login'],
+            loader: async () => (await import('./nl/login.json')).default,
+        }
     ],
 };
 
