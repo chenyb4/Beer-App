@@ -1,14 +1,11 @@
 <script>
   import { Button, Input, Label } from "flowbite-svelte";
-  import { login } from "$lib/service/authentication.js";
-  import { writable } from "svelte/store";
   import { goto } from "$app/navigation";
   import { t } from "$lib/translations";
 
   let username = "";
   let password = "";
   let errorMessage = "";
-  let token = writable("");
   let loading = false;
 
   async function handleLogin() {
@@ -96,7 +93,7 @@
       <div class="h-[90%] w-0.5 bg-dark-900 flex items-center my-3"></div>
 
       <div class="h-full flex-1 flex justify-center items-center">
-        <img src="src/lib/images/ada-logo.png" alt="Logo" class="w-32 h-auto" />
+        <img src="$lib/images/ada-logo.png" alt="Logo" class="w-32 h-auto" />
       </div>
     </div>
   {/if}
@@ -109,7 +106,7 @@
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-image: url("src/lib/images/login_background.svg");
+    background-image: url("$lib/images/login_background.svg");
   }
 
   .loader {
