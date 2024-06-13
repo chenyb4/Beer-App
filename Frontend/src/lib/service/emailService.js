@@ -1,7 +1,6 @@
 export async function getQRandSendMail(userID) {
-    let env = import.meta.env;
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/mail?id=" + userID, {
+        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/mail?id=" + userID, {
             headers: {
                 "Content-Type": "application/json"
             },

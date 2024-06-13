@@ -1,9 +1,7 @@
-let env=import.meta.env;
-
 export async function loadDefaultCredits(){
     try {
         const response = await fetch(
-            `http://${env.VITE_APIURL}:${env.VITE_APIPORT}/credits?id=2`
+            `http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/credits?id=2`
         );
 
         if (!response.ok) {
@@ -18,7 +16,7 @@ export async function loadDefaultCredits(){
 
 export async function getDefaultCredits(){
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/credits?id=2`, {
+        const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/credits?id=2`, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -35,7 +33,7 @@ export async function getDefaultCredits(){
 
 export async function addCreditsForAUser(id, creditsToAdd) {
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/users/credits?id=${id}`, {
+        const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/users/credits?id=${id}`, {
             headers: {
                 "Content-Type": "application/json"
             },

@@ -1,10 +1,7 @@
-let env = import.meta.env;
-
-
 export async function createOrder(buyerId) {
     let sellerId = 1; //Should be gotten from the loggedIn user
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/orders", {
+        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/orders", {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -29,7 +26,7 @@ export async function addProductsToOrder(orderId, productCart) {
       };
       console.log(productData)
   
-      const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/orders/products?id=${orderId}`, {
+      const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/orders/products?id=${orderId}`, {
         method: 'PUT', // Change to the appropriate method (POST, PUT, etc.)
         headers: {
           'Content-Type': 'application/json'
