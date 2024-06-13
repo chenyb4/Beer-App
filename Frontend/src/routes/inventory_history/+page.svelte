@@ -29,15 +29,17 @@
         {#each allInventoryHistories as entry}
             <TableBodyRow>
                 <TableCell position="first">{entry.productName}</TableCell>
-                <TableCell position="middle">{entry.description.inventory_change}</TableCell>
+                {#if (entry.action == 0)}
+                    <TableCell position="middle">{entry.description.inventory_change}</TableCell>
+                {:else}
+                    <TableCell position="middle">-{entry.description.inventory_change}</TableCell>
+                {/if}
                 <TableCell position="middle">{entry.username}</TableCell>
                 <TableCell position="last">{entry.createdAt}</TableCell>
             </TableBodyRow>
         {/each}
     </TableBody>
 </TablePage>
-
-
 
 
 </body>
