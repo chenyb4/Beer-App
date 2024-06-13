@@ -38,11 +38,21 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const { id } = req.query;
-    let { isDisabled, username, email, credits, date_of_birth, language, roleId } = req.body;
+    const {id} = req.query;
+    let {isDisabled, username, email, credits, date_of_birth, language, roleId} = req.body;
     if (language !== undefined) language = userService.convertLanguage(language);
     try {
-        let updatedUser = await userService.updateUser({id, isDisabled, username, email, credits, date_of_birth, language, roleId});
+        let updatedUser = await userService.updateUser({
+            id,
+            isDisabled,
+            username,
+            email,
+            credits,
+            date_of_birth,
+            language,
+            roleId,
+            loggedInUserId: req.user.id
+        });
         if (!updatedUser) {
             return res.status(404).json({message: 'User not found'});
         }
@@ -54,15 +64,14 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-exports.incrementUserCredits = async (req,res) => {
+exports.incrementUserCredits = async (req, res) => {
     const {id} = req.query;
     const {amount} = req.body;
 
 
-
-    try{
-        if(amount !== undefined && amount <= 0) throw new Error('Amount must be higher than 0');
-        const result = await userService.incrementUserCredits(id, amount);
+    try {
+        if (amount !== undefined && amount <= 0) throw new Error('Amount must be higher than 0');
+        const result = await userService.incrementUserCredits(id, amount, req.user.id);
         return res.status(200).json(result)
     } catch (err) {
         console.error(err);

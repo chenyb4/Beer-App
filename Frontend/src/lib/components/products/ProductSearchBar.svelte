@@ -7,19 +7,45 @@
   export let filteredProductsOptions = [];
   export let value = "";
   export let selectedProduct;
+  export let identifiedUser;
+
+  let elementInputSearchbar;
 
   let products = [];
   const dispatch = createEventDispatcher();
 
+  $: if (elementInputSearchbar) {
+    if (identifiedUser) {
+      elementInputSearchbar.removeAttribute("disabled");
+    } else {
+      elementInputSearchbar.setAttribute("disabled", true);
+    }
+  }
+
   function filterProductOptions() {
+    const isAdult = isAbove18(identifiedUser.date_of_birth);
     filteredProductsOptions = value
-      ? products.filter(
-          (product) =>
+      ? products.filter((product) => {
+          const matchesSearch =
             product.name.toLowerCase().includes(value.toLowerCase()) ||
-            product.EAN.includes(value)
-        )
+            product.EAN.includes(value);
+          const allowedProduct = isAdult || !product.isAlcoholic;
+          return matchesSearch && allowedProduct;
+        })
       : [];
     document.getElementById("productOptions").style.display = "block";
+  }
+
+  function isAbove18(dob = new Date()) {
+    console.log(dob);
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age >= 18;
   }
 
   function selectProduct(product) {
@@ -50,6 +76,8 @@
 <div id="searchBar" class="flex flex-col">
   <label class="pb-0.5" for="inputSearchBar">{$t("drinks.drinkScanner")}</label>
   <input
+    bind:this={elementInputSearchbar}
+    disabled
     class="dark:bg-dark-800 border-none rounded-lg"
     type="text"
     id="inputSearchBar"

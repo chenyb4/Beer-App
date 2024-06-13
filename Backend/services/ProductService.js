@@ -26,12 +26,12 @@ exports.getProduct = async (id) => {
 }
 
 // Create product
-exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN) => {
-    if (!name || !price_in_credits || !amount_in_stock || !EAN) {
-        throw new Error('Missing required fields: ');
+exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN, isAlcoholic) => {
+    if (!name || !price_in_credits || amount_in_stock === undefined || !EAN || !isAlcoholic) {
+        throw new Error('Missing one of the required fields: name, price_in_credits, amount_in_stock, EAN or isAlcoholic');
     }
     try {
-        return db.Product.create({name, price_in_credits, amount_in_stock, EAN});
+        return db.Product.create({name, price_in_credits, amount_in_stock, EAN, isAlcoholic});
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create product');
@@ -39,7 +39,7 @@ exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN) => 
 }
 
 // Update product
-exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN) => {
+exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN, loggedInUserId) => {
     if (!id || (!name && !price_in_credits && !amount_in_stock && !EAN)) {
         throw new Error('Missing required fields or no update data provided');
     }
@@ -61,7 +61,7 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
         );
         const updatedProduct = await this.getProduct(id);
         const amountChanged = updatedProduct.amount_in_stock - oldProduct.amount_in_stock
-        await createProductStockHistory(id, amountChanged)
+        await createProductStockHistory(id, amountChanged, loggedInUserId)
 
         return updatedProduct;
     } catch (err) {
@@ -70,31 +70,23 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN)
     }
 }
 
-async function createProductStockHistory(id, amountChanged) {
-    const dummyUserId = 1  // The dummy user always has id number 1 -- will be changed
-
+async function createProductStockHistory(id, amountChanged, loggedInUserId) {
     if (amountChanged > 0) {
-        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amountChanged}, dummyUserId, id)
+        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amountChanged}, loggedInUserId, id)
     } else if (amountChanged < 0) {
-        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amountChanged * -1}, dummyUserId, id)
+        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amountChanged * -1}, loggedInUserId, id)
     }
 }
 
-exports.incrementProductStock = async (id, amount, undo = false) => {
+exports.incrementProductStock = async (id, amount, loggedInUserId) => {
     const product = await db.Product.increment({amount_in_stock: amount}, {where: {id}});
-    if (!undo) {
-        const dummyUserId = 1;  // The dummy user always has id number 1 -- will be changed
-        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amount}, dummyUserId, id);
-    }
+    await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amount}, loggedInUserId, id);
     return product;
 }
 
-exports.decrementProductStock = async (id, amount, undo = false) => {
+exports.decrementProductStock = async (id, amount, loggedInUserId) => {
     const product = await db.Product.decrement({amount_in_stock: amount}, {where: {id}});
-    if (!undo) {
-        const dummyUserId = 1;  // The dummy user always has id number 1 -- will be changed
-        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amount}, dummyUserId, id);
-    }
+    await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amount}, loggedInUserId, id);
     return product;
 }
 

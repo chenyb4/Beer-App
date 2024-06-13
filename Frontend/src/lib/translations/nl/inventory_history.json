@@ -1,4 +1,7 @@
 {
-  "title": "Dit is een Nederlandse titel",
-  "text": "Hallo!"
+  "inventoryHistory": "VOORRAADGESCHIEDENIS",
+  "drink": "Drank",
+  "amount": "Hoeveelheid",
+  "barkeeper": "Barman",
+  "date": "Datum"
 }

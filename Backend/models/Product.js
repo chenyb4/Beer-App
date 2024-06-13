@@ -26,6 +26,10 @@ module.exports = function (sequelize) {
                 type: DataTypes.STRING,
                 len: [8,13],
             },
+            isAlcoholic: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: true
+            }
         },
     );
     return Product;

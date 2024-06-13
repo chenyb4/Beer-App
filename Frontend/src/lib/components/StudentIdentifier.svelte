@@ -36,8 +36,8 @@
         bind:value={identifier}
         bind:this={ref}
       />
-      <button class="bg-dark-200 rounded-2xl ml-2 px-4 py-2" type="submit">
-        Submit
+      <button class="bg-dark-200 rounded-full ml-2 px-4 py-2" type="submit">
+        SUBMIT
       </button>
       {#if errorMessage}
         <p class="text-red-400 px-4">{errorMessage}</p>
@@ -48,7 +48,7 @@
     >
     <input
       disabled
-      class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0 opacity-55 max-w-72"
+      class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0 text-opacity-30 dark:text-opacity-30 max-w-72"
       id="studentNumber_input"
       type="text"
       bind:value={userName}

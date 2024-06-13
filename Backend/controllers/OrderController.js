@@ -21,10 +21,10 @@ exports.getOrder = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-    const {buyerId, sellerId} = req.body;
+    const {buyerId} = req.body;
 
     try {
-        const newOrder = await orderService.createOrder(buyerId, sellerId);
+        const newOrder = await orderService.createOrder(buyerId, req.user.id);
         res.status(201).json(newOrder);
     } catch (err) {
         console.error(err);
@@ -54,7 +54,7 @@ exports.addProductToOrder = async (req, res) => {
 
 
     try {
-        const newOrderProduct = await orderService.addProductToOrder(id, productId, Number(quantity))
+        const newOrderProduct = await orderService.addProductToOrder(id, productId, Number(quantity), req.user.id)
 
         res.status(200).json(newOrderProduct);
     } catch (err) {
