@@ -40,3 +40,21 @@ export async function addProductsToOrder(orderId, productCart) {
       }
     }
   }
+
+  export async function confirmOrder(orderId) {
+    try {
+      const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/orders/confirm?id=" + orderId, {
+          headers: {
+              "Content-Type": "application/json"
+          },
+          method: "PUT",
+
+      });
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return await response.json();
+      } catch (error) {
+          console.error("Failed to fetch user data:", error);
+      }
+  }
