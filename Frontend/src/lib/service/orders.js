@@ -1,12 +1,11 @@
 export async function createOrder(buyerId) {
-    let sellerId = 1; //Should be gotten from the loggedIn user
     try {
         const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/orders", {
             headers: {
                 "Content-Type": "application/json"
             },
             method: "POST",
-            body: JSON.stringify({buyerId, sellerId})
+            body: JSON.stringify({buyerId})
         });
 
             if (!response.ok) {
