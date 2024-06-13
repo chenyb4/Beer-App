@@ -72,6 +72,10 @@ services:
       context: ./Frontend
     ports:
       - ${FEPORT}:4173
+    environment:
+      VITE_APIURL: ${APIURL}
+      VITE_APIPORT: ${APIPORT}
+    command: npm run preview -- --host
 
 volumes:
   beer-swipe-vol:
