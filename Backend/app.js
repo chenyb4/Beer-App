@@ -43,6 +43,7 @@ app.delete('/users', authService.authenticateToken, userController.deleteUser);
 app.get('/orders', authService.authenticateToken, orderController.getOrder);
 app.post('/orders', authService.authenticateToken, orderController.createOrder);
 app.put('/orders', authService.authenticateToken, orderController.updateOrder);
+app.put('/orders/confirm', authService.authenticateToken, orderController.confirmOrder);
 app.put('/orders/products', authService.authenticateToken, orderController.addProductToOrder)
 app.delete('/orders', authService.authenticateToken, orderController.deleteOrder);
 
@@ -120,13 +121,15 @@ async function loadDummyData() {
                 email: "dummy@dummy.nl",
                 password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: "2024-05-23 00:00:00.000",
-                roleId: 3
+                roleId: 3,
+                credits: 20
             }, {
                 username: "dummy2",
                 email: "dummy2@dummy.nl",
                 password: "$2b$10$PhqaHcR13xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: "1990-05-23 00:00:00.000",
-                roleId: 2
+                roleId: 2,
+                credits: 20
             },
         ]);
         await db.Product.create({
