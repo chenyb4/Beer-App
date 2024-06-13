@@ -14,6 +14,14 @@ module.exports = function (sequelize) {
                 allowNull: false,
                 defaultValue: 0,
             },
+            buyerId: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            sellerId: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
         },
     );
 
