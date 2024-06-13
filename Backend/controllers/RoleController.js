@@ -1,5 +1,6 @@
 const roleService = require('../services/RoleService');
 const paginationService = require("../services/PaginationService");
+const logger = require("../logger");
 
 exports.getRole = async (req, res) => {
     const {id} = req.query;
@@ -14,7 +15,7 @@ exports.getRole = async (req, res) => {
         }
         res.status(200).json(roles);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500).json({message: 'Service error'});
     }
 };
@@ -26,7 +27,7 @@ exports.createRole = async (req, res) => {
         const newRole = await roleService.createRole(name, discount);
         res.status(201).json(newRole);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({message: 'Bad request'});
     }
 };
@@ -42,7 +43,7 @@ exports.updateRole = async (req, res) => {
         }
         res.status(200).json(updatedRole);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({message: 'Bad request'});
     }
 };
@@ -54,7 +55,7 @@ exports.deleteRole = async (req, res) => {
         const deletedRole = await roleService.deleteRole(id);
         res.status(200).json(deletedRole);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({message: 'Bad request'});
     }
 }

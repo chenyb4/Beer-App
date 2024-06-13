@@ -27,6 +27,8 @@ services:
     ports:
       - ${APIPORT}:${APIPORT}
     command: npm run start
+    volumes:
+      - ./Backend/logs:/usr/src/app/logs
   db:
     image: postgres
     restart: always

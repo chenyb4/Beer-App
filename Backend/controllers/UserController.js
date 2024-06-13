@@ -1,5 +1,6 @@
 const userService = require('../services/UserService');
 const paginationService = require('../services/PaginationService')
+const logger = require("../logger");
 
 exports.getUser = async (req, res) => {
     const {id, qr_identifier} = req.query;
@@ -19,7 +20,7 @@ exports.getUser = async (req, res) => {
         }
 
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return res.status(500).json({message: 'Service error'});
     }
 };
@@ -32,7 +33,7 @@ exports.createUser = async (req, res) => {
         newUser = userService.convertUser(newUser)
         return res.status(201).json({user: newUser});
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return res.status(400).json({message: 'Bad request'});
     }
 };
@@ -59,7 +60,7 @@ exports.updateUser = async (req, res) => {
         updatedUser = userService.convertUser(updatedUser)
         return res.status(200).json(updatedUser);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return res.status(400).json({message: 'Bad request'});
     }
 };
@@ -74,7 +75,7 @@ exports.incrementUserCredits = async (req, res) => {
         const result = await userService.incrementUserCredits(id, amount, req.user.id);
         return res.status(200).json(result)
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return res.status(400).json({message: 'Bad request', error: err.message});
     }
 }
@@ -86,7 +87,7 @@ exports.deleteUser = async (req, res) => {
         const deletedUser = await userService.deleteUser(id);
         return res.status(200).json(deletedUser);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         return res.status(400).json({message: 'Bad request'});
     }
 }

@@ -14,3 +14,4 @@ vite.config.ts.timestamp-*
 Backend/node_modules
 frontend-svelte/node-modules
 frontend-svelte/.svelte-kit
+*.log

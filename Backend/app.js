@@ -2,7 +2,8 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const morgan = require('morgan');
+const logger = require('./logger');
 const process = require('process');
 const app = express();
 const cors = require('cors')
@@ -16,7 +17,22 @@ const corsOptions = {
   origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT, "http://localhost:5173"] // Whitelist the domains you want to allow
 };
 
-app.use(logger('dev'));
+// Define Morgan tokens for custom formatting
+morgan.token('id', function getId(req) {
+  return req.id;
+});
+morgan.token('timestamp', function getTimestamp() {
+  return new Date().toISOString();
+});
+
+// Custom Morgan format with color and specific token usage
+const morganFormat = ':method :url :status :res[content-length] - :response-time ms';
+
+app.use(morgan(morganFormat, {
+  stream: {
+    write: (message) => logger.info(message.trim())
+  }
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -76,25 +92,25 @@ async function authenticate() {
     await db.sequelize.authenticate();
     console.log('Connection has been established successfully.');
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    logger.error('Unable to connect to the database:', error);
   }
 }
 
 async function sync() {
   try {
     await db.sequelize.sync();
-    console.log('Database synced');
+    logger.info('Database synced');
   } catch (error) {
-    console.error('Unable to sync database:', error)
+    logger.error('Unable to sync database:', error)
   }
 }
 
 async function syncForce() {
   try {
     await db.sequelize.sync({force: true});
-    console.log('Database force synced');
+    logger.info('Database force synced');
   } catch (error) {
-    console.error('Unable to force sync database:', error)
+    logger.error('Unable to force sync database:', error)
   }
 }
 
@@ -132,7 +148,7 @@ async function loadDummyData() {
       price: 11
     })
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     throw new Error('Failed to create dummy data');
   }
 }

@@ -1,6 +1,6 @@
 const historyService = require('../services/HistoryService');
 const {Action} = require("../enums/Action");
-const paginationService = require("../services/PaginationService");
+const logger = require("../logger");
 
 exports.getHistory = async (req, res) => {
     const {id} = req.query;
@@ -17,7 +17,7 @@ exports.getHistory = async (req, res) => {
 
         res.status(200).json(histories);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500).json({ message: 'Service error' });
     }
 };
@@ -33,7 +33,7 @@ exports.getInventoryHistory = async (req, res) => {
 
         res.status(200).json(histories);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500).json({ message: 'Service error' });
     }
 };
@@ -48,7 +48,7 @@ exports.createHistory = async (req, res) => {
         // newHistory.description = JSON.parse(newHistory.description);
         res.status(201).json(newHistory);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({ message: 'Bad request' });
     }
 };
@@ -59,7 +59,7 @@ exports.undo = async (req, res) => {
 
         res.status(200).json(lastUndo);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500).json({message: 'Service error: ' + err.message});
     }
 
@@ -78,7 +78,7 @@ exports.updateHistory = async (req, res) => {
         }
         res.status(200).json(updatedHistory);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({ message: 'Bad request' });
     }
 };
@@ -91,7 +91,7 @@ exports.deleteHistory = async (req, res) => {
         deletedHistory.description = JSON.parse(deletedHistory.description);
         res.status(200).json(deletedHistory);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({message: 'Bad request'});
     }
 }
