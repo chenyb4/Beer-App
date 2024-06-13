@@ -14,5 +14,6 @@
   "areYouSure": "Weet je zeker dat je het volgende product wil verwijderen:",
   "yes": "Yes",
   "no": "No",
-  "keepProduct": "Annuleren" 
+  "keepProduct": "Annuleren",
+  "isAlcoholic": "Is het product alcoholisch?"
 }

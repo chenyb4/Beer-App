@@ -55,17 +55,12 @@ exports.createHistory = async (req, res) => {
 
 exports.undo = async (req, res) => {
     try {
-        const lastUndo = await historyService.undo();
-        return res.status(201).json(
-            historyService.convertHistory(await historyService.createHistory(
-                Action.undo,
-                {history_id: lastUndo.id},
-                lastUndo.userId
-            ))
-        );
+        let lastUndo = await historyService.undo(req.user.id);
+
+        res.status(200).json(lastUndo);
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: 'Service error'});
+        res.status(500).json({message: 'Service error: ' + err.message});
     }
 
 }
@@ -77,7 +72,7 @@ exports.updateHistory = async (req, res) => {
         action = historyService.convertAction(action)
     }
     try {
-        const updatedHistory = historyService.convertHistory(await historyService.updateHistory(id, action, description, userId));
+        const updatedHistory = historyService.convertHistory(await historyService.updateHistory({id, action, description, userId}));
         if (!updatedHistory) {
             return res.status(404).json({ message: 'History not found' });
         }

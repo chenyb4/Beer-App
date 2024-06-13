@@ -14,12 +14,14 @@ module.exports = function (sequelize) {
                     Action.enable_user,
                     Action.disable_user,
                     Action.sell_credits,
-                    Action.undo,
                 ],
                 allowNull: false,
             },
             description: {
                 type: DataTypes.JSON,
+            },
+            undoUserId: {
+                type: DataTypes.INTEGER,
             },
         },
     );

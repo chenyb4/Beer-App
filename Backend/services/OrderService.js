@@ -92,7 +92,7 @@ exports.updateOrder = async (id, amount_of_credits, buyerId, sellerId) => {
     }
 };
 
-exports.addProductToOrder = async (orderId, productId, quantity) => {
+exports.addProductToOrder = async (orderId, productId, quantity, loggedInUserId) => {
     const order = await this.getOrder(orderId, false);
     const product = await productService.getProduct(productId);
     const productInventory = product.amount_in_stock
@@ -106,7 +106,7 @@ exports.addProductToOrder = async (orderId, productId, quantity) => {
                     await createNewOrderProduct(orderId, productId, quantity)
                 }
 
-                await productService.decrementProductStock(productId, quantity)
+                await productService.decrementProductStock(productId, quantity, loggedInUserId)
                 await this.incrementOrderPrice(orderId, product.price_in_credits, quantity)
 
             } catch (err) {

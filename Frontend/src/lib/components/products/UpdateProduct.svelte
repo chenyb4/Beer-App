@@ -1,5 +1,5 @@
 <script>
-  import { Alert, Input, Label, Modal } from "flowbite-svelte";
+  import { Alert, Input, Label, Modal, Select } from "flowbite-svelte";
   import { t } from "$lib/translations/index.js";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { fly } from "svelte/transition";
@@ -15,7 +15,13 @@
     price_in_credits: 0,
     amount_in_stock: 0,
     EAN: "",
+    isAlcoholic: false,
   };
+
+  let options = [
+    { value: false, name: $t("inventory_management.no") },
+    { value: true, name: $t("inventory_management.yes") },
+  ];
 
   let helper = "";
   $: hideHelper = true;
@@ -105,6 +111,16 @@
       >{$t("inventory_management.ean")}</Label
     >
     <Input bind:value={product.EAN} id="ean-input" size="lg" />
+  </div>
+  <div class="mb-6">
+    <Label for="isAlcoholic-input" class="block mb-2">
+      {$t("inventory_management.isAlcoholic")}
+    </Label>
+    <Select
+      id="isAlcoholic-input"
+      items={options}
+      bind:value={product.isAlcoholic}
+    ></Select>
   </div>
   <CtaButton
     captionText="{$t('inventory_management.editProduct')} {product.name}"
