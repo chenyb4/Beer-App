@@ -17,22 +17,15 @@ const corsOptions = {
   origin: ['http://' + process.env.FEURL + ":" + process.env.FEPORT, process.env.DOCKERFEURL + ':' + process.env.FEPORT, "http://localhost:5173"] // Whitelist the domains you want to allow
 };
 
-// Define Morgan tokens for custom formatting
 morgan.token('id', function getId(req) {
   return req.id;
 });
 morgan.token('timestamp', function getTimestamp() {
   return new Date().toISOString();
 });
-
-// Custom Morgan format with color and specific token usage
 const morganFormat = ':method :url :status :res[content-length] - :response-time ms';
 
-app.use(morgan(morganFormat, {
-  stream: {
-    write: (message) => logger.info(message.trim())
-  }
-}));
+app.use(morgan(morganFormat, { stream: { write: (message) => logger.info(message.trim()) } }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

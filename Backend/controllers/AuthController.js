@@ -3,8 +3,6 @@ const logger = require("../logger");
 
 exports.login = async (req, res) => {
     const { username, password } = req.body;
-    logger.info("This is a test MESSAGE")
-
     if (!username || !password) {
         return res.status(400).json({ error: "Username and password are required" });
     }
