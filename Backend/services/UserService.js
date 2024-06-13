@@ -143,8 +143,27 @@ exports.incrementUserCredits = async (id, amount, loggedInUserId) => {
             },
             loggedInUserId
         );
+        return user
 
+    } catch (err) {
+        console.error(err);
+        throw new Error('Failed to manipulate credits of user: ' + id + ' by: ' + amount)
+    }
+}
 
+exports.decrementUserCredits = async (id, amount, loggedInUserId) => {
+    if (id === undefined || amount === undefined) throw new Error('Missing required fields or no update data provided');
+    try {
+        const user = await db.User.decrement({credits: amount}, {where: {id}});
+
+        await historyService.createHistory(
+            Action.change_user_credits,
+            {
+                buyerId: id,
+                credits: amount
+            },
+            loggedInUserId
+        );
         return user
 
     } catch (err) {

@@ -2,6 +2,10 @@ const db = require('../database')
 const paginationService = require("./PaginationService");
 const productService = require('../services/ProductService');
 const {Op} = require("sequelize");
+const {confirmOrder} = require("../controllers/OrderController");
+const historyService = require("./HistoryService");
+const {Action} = require("../enums/Action");
+const userService = require("./UserService");
 
 exports.getAllOrders = async (req) => {
     const {sellerId, buyerId, createdAt} = req.query
@@ -91,6 +95,17 @@ exports.updateOrder = async (id, amount_of_credits, buyerId, sellerId) => {
         throw new Error('Failed to update order');
     }
 };
+
+exports.confirmOrder = async (id, loggedInUserId) => {
+    try {
+        const order = await db.Order.findByPk(id);
+        console.log(JSON.stringify(order))
+        await userService.decrementUserCredits(order.buyerId, order.amount_of_credits, loggedInUserId)
+    } catch (err) {
+        console.error(err);
+        throw new Error('Failed to confirm order');
+    }
+}
 
 exports.addProductToOrder = async (orderId, productId, quantity, loggedInUserId) => {
     const order = await this.getOrder(orderId, false);
