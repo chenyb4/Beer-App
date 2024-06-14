@@ -22,32 +22,46 @@
   let productCart = new Map();
 
   function handleSelectProduct(event) {
+    //Getting constant values from the product;
     const selectedProduct = event.detail.product;
     const stockAmount = selectedProduct.amount_in_stock;
+    const productPrice = selectedProduct.price_in_credits;
+
+    if (identifiedUser.credits < productPrice) {
+      alert("You do not have enough credits to purchase this product.");
+      return;
+    }
 
     if (productCart.has(selectedProduct.id)) {
       const currentQuantity = productCart.get(selectedProduct.id).quantity;
+
       if (currentQuantity < stockAmount) {
         productCart.set(selectedProduct.id, {
           ...selectedProduct,
           quantity: currentQuantity + 1,
         });
+        identifiedUser.credits -= productPrice; // Deduct the price from user's credits
       } else {
         alert("Product quantity exceeds stock amount.");
         return;
       }
     } else {
       if (stockAmount > 0) {
-        productCart.set(selectedProduct.id, {
-          ...selectedProduct,
-          quantity: 1,
-        });
+        if (identifiedUser.credits >= productPrice) {
+          productCart.set(selectedProduct.id, {
+            ...selectedProduct,
+            quantity: 1,
+          });
+          identifiedUser.credits -= productPrice; // Deduct the price from user's credits
+        } else {
+          alert("You do not have enough credits to purchase this product.");
+          return;
+        }
       } else {
         alert("Product is out of stock.");
         return;
       }
     }
-
     selectedProducts = Array.from(productCart.values());
   }
 
@@ -62,6 +76,7 @@
         "At least one product must be selected before submitting an order.";
       return;
     }
+
     errorMessage = "";
     const order = await createOrder(identifiedUser.id);
     console.log(order);
