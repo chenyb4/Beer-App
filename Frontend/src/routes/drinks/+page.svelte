@@ -27,32 +27,37 @@
     const stockAmount = selectedProduct.amount_in_stock;
     const productPrice = selectedProduct.price_in_credits;
 
+    //Making sure user cant buy product without enough credits.
     if (identifiedUser.credits < productPrice) {
       alert("You do not have enough credits to purchase this product.");
       return;
     }
-
+    //Check if the Map already contains the product
     if (productCart.has(selectedProduct.id)) {
       const currentQuantity = productCart.get(selectedProduct.id).quantity;
-
+      //Check if the amount in the cart exceeds the amount in stock.
       if (currentQuantity < stockAmount) {
         productCart.set(selectedProduct.id, {
           ...selectedProduct,
           quantity: currentQuantity + 1,
         });
-        identifiedUser.credits -= productPrice; // Deduct the price from user's credits
+        // Deduct the price from user's credits
+        identifiedUser.credits -= productPrice;
       } else {
         alert("Product quantity exceeds stock amount.");
         return;
       }
+      //New type of product is added.
     } else {
       if (stockAmount > 0) {
         if (identifiedUser.credits >= productPrice) {
+          //Setting a new instance in the map with quantity 1
           productCart.set(selectedProduct.id, {
             ...selectedProduct,
             quantity: 1,
           });
-          identifiedUser.credits -= productPrice; // Deduct the price from user's credits
+          // Deduct the price from user's credits
+          identifiedUser.credits -= productPrice;
         } else {
           alert("You do not have enough credits to purchase this product.");
           return;
@@ -62,6 +67,7 @@
         return;
       }
     }
+    //Set the new array
     selectedProducts = Array.from(productCart.values());
   }
 
@@ -76,7 +82,6 @@
         "At least one product must be selected before submitting an order.";
       return;
     }
-
     errorMessage = "";
     const order = await createOrder(identifiedUser.id);
     console.log(order);
@@ -90,16 +95,23 @@
   function removeProductFromCart(product) {
     if (productCart.has(product.id)) {
       let currentProduct = productCart.get(product.id);
+      const productPrice = currentProduct.price_in_credits;
       if (currentProduct.quantity > 1) {
+        //If there is more than 1 of a product remove one of quantity
         productCart.set(product.id, {
           ...currentProduct,
           quantity: currentProduct.quantity - 1,
         });
+        // Refund the price for one product
+        identifiedUser.credits += productPrice;
       } else {
+        //If this is last quantity in the cart remove the instance as a whole
         productCart.delete(product.id);
+        // Refund the price for one product
+        identifiedUser.credits += productPrice;
       }
     }
-
+    //Set the new array
     selectedProducts = Array.from(productCart.values());
   }
 
