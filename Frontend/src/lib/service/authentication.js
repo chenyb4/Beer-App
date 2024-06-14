@@ -1,7 +1,5 @@
-let env = import.meta.env;
-
 export async function login(username, password) {
-    const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/login`, {
+    const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +17,7 @@ export async function login(username, password) {
 }
 
 export async function register(username, password, email, date_of_birth) {
-    const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/register`, {
+    const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
