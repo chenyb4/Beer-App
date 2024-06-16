@@ -7,5 +7,6 @@
   "barkeeper": "Barkeeper",
   "date": "Date",
   "product": "Product",
-  "quantity": "Quantity"
+  "quantity": "Quantity",
+  "no_data_message": "There is currently no data to show for transactions."
 }
