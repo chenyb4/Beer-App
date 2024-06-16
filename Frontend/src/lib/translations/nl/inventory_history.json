@@ -3,5 +3,6 @@
   "drink": "Drank",
   "amount": "Hoeveelheid",
   "barkeeper": "Barman",
-  "date": "Datum"
+  "date": "Datum",
+  "message_no_data": "Er zijn momenteel geen gegevens voor de voorraadgeschiedenis."
 }

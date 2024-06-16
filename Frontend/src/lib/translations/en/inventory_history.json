@@ -3,5 +3,6 @@
   "drink": "Drink",
   "amount": "Amount",
   "barkeeper": "barkeeper",
-  "date": "Date"
+  "date": "Date",
+  "message_no_data": "There is currently no data for inventory history."
 }
