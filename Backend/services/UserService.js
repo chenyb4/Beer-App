@@ -203,7 +203,7 @@ exports.createUserIdentifier = async (id, baseCase = 0) => {
         )
 
         return this.getUser(id);
-    } catch (error) {
+    } catch (err) {
         if (baseCase < 1) {
             return await this.createUserIdentifier(id, baseCase + 1);
         } else {
