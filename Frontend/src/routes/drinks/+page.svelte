@@ -5,7 +5,11 @@
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { TrashBinSolid } from "flowbite-svelte-icons";
-  import { addProductsToOrder, createOrder } from "$lib/service/orders";
+  import {
+    addProductsToOrder,
+    confirmOrder,
+    createOrder,
+  } from "$lib/service/orders";
 
   let ref = {};
   let identifiedUser;
@@ -63,6 +67,7 @@
     console.log(order);
     if (order) {
       await addProductsToOrder(order.id, productCart);
+      await confirmOrder(order.id);
       clearFields();
     }
   }
