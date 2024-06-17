@@ -35,12 +35,12 @@
 
     /** @type {import('./$types').PageData} */
     export let data;
-    $: users = data.users.data;
+    $: users = data.users?.data || [];
 
-    const pages = Math.ceil(data.users.meta.total / data.users.meta.page_size);
+    const pages = Math.ceil(data.users?.meta.total / data.users?.meta.page_size || 1);
     let currentPage = 1;
 
-    const roles = data.roles.data;
+    const roles = data.roles?.data || [];
     let modalTitle = "";
     let modalText = "";
     let modalOpen = false;
@@ -298,6 +298,10 @@
                     </TableCell>
                 </TableBodyRow>
             {/each}
+        {:else}
+            <TableBodyRow>
+                <TableCell position="first" colspan="7" class="text-center">No users found</TableCell>
+            </TableBodyRow>
         {/if}
     </TableBody>
 </TablePage>
