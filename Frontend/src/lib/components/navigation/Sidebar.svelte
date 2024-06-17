@@ -5,6 +5,7 @@
     SidebarGroup,
     SidebarBrand,
     DarkMode,
+    Select,
   } from "flowbite-svelte";
   import NavBarOption from "$lib/components/navigation/NavBarOption.svelte";
   import { page } from "$app/stores";
@@ -60,15 +61,15 @@
           title={$t("homepage.inventory_history.title")}
           site="/inventory_history"
         />
-        <div class="bottom-0 absolute">
+        <div class="bottom-0 absolute flex">
           <DarkMode />
-          <select bind:value={$locale} on:change={handleChange}>
+          <Select bind:value={$locale} on:change={handleChange}>
             {#each $locales as value}
               <option {value} selected={$locale === value}
                 >{$t(`lang.${value}`)}</option
               >
             {/each}
-          </select>
+          </Select>
         </div>
       </SidebarGroup>
     </SidebarWrapper>

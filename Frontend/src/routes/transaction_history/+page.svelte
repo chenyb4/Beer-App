@@ -1,13 +1,14 @@
 <script>
-    import {t} from "$lib/translations/index.js";
-    import {Button, TableBody, TableBodyRow, Modal} from "flowbite-svelte";
-    import TableHeader from "$lib/components/table/TableHeader.svelte";
-    import TableCell from "$lib/components/table/TableCell.svelte";
-    import TablePage from "$lib/components/table/TablePage.svelte";
-    import {InfoCircleSolid} from 'flowbite-svelte-icons';
-    import {getOneOrderById} from "$lib/service/transactions.js";
+  import { t } from "$lib/translations/index.js";
+  import { Button, TableBody, TableBodyRow, Modal } from "flowbite-svelte";
+  import TableHeader from "$lib/components/table/TableHeader.svelte";
+  import TableCell from "$lib/components/table/TableCell.svelte";
+  import TablePage from "$lib/components/table/TablePage.svelte";
+  import { InfoCircleSolid } from "flowbite-svelte-icons";
+  import { getOneOrderById } from "$lib/service/transactions.js";
 
-    const iconStyle = "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
+  const iconStyle =
+    "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -25,6 +26,8 @@
         showModal = true;
     }
 
+    showModal = true;
+  }
 </script>
 
 <body class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl">
@@ -74,13 +77,7 @@
                 {/each}
             </div>
         </div>
+      </div>
     </Modal>
 {/if}
 </body>
-
-
-
-
-
-
-
