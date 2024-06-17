@@ -1,6 +1,6 @@
 export async function login(username, password) {
-    const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/login`, {
-        method: 'POST',
+    const response = await fetch('http://' + import.meta.env.VITE_APIURL + ':' + import.meta.env.VITE_APIPORT + '/login', 
+    { method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -12,8 +12,7 @@ export async function login(username, password) {
         throw new Error(error.message);
     }
 
-    const data = await response.json();
-    return data.token;
+    return await response.json();
 }
 
 export async function register(username, password, email, date_of_birth) {

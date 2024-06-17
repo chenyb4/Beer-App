@@ -20,9 +20,7 @@
       method: "POST",
       body: formData,
     });
-    const result = await response.json();
-    console.log(result);
-    if (result.data === "[true]") {
+    if (response.ok) {
       setTimeout(() => {
         loading = false;
         goto("/");
