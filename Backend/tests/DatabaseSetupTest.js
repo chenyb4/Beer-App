@@ -31,21 +31,29 @@ async function createTestData() {
         ]);
         await db.User.bulkCreate([
             {
-                id: 1,
                 username: "example",
                 email: "example@example.com",
+                qr_identifier: 'iahdfo9q34w8yhrtharfiulhas',
                 password: "password",
                 date_of_birth: "1999-01-01 00:00:00.000",
                 roleId: 1
             },
             {
-                id: 2,
                 username: "example2",
                 email: "example2@example.com",
+                qr_identifier: 'iahdfo9q34w8yhrthasdfrfiulhas',
                 password: "password2",
                 language: Language.dutch,
                 date_of_birth: new Date().setHours(0, 0, 0, 0),
                 roleId: 3
+            },
+            {
+                username: "exemplary",
+                email: "exemplary@exemplary.com",
+                qr_identifier: 'iahdfdsao9q34w8yhrtharfiulhas',
+                password: "password_exemplary",
+                date_of_birth: new Date().setHours(0, 0, 0, 0),
+                roleId: 2
             },
         ]);
         await db.Product.bulkCreate([
@@ -53,13 +61,15 @@ async function createTestData() {
                 name: 'beer',
                 price_in_credits: 1,
                 amount_in_stock: 24,
-                EAN: '12345678910'
+                EAN: '12345678910',
+                isAlcoholic: true
             },
             {
                 name: 'cola',
                 price_in_credits: 1,
                 amount_in_stock: 3,
-                EAN: '12345578910'
+                EAN: '12345578910',
+                isAlcoholic: false
             },
         ])
         await db.Order.create({
