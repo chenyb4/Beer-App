@@ -25,20 +25,27 @@
     </TableHeader>
 
 
-    <TableBody>
-        {#each allInventoryHistories as entry}
-            <TableBodyRow>
-                <TableCell position="first">{entry.productName}</TableCell>
-                {#if (entry.action == 0)}
-                    <TableCell position="middle">{entry.description.inventory_change}</TableCell>
-                {:else}
-                    <TableCell position="middle">-{entry.description.inventory_change}</TableCell>
-                {/if}
-                <TableCell position="middle">{entry.username}</TableCell>
-                <TableCell position="last">{entry.createdAt}</TableCell>
-            </TableBodyRow>
-        {/each}
-    </TableBody>
+    {#if allInventoryHistories.length==0}
+        <p>{$t('inventory_history.message_no_data')}</p>
+    {:else}
+        <TableBody>
+            {#each allInventoryHistories as entry}
+                <TableBodyRow>
+                    <TableCell position="first">{entry.productName}</TableCell>
+                    {#if (entry.action == 0)}
+                        <TableCell position="middle">{entry.description.inventory_change}</TableCell>
+                    {:else}
+                        <TableCell position="middle">-{entry.description.inventory_change}</TableCell>
+                    {/if}
+                    <TableCell position="middle">{entry.username}</TableCell>
+                    <TableCell position="last">{entry.createdAt}</TableCell>
+                </TableBodyRow>
+            {/each}
+        </TableBody>
+    {/if}
+
+
+
 </TablePage>
 
 
