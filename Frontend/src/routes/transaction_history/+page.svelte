@@ -30,54 +30,63 @@
   }
 </script>
 
-<body class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl">
-<TablePage title={$t("transaction_history.title")}>
-    <TableHeader headerValues={[
-                $t('transaction_history.buyer'),
-                $t('transaction_history.credits'),
-                $t('transaction_history.details'),
-                $t('transaction_history.barkeeper'),
-                $t('transaction_history.date')
-            ]}>
-    </TableHeader>
+<body
+  class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl"
+>
+  <TablePage title={$t("transaction_history.title")}>
+    <TableHeader
+      headerValues={[
+        $t("transaction_history.buyer"),
+        $t("transaction_history.credits"),
+        $t("transaction_history.details"),
+        $t("transaction_history.barkeeper"),
+        $t("transaction_history.date"),
+      ]}
+    ></TableHeader>
 
-        {#if allOrders.length == 0}
-           <p>{$t('transaction_history.no_data_message')}</p>
-        {:else }
+    {#if allOrders.length == 0}
+      <p>{$t("transaction_history.no_data_message")}</p>
+    {:else}
+      <TableBody>
+        {#each allOrders as entry}
+          <TableBodyRow>
+            <TableCell position="first">{entry.buyer.email}</TableCell>
+            <TableCell position="middle">{entry.amount_of_credits}</TableCell>
+            <TableCell position="middle">
+              <Button class="p-0" on:click={() => openModal(entry.id)}>
+                <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
+              </Button>
+            </TableCell>
+            <TableCell position="middle">{entry.seller.username}</TableCell>
+            <TableCell position="last">{entry.createdAt}</TableCell>
+          </TableBodyRow>
+        {/each}
+      </TableBody>
+    {/if}
+  </TablePage>
+
+  {#if showModal}
+    <Modal
+      title={$t("transaction_history.details")}
+      bind:open={showModal}
+      autoclose
+    >
+      <div class="p-4">
+        <div class="mt-2">
+          <TableHeader
+            headerValues={[
+              $t("transaction_history.product"),
+              $t("transaction_history.quantity"),
+            ]}
+          ></TableHeader>
+          {#each productsArray as entry}
             <TableBody>
-            {#each allOrders as entry}
-                <TableBodyRow>
-                    <TableCell position="first">{entry.buyer.email}</TableCell>
-                    <TableCell position="middle">{entry.amount_of_credits}</TableCell>
-                    <TableCell position="middle">
-                        <Button class="p-0" on:click={()=>openModal(entry.id)}>
-                            <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
-                        </Button>
-                    </TableCell>
-                    <TableCell position="middle">{entry.seller.username}</TableCell>
-                    <TableCell position="last">{entry.createdAt}</TableCell>
-                </TableBodyRow>
-            {/each}
+              <TableCell position="first">{entry.product.name}</TableCell>
+              <TableCell position="last">{entry.quantity}</TableCell>
             </TableBody>
-        {/if}
-
-</TablePage>
-
-{#if showModal}
-    <Modal title={$t('transaction_history.details')} bind:open={showModal} autoclose>
-        <div class="p-4">
-            <div class="mt-2">
-                <TableHeader headerValues={[$t('transaction_history.product'),$t('transaction_history.quantity')]}>
-                </TableHeader>
-                {#each productsArray as entry}
-                    <TableBody>
-                        <TableCell position="first">{entry.product.name}</TableCell>
-                        <TableCell position="last">{entry.quantity}</TableCell>
-                    </TableBody>
-                {/each}
-            </div>
+          {/each}
         </div>
       </div>
     </Modal>
-{/if}
+  {/if}
 </body>
