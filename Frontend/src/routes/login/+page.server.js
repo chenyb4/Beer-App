@@ -6,7 +6,7 @@ export const actions = {
 	  const data = await request.formData();
 	  const username = data.get('username');
 	  const password = data.get('password');
-		const userTokenResponse = await login(username, password);
+	  const userTokenResponse = await login(username, password);
 		if(userTokenResponse.token){
 			cookies.set('jwt', userTokenResponse.token, { path: '/' });
 			return true;
