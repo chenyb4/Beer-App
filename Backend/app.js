@@ -41,10 +41,10 @@ app.put('/users/credits', authService.authenticateToken, userController.incremen
 app.delete('/users', authService.authenticateToken, userController.deleteUser);
 
 app.get('/orders', authService.authenticateToken, orderController.getOrder);
-app.post('/orders', authService.authenticateToken, orderController.createOrder);
+app.post('/orders', authService.authenticateTokenForSeller, orderController.createOrder);
 app.put('/orders', authService.authenticateToken, orderController.updateOrder);
-app.put('/orders/confirm', authService.authenticateToken, orderController.confirmOrder);
-app.put('/orders/products', authService.authenticateToken, orderController.addProductToOrder)
+app.put('/orders/confirm', authService.authenticateTokenForSeller, orderController.confirmOrder);
+app.put('/orders/products', authService.authenticateTokenForSeller, orderController.addProductToOrder)
 app.delete('/orders', authService.authenticateToken, orderController.deleteOrder);
 
 app.get('/histories', authService.authenticateToken, historyController.getHistory);
