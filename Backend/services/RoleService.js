@@ -1,5 +1,6 @@
 const db = require('../database')
 const paginationService = require("./PaginationService");
+const logger = require("../logger");
 
 exports.getRoles = async (req) => {
     let query = await paginationService.getQuery(req)
@@ -16,6 +17,7 @@ exports.getRole = async (id) => {
     try {
         return await db.Role.findByPk(id);
     } catch (err) {
+        logger.error(err);
         throw new Error('Failed to get role');
     }
 };
@@ -28,7 +30,7 @@ exports.createRole = async (name, discount) => {
     try {
         return db.Role.create({name, discount});
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to create role');
     }
 };
@@ -51,7 +53,7 @@ exports.updateRole = async (id, name, discount) => {
             },
         );
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to update role');
     }
 };

@@ -1,4 +1,5 @@
-const db = require('../database')
+const db = require('../database');
+const logger = require("../logger");
 
 const creditId = 1;
 
@@ -28,7 +29,7 @@ exports.updateCredit = async (default_amount, price) => {
                 }
             );
         } catch (err) {
-            console.error(err);
+            logger.error(err);
             throw new Error('Failed to update credit');
         }
     }
@@ -45,7 +46,7 @@ exports.createCredit = async (default_amount, price) => {
     try {
         return await db.Credit.create({id: creditId, default_amount, price});
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('No credit data available. Creating new Credit => Failed to create credit');
     }
 }

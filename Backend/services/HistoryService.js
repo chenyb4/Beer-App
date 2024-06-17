@@ -4,6 +4,7 @@ const productService = require("./ProductService");
 const userService = require("./UserService");
 const {Action} = require('../enums/Action')
 const {Op} = require('sequelize');
+const logger = require("../logger");
 
 exports.getHistories = async (req, whereOrClause) => {
     let query = await paginationService.getQuery(req)
@@ -33,6 +34,7 @@ exports.getHistory = async (id) => {
     try {
         return await db.History.findByPk(id);
     } catch (err) {
+        logger.error(err);
         throw new Error('Failed to get history');
     }
 };
@@ -45,7 +47,7 @@ exports.createHistory = async (action, description, userId, productId = null) =>
     try {
         return await db.History.create({action, description, userId, productId});
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to create history');
     }
 };
@@ -56,6 +58,7 @@ exports.getLastUndo = async () => {
             order: [['createdAt', 'DESC']]
         });
     } catch (err) {
+        logger.error(err);
         throw new Error('Failed to get history');
     }
 }
@@ -80,7 +83,7 @@ exports.updateHistory = async ({id, action, description, userId, undoUserId}) =>
             },
         );
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to update history');
     }
 };

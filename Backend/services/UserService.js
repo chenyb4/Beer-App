@@ -5,6 +5,7 @@ const paginationService = require("./PaginationService");
 const historyService = require("./HistoryService");
 const {Action} = require('../enums/Action')
 const salt = 10;
+const logger = require("../logger");
 
 exports.getAllUsers = async (req) => {
     let query = await paginationService.getQuery(req)
@@ -44,6 +45,7 @@ exports.getUser = async (id) => {
     try {
         return await db.User.findByPk(id);
     } catch (err) {
+        logger.error(err);
         throw new Error('Failed to get user');
     }
 };
@@ -56,6 +58,7 @@ exports.getQRUser = async (qr_identifier) => {
     try {
         return await db.User.findOne({where: {qr_identifier}});
     } catch (err) {
+        logger.error(err);
         throw new Error('Failed to get user');
     }
 };
@@ -71,7 +74,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
         try {
             return await db.User.create({username, email, date_of_birth});
         } catch (err) {
-            console.error(err);
+            logger.error(err);
             throw new Error('Failed to create user: ' + err.message);
         }
     }
@@ -81,7 +84,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
     try {
         return await db.User.create({username, email, password: hashedPassword, date_of_birth});
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to create user: ' + err.message);
     }
 };
@@ -125,7 +128,7 @@ exports.updateUser = async ({
         await createHistoryEntryIfNecessary(oldUser, newUser, loggedInUserId);
         return newUser;
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to update user with id: ' + id);
     }
 };
@@ -171,7 +174,7 @@ exports.decrementUserCredits = async (id, amount, loggedInUserId) => {
         return user
 
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to manipulate credits of user: ' + id + ' by: ' + amount)
     }
 }
@@ -200,11 +203,11 @@ exports.createUserIdentifier = async (id, baseCase = 0) => {
         )
 
         return this.getUser(id);
-    } catch (error) {
+    } catch (err) {
         if (baseCase < 1) {
             return await this.createUserIdentifier(id, baseCase + 1);
         } else {
-            console.error(error)
+            logger.error(err);
         }
     }
 

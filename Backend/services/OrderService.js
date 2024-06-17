@@ -55,6 +55,7 @@ exports.getOrder = async (id, details = true) => {
         });
         return await db.Order.findByPk(id);
     } catch (err) {
+        logger.error(err);
         throw new Error('Failed to get order. ' + err.message);
     }
 };
@@ -67,7 +68,7 @@ exports.createOrder = async (buyerId, sellerId) => {
     try {
         return db.Order.create({buyerId, sellerId});
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to create order');
     }
 };
@@ -91,7 +92,7 @@ exports.updateOrder = async (id, amount_of_credits, buyerId, sellerId) => {
             },
         );
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to update order');
     }
 };
@@ -125,6 +126,7 @@ exports.addProductToOrder = async (orderId, productId, quantity, loggedInUserId)
                 await this.incrementOrderPrice(orderId, product.price_in_credits, quantity)
 
             } catch (err) {
+                logger.error(err);
                 throw new Error('Create OrderProduct: ' + err)
             }
 
