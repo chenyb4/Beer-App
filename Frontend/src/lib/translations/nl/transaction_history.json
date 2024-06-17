@@ -7,5 +7,6 @@
   "barkeeper": "Barman",
   "date": "Datum",
   "product": "Product",
-  "quantity": "Hoeveelheid"
+  "quantity": "Hoeveelheid",
+  "no_data_message": "Er zijn momenteel geen gegevens om transacties weer te geven."
 }

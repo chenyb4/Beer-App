@@ -10,23 +10,21 @@
   const iconStyle =
     "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
-  /** @type {import('./$types').PageData} */
-  export let data;
-  //this is an array of order objects
-  let allOrders = data.allOrders.data;
-  console.log(allOrders);
+    /** @type {import('./$types').PageData} */
+    export let data;
+    //this is an array of order objects
+    let allOrders = data.allOrders.data;
 
-  // State variables for modal control
-  let showModal = false;
-  let selectedOrder = null;
-  let productsArray = null;
+    // State variables for modal control
+    let showModal = false;
+    let selectedOrder = null;
+    let productsArray = null;
 
-  async function openModal(orderId) {
-    console.log("model open function is called");
-    selectedOrder = await getOneOrderById(orderId);
-    console.log(selectedOrder);
-    productsArray = selectedOrder.order_products;
-    console.log(productsArray);
+    async function openModal(orderId) {
+        selectedOrder = await getOneOrderById(orderId);
+        productsArray = selectedOrder.order_products;
+        showModal = true;
+    }
 
     showModal = true;
   }
@@ -46,21 +44,25 @@
       ]}
     ></TableHeader>
 
-    <TableBody>
-      {#each allOrders as entry}
-        <TableBodyRow>
-          <TableCell position="first">{entry.buyer.username}</TableCell>
-          <TableCell position="middle">{entry.amount_of_credits}</TableCell>
-          <TableCell position="middle">
-            <Button class="p-0" on:click={() => openModal(entry.id)}>
-              <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
-            </Button>
-          </TableCell>
-          <TableCell position="middle">{entry.seller.username}</TableCell>
-          <TableCell position="last">{entry.createdAt}</TableCell>
-        </TableBodyRow>
-      {/each}
-    </TableBody>
+    {#if allOrders.length == 0}
+      <p>{$t("transaction_history.no_data_message")}</p>
+    {:else}
+      <TableBody>
+        {#each allOrders as entry}
+          <TableBodyRow>
+            <TableCell position="first">{entry.buyer.email}</TableCell>
+            <TableCell position="middle">{entry.amount_of_credits}</TableCell>
+            <TableCell position="middle">
+              <Button class="p-0" on:click={() => openModal(entry.id)}>
+                <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
+              </Button>
+            </TableCell>
+            <TableCell position="middle">{entry.seller.username}</TableCell>
+            <TableCell position="last">{entry.createdAt}</TableCell>
+          </TableBodyRow>
+        {/each}
+      </TableBody>
+    {/if}
   </TablePage>
 
   {#if showModal}

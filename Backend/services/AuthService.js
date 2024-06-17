@@ -26,27 +26,51 @@ function generateAccessToken(username) {
     return jwt.sign(username, process.env.TOKEN_SECRET, {expiresIn: '1800s'});
 }
 
-exports.authenticateToken = (req, res, next) => {
+function developmentCheck(req){
     // Check if the app is running in development mode
     if (process.env.NODE_ENV === 'development') {
         // For development, add a mock user to the request and bypass token verification
         req.user = { id: 1, username: 'dummy' };
-        return next();
+        return true
     }
+}
 
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+function validateToken(req, res, next, checkSeller = false) {
+    const token = req.headers['authorization'];
 
     if (!token) {
         return res.status(401).json({ error: 'Token not provided' });
     }
 
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, u) => {
         if (err) {
             console.error(err);
-            return res.status(403).json({ error: 'Invalid token' });
+            return res.status(403).json({error: 'Invalid token'});
         }
-        req.user = user;
-        next();
+        const {users} = await userService.getAllUsers({query: {username: u.username}})
+
+        const user = users[0]
+        if (!checkSeller){
+            if(user.roleId === 3){
+                return res.status(403).json({error: 'No access'});
+            } else {
+                req.user = user
+                next()
+            }
+        } else {
+            req.user = user
+            next();
+        }
+
     });
+}
+
+exports.authenticateTokenForSeller = (req, res, next) => {
+    if(developmentCheck(req)) return next();
+    validateToken(req, res, next, true)
+}
+
+exports.authenticateToken = (req, res, next) => {
+    if(developmentCheck(req)) return next();
+    validateToken(req, res, next)
 };
