@@ -3,6 +3,7 @@
   import { t } from "$lib/translations";
   import logo from "$lib/images/ada-logo.png";
   import { Label } from "flowbite-svelte";
+  import { login } from '$lib/service/authentication';
 
   let username = "";
   let password = "";
@@ -13,14 +14,7 @@
     loading = true;
     errorMessage = "";
 
-    const formData = new FormData();
-    formData.append("username", username);
-    formData.append("password", password);
-
-    const response = await fetch("/login", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await login({username, password});
     if (response.ok) {
       setTimeout(() => {
         loading = false;
