@@ -25,9 +25,6 @@
         productsArray = selectedOrder.order_products;
         showModal = true;
     }
-
-    showModal = true;
-  }
 </script>
 
 <body

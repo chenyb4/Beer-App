@@ -40,9 +40,10 @@
 	"dependencies": {
 		"@sveltejs/adapter-node": "^5.0.1",
 		"@sveltejs/adapter-static": "^3.0.1",
+		"@testing-library/svelte": "^5.1.0",
 		"cross-env": "^7.0.3",
-		"svelte-preprocess": "^5.1.4",
 		"jsonwebtoken": "^9.0.2",
+		"svelte-preprocess": "^5.1.4",
 		"sveltekit-i18n": "^2.4.2"
 	}
 }
