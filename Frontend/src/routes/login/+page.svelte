@@ -3,7 +3,7 @@
   import { t } from "$lib/translations";
   import logo from "$lib/images/ada-logo.png";
   import { Label } from "flowbite-svelte";
-  import { login } from '$lib/service/authentication';
+  import { login } from "$lib/service/authentication";
 
   let username = "";
   let password = "";
@@ -11,17 +11,25 @@
   let loading = false;
 
   async function handleLogin() {
-    loading = true;
-    errorMessage = "";
+    try {
+      loading = true;
+      errorMessage = "";
 
-    const response = await login({username, password});
-    if (response.ok) {
-      setTimeout(() => {
+      const response = await login({ username, password });
+      console.log(response);
+
+      if (response) {
+        setTimeout(() => {
+          loading = false;
+          goto("/");
+        }, 2500);
+      } else {
+        errorMessage = $t("login.notCorrect");
         loading = false;
-        goto("/");
-      }, 2500);
-    } else {
-      errorMessage = $t("login.notCorrect");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      errorMessage = $t("login.notCorrect"); // Add a generic error message for unexpected failures
       loading = false;
     }
   }
