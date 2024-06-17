@@ -1,4 +1,8 @@
 {
-  "title": "This is a credits English title",
-  "text": "Credits!"
+  "inventoryHistory": "INVENTORY HISTORY",
+  "drink": "Drink",
+  "amount": "Amount",
+  "barkeeper": "barkeeper",
+  "date": "Date",
+  "message_no_data": "There is currently no data for inventory history."
 }

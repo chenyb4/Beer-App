@@ -14,6 +14,7 @@ module.exports = function (sequelize) {
                     Action.enable_user,
                     Action.disable_user,
                     Action.sell_credits,
+                    Action.change_user_credits,
                 ],
                 allowNull: false,
             },

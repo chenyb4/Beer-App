@@ -75,7 +75,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
             return await db.User.create({username, email, date_of_birth});
         } catch (err) {
             logger.error(err);
-            throw new Error('Failed to create user');
+            throw new Error('Failed to create user: ' + err.message);
         }
     }
     // For creating an executive
@@ -85,7 +85,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
         return await db.User.create({username, email, password: hashedPassword, date_of_birth});
     } catch (err) {
         logger.error(err);
-        throw new Error('Failed to create user');
+        throw new Error('Failed to create user: ' + err.message);
     }
 };
 
@@ -135,6 +135,7 @@ exports.updateUser = async ({
 
 exports.incrementUserCredits = async (id, amount, loggedInUserId) => {
     if (!id || !amount) throw new Error('Missing required fields or no update data provided');
+    if (amount < 1) throw new Error('Amount can not be lower than 1');
     try {
         const user = await db.User.increment({credits: amount}, {where: {id}});
 
@@ -146,8 +147,30 @@ exports.incrementUserCredits = async (id, amount, loggedInUserId) => {
             },
             loggedInUserId
         );
+        return user
 
+    } catch (err) {
+        console.error(err);
+        throw new Error('Failed to manipulate credits of user: ' + id + ' by: ' + amount)
+    }
+}
 
+exports.decrementUserCredits = async (id, amount, loggedInUserId) => {
+    if (id === undefined || amount === undefined) throw new Error('Missing required fields or no update data provided');
+    if (amount < 1) throw new Error('Amount can not be lower than 1');
+    const preUser = await this.getUser(id);
+    if(preUser.credits < amount) throw new Error('Amount can not be more than available credits')
+    try {
+        const user = await db.User.decrement({credits: amount}, {where: {id}});
+
+        await historyService.createHistory(
+            Action.change_user_credits,
+            {
+                buyerId: id,
+                credits: amount
+            },
+            loggedInUserId
+        );
         return user
 
     } catch (err) {

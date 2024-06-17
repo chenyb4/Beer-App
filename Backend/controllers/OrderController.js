@@ -22,10 +22,10 @@ exports.getOrder = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-    const {buyerId, sellerId} = req.body;
+    const {buyerId} = req.body;
 
     try {
-        const newOrder = await orderService.createOrder(buyerId, sellerId);
+        const newOrder = await orderService.createOrder(buyerId, req.user.id);
         res.status(201).json(newOrder);
     } catch (err) {
         logger.error(err);
@@ -49,10 +49,21 @@ exports.updateOrder = async (req, res) => {
     }
 };
 
+exports.confirmOrder = async (req, res) => {
+    const {id} = req.query;
+    try {
+        const newOrderProduct = await orderService.confirmOrder(id, req.user.id)
+
+        res.status(200).json(newOrderProduct);
+    } catch (err) {
+        console.error(err);
+        res.status(400).json({message: 'Bad request: ' + err});
+    }
+}
+
 exports.addProductToOrder = async (req, res) => {
     const {id} = req.query;
     const {productId, quantity = 1} = req.body;
-
 
     try {
         const newOrderProduct = await orderService.addProductToOrder(id, productId, Number(quantity), req.user.id)

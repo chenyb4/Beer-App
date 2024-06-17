@@ -109,41 +109,39 @@
   onClose={changeProducts}
   product={currentProduct}
 ></DeleteProduct>
-<div class="h-4/5 w-full">
-  <TablePage
-    {pages}
-    {currentPage}
-    pageSize={data.products.meta.page_size}
-    changeData={changeProducts}
-    title={$t("inventory_management.title")}
-  >
-    <TableHeader
-      headerValues={[
-        $t("inventory_management.name"),
-        $t("inventory_management.stock"),
-        "",
-      ]}
-    ></TableHeader>
-    <TableBody>
-      {#each products as product}
-        <TableBodyRow>
-          <TableCell position="first">{product.name}</TableCell>
-          <TableCell position="middle">{product.amount_in_stock}</TableCell>
-          <TableCell position="last"
-            ><div class="flex flex-row justify-evenly">
-              <button on:click={handleOpenAddProductStockDialog(product)}
-                ><CirclePlusSolid class={iconStyle}></CirclePlusSolid></button
-              >
-              <button on:click={handleOpenUpdateProductDialog(product)}>
-                <EditSolid class={iconStyle}></EditSolid>
-              </button>
-              <button on:click={handleDeleteProductDialog(product)}>
-                <TrashBinSolid class={iconStyle}></TrashBinSolid>
-              </button>
-            </div>
-          </TableCell>
-        </TableBodyRow>
-      {/each}
-    </TableBody>
-  </TablePage>
-</div>
+<TablePage
+  {pages}
+  {currentPage}
+  pageSize={data.products.meta.page_size}
+  changeData={changeProducts}
+  title={$t("inventory_management.title")}
+>
+  <TableHeader
+    headerValues={[
+      $t("inventory_management.name"),
+      $t("inventory_management.stock"),
+      "",
+    ]}
+  ></TableHeader>
+  <TableBody>
+    {#each products as product}
+      <TableBodyRow>
+        <TableCell position="first">{product.name}</TableCell>
+        <TableCell position="middle">{product.amount_in_stock}</TableCell>
+        <TableCell position="last"
+          ><div class="flex flex-row justify-evenly">
+            <button on:click={handleOpenAddProductStockDialog(product)}
+              ><CirclePlusSolid class={iconStyle}></CirclePlusSolid></button
+            >
+            <button on:click={handleOpenUpdateProductDialog(product)}>
+              <EditSolid class={iconStyle}></EditSolid>
+            </button>
+            <button on:click={handleDeleteProductDialog(product)}>
+              <TrashBinSolid class={iconStyle}></TrashBinSolid>
+            </button>
+          </div>
+        </TableCell>
+      </TableBodyRow>
+    {/each}
+  </TableBody>
+</TablePage>

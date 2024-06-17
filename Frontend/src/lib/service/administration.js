@@ -1,7 +1,6 @@
 export async function createUser(username, email, date_of_birth) {
-    let env = import.meta.env;
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/users", {
+        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users", {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -27,9 +26,8 @@ export async function getUsers(page = 1, pageSize = 10, filterUsername = "", fil
     if (filterLanguage !== -1) query.language = filterLanguage;
     if (filterRole !== 0) query.roleId = filterRole;
     const queryString = new URLSearchParams(query).toString();
-    let env = import.meta.env;
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/users${queryString ? `?${queryString}` : ''}`, {
+        const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/users${queryString ? `?${queryString}` : ''}`, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -45,9 +43,8 @@ export async function getUsers(page = 1, pageSize = 10, filterUsername = "", fil
 }
 
 export async function getRoles(){
-    let env = import.meta.env;
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/roles", {
+        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/roles", {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -66,7 +63,7 @@ export async function getRoles(){
 export async function deleteUser(user) {
     let env = import.meta.env;
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/users?id=" + user.id, {
+        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users?id=" + user.id, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -85,7 +82,7 @@ export async function deleteUser(user) {
 export async function updateUser(user, username = user.username, date_of_birth = user.date_of_birth, language = user.language, roleId = user.roleId) {
     let env = import.meta.env;
     try {
-        const response = await fetch("http://" + env.VITE_APIURL + ":" + env.VITE_APIPORT + "/users/?id=" + user.id, {
+        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users/?id=" + user.id, {
             headers: {
                 "Content-Type": "application/json"
             },

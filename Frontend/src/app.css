@@ -13,9 +13,13 @@ body::before {
   top: 0;
   width: 100%; /* Adjust the width to account for the padding */
   height: 100%;
-  background-image: url("src/lib/images/bottleskyline.svg");
+  background-image: url("$lib/images/bottleskyline.svg");
   background-repeat: repeat-x;
   background-position: right 10% bottom -10px;
   background-size: auto 11%;
   z-index: -1; /* Ensure the background stays behind other content */
+}
+
+html {
+  font-family: "Lato", sans-serif;
 }

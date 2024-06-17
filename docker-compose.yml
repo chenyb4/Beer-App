@@ -72,12 +72,11 @@ services:
   sveltekit:
     build: ./Frontend
     ports:
-      - ${FEPORT}:5173
+      - ${FEPORT}:4173
     environment:
       VITE_APIURL: ${APIURL}
       VITE_APIPORT: ${APIPORT}
-    #      NODE_ENV: production
-    command: npm run dev -- --host
+    command: npm run full-preview
 
 volumes:
   beer-swipe-vol:

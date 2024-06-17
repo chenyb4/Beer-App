@@ -1,4 +1,8 @@
 {
-  "title": "Dit is een Nederlandse titel",
-  "text": "Hallo!"
+  "inventoryHistory": "VOORRAADGESCHIEDENIS",
+  "drink": "Drank",
+  "amount": "Hoeveelheid",
+  "barkeeper": "Barman",
+  "date": "Datum",
+  "message_no_data": "Er zijn momenteel geen gegevens voor de voorraadgeschiedenis."
 }

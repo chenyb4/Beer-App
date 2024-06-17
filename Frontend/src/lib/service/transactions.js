@@ -1,9 +1,6 @@
-
-let env=import.meta.env;
-
 export async function getAllOrders(){
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/orders`, {
+        const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/orders`, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -20,7 +17,7 @@ export async function getAllOrders(){
 
 export async function getOneOrderById(orderId){
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/orders?id=${orderId}`, {
+        const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/orders?id=${orderId}`, {
             headers: {
                 "Content-Type": "application/json"
             },

@@ -6,6 +6,7 @@
 		"dev": "cross-env VITE_APIURL=localhost VITE_APIPORT=8080 vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"full-preview": " vite build && vite preview --host",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
 		"test": "npm run test:integration && npm run test:unit",
@@ -21,6 +22,7 @@
 		"@types/eslint": "^8.56.0",
 		"autoprefixer": "^10.4.16",
 		"cross-env": "^7.0.3",
+		"dotenv": "^16.4.5",
 		"eslint": "^8.56.0",
 		"eslint-plugin-svelte": "^2.35.1",
 		"flowbite": "^2.3.0",
@@ -36,7 +38,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-node": "^5.0.1",
+		"@sveltejs/adapter-static": "^3.0.1",
 		"cross-env": "^7.0.3",
+		"svelte-preprocess": "^5.1.4",
+		"jsonwebtoken": "^9.0.2",
 		"sveltekit-i18n": "^2.4.2"
 	}
 }

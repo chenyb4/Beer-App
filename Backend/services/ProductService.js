@@ -29,7 +29,7 @@ exports.getProduct = async (id) => {
 
 // Create product
 exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN, isAlcoholic) => {
-    if (!name || !price_in_credits || !amount_in_stock || !EAN || !isAlcoholic) {
+    if (!name || !price_in_credits || amount_in_stock === undefined || !EAN || !isAlcoholic) {
         throw new Error('Missing one of the required fields: name, price_in_credits, amount_in_stock, EAN or isAlcoholic');
     }
     try {

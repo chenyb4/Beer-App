@@ -37,7 +37,6 @@
   }
 
   function isAbove18(dob = new Date()) {
-    console.log(dob);
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -69,7 +68,6 @@
 
   onMount(async () => {
     products = await loadProducts();
-    console.log(products);
   });
 </script>
 
