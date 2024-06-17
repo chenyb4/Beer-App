@@ -38,7 +38,7 @@ const orderController = require('./controllers/OrderController');
 const historyController = require('./controllers/HistoryController');
 const creditController = require('./controllers/CreditController');
 const roleController = require('./controllers/RoleController');
-const mailController = require('./services/MailService');
+const mailService = require('./services/MailService');
 const authController = require("./controllers/AuthController");
 const authService = require("./services/AuthService");
 
@@ -75,7 +75,7 @@ app.post('/products', authService.authenticateToken, productController.createPro
 app.put('/products', authService.authenticateToken, productController.updateProduct);
 app.delete('/products', authService.authenticateToken, productController.deleteProduct)
 
-app.post('/mail', authService.authenticateToken, mailController.sendmail);
+app.post('/mail', authService.authenticateToken, mailService.mail);
 
 app.post('/login', authController.login)
 app.post('/register', authController.register);
