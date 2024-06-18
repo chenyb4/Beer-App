@@ -38,12 +38,12 @@ export default {
                     700: '#042A2B',
                     800: '#38383C',
                     900: '#28282C',
-                    p_foreground: '#009C82',
+                    p_foreground: '#A4C3B2',
                     s_foreground: '#042A2B',
-                    text: '#000000',
-                    p_bg: '#ffffff',
-                    s_bg: '#a9a9a9',
-                    input_bg: '#ffffff',
+                    text: '#28282C',
+                    p_bg: '#F4F3EE',
+                    s_bg: '#D9D9D9',
+                    input_bg: '#F4F3EE',
                 },
             }
         }
