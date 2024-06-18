@@ -1,20 +1,16 @@
-import { goto } from "$app/navigation";
-import {login} from "$lib/service/authentication.js"
+import { login } from '$lib/service/authentication';
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-	default: async ({cookies, request}) => {
-
-		const data = await request.formData();
-		const username = data.get('username');
-		const password = data.get('password');
-		try {
-			const userToken = await login(username, password);
-			cookies.set('jwt', userToken, {path: '/'});
+	default: async ({ cookies, request }) => {
+	  const data = await request.formData();
+	  const username = data.get('username');
+	  const password = data.get('password');
+	  const userTokenResponse = await login(username, password);
+		if(userTokenResponse.token){
+			cookies.set('jwt', userTokenResponse.token, { path: '/' });
 			return true;
-		  } catch (error) {
-			console.log(error);
-			return false;
-		  }		  
+		}
+		return false;// Include the userToken in the return
 	}
-};
+  };

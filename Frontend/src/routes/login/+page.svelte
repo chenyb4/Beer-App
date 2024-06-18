@@ -1,7 +1,9 @@
 <script>
-  import { Button, Input, Label } from "flowbite-svelte";
   import { goto } from "$app/navigation";
   import { t } from "$lib/translations";
+  import logo from "$lib/images/ada-logo.png";
+  import { Label } from "flowbite-svelte";
+  import { login } from "$lib/service/authentication";
 
   let username = "";
   let password = "";
@@ -9,35 +11,26 @@
   let loading = false;
 
   async function handleLogin() {
-    if (username === "" || password === "") {
-      errorMessage = $t("login.notFilled");
-      console.log(errorMessage);
-      return;
-    }
-    loading = true;
-    const formData = new FormData();
-    formData.append("username", username);
-    formData.append("password", password);
+    try {
+      loading = true;
+      errorMessage = "";
 
-    const response = await fetch("/login", {
-      method: "POST",
-      body: formData,
-    });
-    if (response.ok) {
-      const result = await response.json();
-      console.log(result.data);
-      if (result.data == "[true]") {
+      const response = await login({ username, password });
+      console.log(response);
+
+      if (response) {
         setTimeout(() => {
           loading = false;
           goto("/");
         }, 2500);
       } else {
-        loading = false;
         errorMessage = $t("login.notCorrect");
+        loading = false;
       }
-    } else {
+    } catch (error) {
+      console.error("Login error:", error);
+      errorMessage = $t("login.notCorrect"); // Add a generic error message for unexpected failures
       loading = false;
-      errorMessage = $t("login.notCorrect");
     }
   }
 </script>
@@ -56,23 +49,23 @@
       <div class="h-full flex-1 flex flex-col justify-start p-6">
         <h1 class="text-white text-2xl mb-10">Welcome back!</h1>
         <Label for="username" class="text-white mb-2">Username:</Label>
-        <Input
+        <input
           required
           type="text"
           id="username"
           name="username"
-          class="bg-dark-900 border-none mb-4 text-white"
+          class="bg-dark-900 border-none mb-4 text-white w-full rounded-xl"
           bind:value={username}
-        ></Input>
+        />
         <Label for="password" class="text-white mb-2">Password:</Label>
-        <Input
+        <input
           required
           type="password"
           id="password"
           name="password"
-          class="bg-dark-900 border-none text-white"
+          class="bg-dark-900 border-none text-white w-full rounded-xl"
           bind:value={password}
-        ></Input>
+        />
         <div
           class="text-red-400 mt-4 text-sm h-4 {errorMessage
             ? 'visible'
@@ -82,8 +75,7 @@
         </div>
         <button
           on:click={handleLogin}
-          type="submit"
-          class="bg-dark-p_foreground p-4 rounded-full mt-8"
+          class="bg-dark-p_foreground p-4 rounded-full mt-8 text-white w-full"
           disabled={loading}
         >
           LOGIN
@@ -93,7 +85,7 @@
       <div class="h-[90%] w-0.5 bg-dark-900 flex items-center my-3"></div>
 
       <div class="h-full flex-1 flex justify-center items-center">
-        <img src="$lib/images/ada-logo.png" alt="Logo" class="w-32 h-auto" />
+        <img src={logo} alt="Logo" class="w-32 h-auto" />
       </div>
     </div>
   {/if}
