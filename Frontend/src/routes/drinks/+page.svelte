@@ -131,7 +131,9 @@
 </script>
 
 <div class="w-full h-full">
-  <div class="bg-dark-900 m-4 rounded-xl h-[85%] flex flex-col justify-between">
+  <div
+    class="dark:bg-dark-900 m-4 rounded-xl h-[85%] flex flex-col justify-between bg-light-s_bg"
+  >
     <h2 class="p-4 font-bold">{$t("drinks.title")}</h2>
     <div class="flex flex-col mx-4">
       <div class="flex flex-row justify-between">
@@ -142,7 +144,9 @@
           bind:ref
         />
         {#if identifiedUser}
-          <div class="bg-dark-300 w-64 p-4 rounded-2xl flex-col items-center">
+          <div
+            class="dark:bg-dark-p_foreground bg-light-p_foreground w-64 p-4 rounded-2xl flex-col items-center"
+          >
             <h4>Amount of credits left:</h4>
             <p class="flex justify-center text-4xl">
               {identifiedUser.credits}
@@ -159,7 +163,7 @@
         />
       </div>
       <div
-        class="bg-dark-800 w-full mt-6 flex flex-col h-80 rounded-xl overflow-auto"
+        class="dark:bg-dark-800 bg-light-p_bg w-full mt-6 flex flex-col h-80 rounded-xl overflow-auto"
       >
         <div class="px-4 py-2">
           <div class="grid grid-cols-6 gap-2 font-bold">
@@ -177,7 +181,9 @@
           </div>
 
           {#each selectedProducts as product}
-            <div class="grid grid-cols-6 gap-2 mt-2 bg-dark-900 rounded-xl p-4">
+            <div
+              class="grid grid-cols-6 gap-2 mt-2 dark:bg-dark-900 bg-light-s_bg rounded-xl p-4"
+            >
               <div class="col-span-3">
                 {product.name}
               </div>
@@ -192,7 +198,7 @@
                 <button on:click={() => removeProductFromCart(product)}
                   ><svelte:component
                     this={TrashBinSolid}
-                    class="text-light-p_foreground h-full"
+                    class="text-light-p_foreground dark:text-dark-p_foreground h-full"
                   /></button
                 >
               </div>
