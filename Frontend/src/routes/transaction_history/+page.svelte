@@ -10,23 +10,21 @@
   const iconStyle =
     "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
-  /** @type {import('./$types').PageData} */
-  export let data;
-  //this is an array of order objects
-  let allOrders = data.allOrders.data;
+    /** @type {import('./$types').PageData} */
+    export let data;
+    //this is an array of order objects
+    let allOrders = data.allOrders?.data || [];
 
-  // State variables for modal control
-  let showModal = false;
-  let selectedOrder = null;
-  let productsArray = null;
+    // State variables for modal control
+    let showModal = false;
+    let selectedOrder = null;
+    let productsArray = null;
 
-  async function openModal(orderId) {
-    selectedOrder = await getOneOrderById(orderId);
-    productsArray = selectedOrder.order_products;
-    showModal = true;
-  }
-
-  showModal = true;
+    async function openModal(orderId) {
+        selectedOrder = await getOneOrderById(orderId);
+        productsArray = selectedOrder.order_products;
+        showModal = true;
+    }
 </script>
 
 <body
@@ -43,7 +41,7 @@
       ]}
     ></TableHeader>
 
-    {#if allOrders.length == 0}
+    {#if allOrders.length === 0}
       <p>{$t("transaction_history.no_data_message")}</p>
     {:else}
       <TableBody>

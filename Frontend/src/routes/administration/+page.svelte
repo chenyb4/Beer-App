@@ -1,15 +1,18 @@
 <script>
     import {t} from "$lib/translations/index.js";
-    import CtaButton from "$lib/components/CtaButton.svelte";
     import CreateStudent from "$lib/components/administration/CreateStudent.svelte";
     import {handleSendMailResponse} from "$lib/service/QR.js";
     import TablePage from "$lib/components/table/TablePage.svelte"
     import {
-        Button, ButtonGroup, Dropdown, DropdownItem, Input,
+        Button,
+        ButtonGroup,
+        Dropdown,
+        DropdownItem,
+        Input,
         Modal,
         Popover,
         TableBody,
-        TableBodyRow,
+        TableBodyRow
     } from "flowbite-svelte";
     import languages from "$lib/service/languages.json"
     import {dateToString} from "$lib/service/dateToString.js";
@@ -32,12 +35,12 @@
 
     /** @type {import('./$types').PageData} */
     export let data;
-    $: users = data.users.data;
+    $: users = data.users?.data || [];
 
-    const pages = Math.ceil(data.users.meta.total / data.users.meta.page_size);
+    const pages = Math.ceil(data.users?.meta.total / data.users?.meta.page_size || 1);
     let currentPage = 1;
 
-    const roles = data.roles.data;
+    const roles = data.roles?.data || [];
     let modalTitle = "";
     let modalText = "";
     let modalOpen = false;
@@ -49,7 +52,8 @@
     let textSentQRModal = "";
 
     // Calculate if the user is above 18
-    function isAbove18(dob = new Date()) {
+    function isAbove18(dob = "") {
+        if (dob === "") return;
         const today = new Date();
         const birthDate = new Date(dob);
         let age = today.getFullYear() - birthDate.getFullYear();
@@ -173,7 +177,8 @@
             <DotsVerticalOutline class="dots-menu"/>
         </Button>
         <Dropdown placement="top" triggeredBy=".dots-menu" class="w-32">
-            <DropdownItem on:click={handleOpenCreateUsersDialog} class="text-center">{$t("administration.addUsers")}</DropdownItem>
+            <DropdownItem on:click={handleOpenCreateUsersDialog}
+                          class="text-center">{$t("administration.addUsers")}</DropdownItem>
         </Dropdown>
     </ButtonGroup>
 </div>
@@ -248,7 +253,7 @@
                     </option>
                 </select>
             </TableCellWithInputs>
-            <TableCellWithInputs position="middle" />
+            <TableCellWithInputs position="middle"/>
             <TableCellWithInputs position="last">
                 <Button class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
                         on:click={() => changeUsers()}>
@@ -293,6 +298,10 @@
                     </TableCell>
                 </TableBodyRow>
             {/each}
+        {:else}
+            <TableBodyRow>
+                <TableCell position="first" colspan="7" class="text-center">No users found</TableCell>
+            </TableBodyRow>
         {/if}
     </TableBody>
 </TablePage>
