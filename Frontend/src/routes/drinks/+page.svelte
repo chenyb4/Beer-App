@@ -198,7 +198,7 @@
                 <button on:click={() => removeProductFromCart(product)}
                   ><svelte:component
                     this={TrashBinSolid}
-                    class="text-light-p_foreground h-full"
+                    class="text-light-p_foreground dark:text-dark-p_foreground h-full"
                   /></button
                 >
               </div>

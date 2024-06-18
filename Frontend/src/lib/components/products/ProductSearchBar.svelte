@@ -78,7 +78,11 @@
   }
 
   function autoSelectProductByBarcode(barcode) {
-    const product = products.find((product) => product.EAN === barcode);
+    const isAdult = isAbove18(identifiedUser.date_of_birth);
+    const product = products.find(
+      //Check if the EAN matches the input and the user is an adult or the product is not alcholic
+      (product) => product.EAN === barcode && (isAdult || !product.isAlcoholic)
+    );
     if (product) {
       selectProduct(product);
     }

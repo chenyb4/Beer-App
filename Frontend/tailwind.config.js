@@ -8,6 +8,16 @@ export default {
 
     theme: {
         extend: {
+            backgroundImage: {
+                'bottleskyline-light': "url('/images/bottleskyline-light.svg')",
+                'bottleskyline-dark': "url('/images/bottleskyline-dark.svg')"
+              },
+             backgroundPosition: {
+        'bottom-custom': 'right 10% bottom -10px',
+      },
+      backgroundSize: {
+        'auto-11': 'auto 11%',
+      },
             colors: {
                 'dark': {
                     50: '#00ffd3',
