@@ -13,7 +13,7 @@
     /** @type {import('./$types').PageData} */
     export let data;
     //this is an array of order objects
-    let allOrders = data.allOrders.data;
+    let allOrders = data.allOrders?.data || [];
 
     // State variables for modal control
     let showModal = false;
@@ -41,7 +41,7 @@
       ]}
     ></TableHeader>
 
-    {#if allOrders.length == 0}
+    {#if allOrders.length === 0}
       <p>{$t("transaction_history.no_data_message")}</p>
     {:else}
       <TableBody>
