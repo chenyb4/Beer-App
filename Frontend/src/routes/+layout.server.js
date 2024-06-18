@@ -4,8 +4,6 @@ import { locales, loadTranslations, translations, defaultLocale } from '$lib/tra
 export const load = async ({ url, cookies, request }) => {
     const { pathname } = url;
 
-    console.log(cookies.get("jwt"));
-
     // Try to get the locale from cookie
     let locale = (cookies.get('lang') || '').toLowerCase();
 
