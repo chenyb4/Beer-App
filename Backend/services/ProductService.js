@@ -2,6 +2,7 @@ const db = require('../database')
 const paginationService = require("./PaginationService");
 const historyService = require("./HistoryService");
 const {Action} = require('../enums/Action')
+const logger = require('../logger');
 
 
 // Get all products
@@ -21,6 +22,7 @@ exports.getProduct = async (id) => {
     try {
         return await db.Product.findByPk(id);
     } catch (err) {
+        logger.error(err);
         throw new Error('Failed to get product');
     }
 }
@@ -33,7 +35,7 @@ exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN, isA
     try {
         return db.Product.create({name, price_in_credits, amount_in_stock, EAN, isAlcoholic});
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to create product');
     }
 }
@@ -65,7 +67,7 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN,
 
         return updatedProduct;
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to update product with id: ' + id);
     }
 }

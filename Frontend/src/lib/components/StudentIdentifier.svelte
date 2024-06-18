@@ -6,7 +6,7 @@
 
   export let identifier = "";
   export let userName = "";
-  export let ref = "";
+  export let ref;
   export let identifiedUser;
   let errorMessage = "";
 
@@ -19,6 +19,12 @@
     } catch (error) {
       errorMessage = $t("drinks.errorMessage");
       userName = "";
+    }
+  }
+
+  function handleInput(event) {
+    if (identifier.length > 59) {
+      handleSubmit(event);
     }
   }
 </script>
@@ -35,6 +41,7 @@
         type="text"
         bind:value={identifier}
         bind:this={ref}
+        on:input={handleInput}
       />
       <button class="bg-dark-200 rounded-full ml-2 px-4 py-2" type="submit">
         SUBMIT

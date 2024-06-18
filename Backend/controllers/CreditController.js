@@ -1,10 +1,11 @@
 const creditService = require('../services/CreditService');
+const logger = require("../logger");
 
 exports.getCredit = async (req, res) => {
     try {
         res.status(200).json(await creditService.getCredit());
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500).json({ message: 'Service error' });
     }
 };
@@ -19,7 +20,7 @@ exports.updateCredit = async (req, res) => {
         }
         res.status(200).json(updatedCredit);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({ message: 'Bad request' });
     }
 };

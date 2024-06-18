@@ -1,5 +1,7 @@
 const productService = require('../services/ProductService');
 const paginationService = require("../services/PaginationService");
+const logger = require('../logger');
+
 
 exports.getProducts = async (req, res) => {
     const { id } = req.query;
@@ -15,7 +17,7 @@ exports.getProducts = async (req, res) => {
         }
         res.status(200).json(products);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500).json({message: 'Service Error'});
     }
 
@@ -28,7 +30,7 @@ exports.createProduct = async (req, res) => {
         const newProduct = await productService.createProduct(name, price_in_credits, amount_in_stock, EAN, isAlcoholic);
         res.status(201).json(newProduct);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({message: 'Bad request'});
     }
 };
@@ -44,7 +46,7 @@ exports.updateProduct = async (req, res) => {
         }
         res.status(200).json(updatedProduct)
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(400).json({message: 'Bad request'});
     }
 };
@@ -55,6 +57,7 @@ exports.deleteProduct = async (req, res) => {
     try {
         res.status(200).json(await productService.deleteProduct(id));
     } catch (err) {
+        logger.error(err);
         res.status(400).json({message: 'Bad request'});
     }
 }
