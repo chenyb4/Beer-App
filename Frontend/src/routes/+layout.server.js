@@ -1,9 +1,14 @@
 import { locales, loadTranslations, translations, defaultLocale } from '$lib/translations';
+import {redirect} from "@sveltejs/kit";
 
 /** @type {import('@sveltejs/kit').ServerLoad} */
 export const load = async ({ url, cookies, request }) => {
     const { pathname } = url;
 
+    if (pathname !== "/login")
+        if (!cookies.get("authToken")) {
+            throw redirect(302, '/login?status=302');
+        }
     // Try to get the locale from cookie
     let locale = (cookies.get('lang') || '').toLowerCase();
 
