@@ -8,8 +8,7 @@
   export let value = "";
   export let selectedProduct;
   export let identifiedUser;
-
-  let elementInputSearchbar;
+  export let elementInputSearchbar;
 
   let products = [];
   const dispatch = createEventDispatcher();
@@ -17,23 +16,35 @@
   $: if (elementInputSearchbar) {
     if (identifiedUser) {
       elementInputSearchbar.removeAttribute("disabled");
+      elementInputSearchbar.focus();
     } else {
       elementInputSearchbar.setAttribute("disabled", true);
     }
   }
 
   function filterProductOptions() {
+    // Check if the user is an adult (18+)
     const isAdult = isAbove18(identifiedUser.date_of_birth);
+    // Filter products based on the search value
     filteredProductsOptions = value
       ? products.filter((product) => {
+          // Check if the product name or EAN matches the search value
           const matchesSearch =
             product.name.toLowerCase().includes(value.toLowerCase()) ||
             product.EAN.includes(value);
+          // Check if the product is allowed for the user (non-alcoholic for minors)
           const allowedProduct = isAdult || !product.isAlcoholic;
+          // Return true if both conditions are met
           return matchesSearch && allowedProduct;
         })
       : [];
+    // Display the filtered product options
     document.getElementById("productOptions").style.display = "block";
+    // Check if the input length is greater than 12 characters (EAN is always 13 characters)
+    if (value.length > 12) {
+      // Automatically select the product by barcode if the length exceeds 12 characters
+      autoSelectProductByBarcode(value);
+    }
   }
 
   function isAbove18(dob = new Date()) {
@@ -63,6 +74,13 @@
   function selectProductWithEnter(event) {
     if (event.key === "Enter" && filteredProductsOptions.length > 0) {
       selectProduct(filteredProductsOptions[0]);
+    }
+  }
+
+  function autoSelectProductByBarcode(barcode) {
+    const product = products.find((product) => product.EAN === barcode);
+    if (product) {
+      selectProduct(product);
     }
   }
 

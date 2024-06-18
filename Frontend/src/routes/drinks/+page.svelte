@@ -20,6 +20,7 @@
   let selectedProducts = [];
   let errorMessage = "";
   let productCart = new Map();
+  let elementInputSearchbar;
 
   function handleSelectProduct(event) {
     //Getting constant values from the product;
