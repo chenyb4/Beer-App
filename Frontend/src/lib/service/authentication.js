@@ -1,14 +1,10 @@
 import {jwtDecode} from "jwt-decode";
 import {getRoles} from "$lib/service/administration.js";
+import {getCookie, request} from "$lib/service/config.js";
+
 
 export async function login({username, password}) {
-    const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-    });
+    const response = await request("/login", "post", JSON.stringify({ username, password }), false);
 
     if (!response.ok) {
         const error = await response.json();
@@ -16,7 +12,6 @@ export async function login({username, password}) {
     }
 
     const data = await response.json();
-
     await handleLogin(data.token)
 
     return response.status
@@ -30,11 +25,12 @@ export function setCookie(name, value, expires = 3) { // Expires in 7 days by de
 }
 
 async function handleLogin(token) {
+    setCookie('authToken', token);
     const decodedUser = jwtDecode(token)
     setCookie('username', decodedUser.user.username);
     const rolesData = await getRoles();
     setCookie('roleName', rolesData.data[decodedUser.user.roleId -1].name)
-    setCookie('authToken', token);
+
 }
 
 export async function register(username, password, email, date_of_birth) {

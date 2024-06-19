@@ -1,3 +1,5 @@
+import {request} from "$lib/service/config.js";
+
 export async function createUser(username, email, date_of_birth) {
     try {
         const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users", {
@@ -44,12 +46,7 @@ export async function getUsers(page = 1, pageSize = 10, filterUsername = "", fil
 
 export async function getRoles(){
     try {
-        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/roles", {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            method: "GET",
-        });
+        const response = await request("/roles", "GET",'', true);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
