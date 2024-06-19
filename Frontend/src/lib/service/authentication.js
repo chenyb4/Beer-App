@@ -34,14 +34,7 @@ async function handleLogin(token) {
 }
 
 export async function register(username, password, email, date_of_birth) {
-    const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/register`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password, email, date_of_birth }),
-    });
-
+    const response = await request(`/register`, "POST", JSON.stringify({ username, password, email, date_of_birth }), false);
     if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message);

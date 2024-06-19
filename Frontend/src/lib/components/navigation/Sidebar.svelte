@@ -17,8 +17,8 @@
   export let username = "user";
   export let roleName = "";
 
-  let blur = "";
-  if (roleName === "seller")
+  $: blur = "";
+  $: if (roleName === "seller")
       blur = "blur";
 
   let site = {
