@@ -79,7 +79,7 @@ exports.createUser = async (username, email, password, date_of_birth) => {
         }
     }
     // For creating an executive
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await hashValue(password)
 
     try {
         return await db.User.create({username, email, password: hashedPassword, date_of_birth});
@@ -98,27 +98,33 @@ exports.updateUser = async ({
                                 date_of_birth,
                                 language,
                                 roleId,
-                                loggedInUserId
+                                loggedInUserId,
+                                password
                             }) => {
-    if (!id || (!isDisabled && !username && !email && !credits && !date_of_birth && !language && !roleId)) {
+    if (!id || (!isDisabled && !username && !email && !credits && !date_of_birth && !language && !roleId && !password)) {
         throw new Error('Missing required fields or no update data provided');
     }
 
     if (date_of_birth !== undefined) date_of_birth = new Date(Date.parse(date_of_birth)).setHours(0, 0, 0, 0)
 
+    let updateValues = {
+        isDisabled,
+        username,
+        email,
+        credits,
+        date_of_birth,
+        language,
+        roleId
+    }
+    if (password !== undefined && password !== null) {
+        const hashedPassword = await hashValue(password)
+        updateValues = Object.assign({}, updateValues, {password: hashedPassword});
+    }
+
 
     try {
         const oldUser = await this.getUser(id);
-        await db.User.update(   // Update User
-            {
-                isDisabled,
-                username,
-                email,
-                credits,
-                date_of_birth,
-                language,
-                roleId
-            },
+        await db.User.update(updateValues,
             {
                 where: {id},
             },
@@ -159,7 +165,7 @@ exports.decrementUserCredits = async (id, amount, loggedInUserId) => {
     if (id === undefined || amount === undefined) throw new Error('Missing required fields or no update data provided');
     if (amount < 1) throw new Error('Amount can not be lower than 1');
     const preUser = await this.getUser(id);
-    if(preUser.credits < amount) throw new Error('Amount can not be more than available credits')
+    if (preUser.credits < amount) throw new Error('Amount can not be more than available credits')
     try {
         const user = await db.User.decrement({credits: amount}, {where: {id}});
 

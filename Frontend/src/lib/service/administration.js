@@ -58,7 +58,6 @@ export async function getRoles(){
 }
 
 export async function deleteUser(user) {
-    let env = import.meta.env;
     try {
         const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users?id=" + user.id, {
             headers: {
@@ -76,15 +75,14 @@ export async function deleteUser(user) {
     }
 }
 
-export async function updateUser(user, username = user.username, date_of_birth = user.date_of_birth, language = user.language, roleId = user.roleId) {
-    let env = import.meta.env;
+export async function updateUser({user, username = user.username, date_of_birth = user.date_of_birth, language = user.language, roleId = user.roleId, password = ''}) {
     try {
         const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users/?id=" + user.id, {
             headers: {
                 "Content-Type": "application/json"
             },
             method: "PUT",
-            body: JSON.stringify({username, date_of_birth, language, roleId})
+            body: JSON.stringify({username, date_of_birth, language, roleId, password})
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
