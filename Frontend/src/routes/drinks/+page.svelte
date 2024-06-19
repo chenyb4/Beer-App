@@ -10,6 +10,8 @@
     confirmOrder,
     createOrder,
   } from "$lib/service/orders";
+  import {Alert, Modal} from "flowbite-svelte";
+  import {goto} from "$app/navigation";
 
   let ref = {};
   let identifiedUser;
@@ -21,6 +23,9 @@
   let errorMessage = "";
   let productCart = new Map();
   let elementInputSearchbar;
+
+  export let data;
+  let status = data.status || "";
 
   function handleSelectProduct(event) {
     //Getting constant values from the product;
@@ -131,6 +136,13 @@
 </script>
 
 <div class="w-full h-full">
+  {#if status === "302"}
+    <Alert color="red" class="absolute top-5 left-5" dismissable on:close={() => status = ''}>
+        <span class="font-bold text-2xl">
+            You are a seller. If you want to use other activities on this system, please log out and log in with admin credentials
+        </span>
+    </Alert>
+  {/if}
   <div class="bg-dark-900 m-4 rounded-xl h-[85%] flex flex-col justify-between">
     <h2 class="p-4 font-bold">{$t("drinks.title")}</h2>
     <div class="flex flex-col mx-4">

@@ -4,7 +4,6 @@
     import logo from "$lib/images/ada-logo.png";
     import {Alert, Label} from "flowbite-svelte";
     import {login} from "$lib/service/authentication";
-    import {onMount} from "svelte";
 
     let username = "";
     let password = "";
