@@ -23,7 +23,7 @@ export async function getUsers(page = 1, pageSize = 10, filterUsername = "", fil
     if (filterRole !== 0) query.roleId = filterRole;
     const queryString = new URLSearchParams(query).toString();
     try {
-        const response = await request(`/users${queryString ? '?${queryString}' : ''}`, "GET", '', true);
+        const response = await request(`/users?` + queryString, "GET", '', true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -34,7 +34,6 @@ export async function getUsers(page = 1, pageSize = 10, filterUsername = "", fil
 }
 
 export async function getRoles(){
-    console.log(getCookie('authToken'))
     try {
         const response = await request("/roles", "GET",'', true);
         if (!response.ok) {
@@ -47,14 +46,8 @@ export async function getRoles(){
 }
 
 export async function deleteUser(user) {
-    let env = import.meta.env;
     try {
-        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users?id=" + user.id, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            method: "DELETE",
-        });
+        const response = await request("/users?id=" + user.id, "DELETE",'', true);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -66,15 +59,8 @@ export async function deleteUser(user) {
 }
 
 export async function updateUser(user, username = user.username, date_of_birth = user.date_of_birth, language = user.language, roleId = user.roleId) {
-    let env = import.meta.env;
     try {
-        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/users/?id=" + user.id, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            method: "PUT",
-            body: JSON.stringify({username, date_of_birth, language, roleId})
-        });
+        const response = await request("/users/?id=" + user.id, "PUT",JSON.stringify({username, date_of_birth, language, roleId}), true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

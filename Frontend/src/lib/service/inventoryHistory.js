@@ -1,13 +1,8 @@
-let env=import.meta.env;
+import {request} from "$lib/service/config.js";
 
 export async function getAllInventoyHistories(){
     try {
-        const response = await fetch(`http://${env.VITE_APIURL}:${env.VITE_APIPORT}/histories/inventory`, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            method: "GET",
-        });
+        const response = await request( `/histories/inventory`, "GET", '', true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
