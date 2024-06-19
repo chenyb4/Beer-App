@@ -2,7 +2,7 @@ import {request} from "$lib/service/config.js";
 
 export async function getAllOrders(){
     try {
-        const response = await request( `/orders`, "GET", true);
+        const response = await request( `/orders`, "GET", '',true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -14,7 +14,7 @@ export async function getAllOrders(){
 
 export async function getOneOrderById(orderId){
     try {
-        const response = await request( `/orders?id=${orderId}`, "GET", true);
+        const response = await request( `/orders?id=${orderId}`, "GET", '',true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
