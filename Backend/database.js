@@ -6,7 +6,8 @@ const url = process.env.DBURL
 
 const sequelize = new Sequelize('postgres', user, password, {
     host: url,
-    dialect: "postgres"
+    dialect: "postgres",
+    logging: false
 });
 
 const User = require("./models/User")(sequelize)
