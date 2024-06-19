@@ -20,7 +20,7 @@
 
   /** @type {import('./$types').PageData} */
   export let data;
-  let defaultCreditsInitial = data.defaultCredits;
+  let defaultCreditsInitial = data.defaultCredits || 10;
 
   //re-assign when there is data from the server for these values
   amountOfCredits = defaultCreditsInitial.default_amount;

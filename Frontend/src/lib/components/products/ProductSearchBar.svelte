@@ -78,7 +78,11 @@
   }
 
   function autoSelectProductByBarcode(barcode) {
-    const product = products.find((product) => product.EAN === barcode);
+    const isAdult = isAbove18(identifiedUser.date_of_birth);
+    const product = products.find(
+      //Check if the EAN matches the input and the user is an adult or the product is not alcholic
+      (product) => product.EAN === barcode && (isAdult || !product.isAlcoholic)
+    );
     if (product) {
       selectProduct(product);
     }
@@ -94,7 +98,7 @@
   <input
     bind:this={elementInputSearchbar}
     disabled
-    class="dark:bg-dark-800 border-none rounded-lg"
+    class="dark:bg-dark-800 bg-light-p_bg border-none rounded-lg"
     type="text"
     id="inputSearchBar"
     bind:value
@@ -107,7 +111,7 @@
     <div id="productOptions" class="block absolute w-full">
       {#each filteredProductsOptions as product}
         <button
-          class="border border-dark-300 w-full bg-dark-900"
+          class="border border-light-p_foreground dark:border-dark-300 w-full bg-light-s_bg dark:bg-dark-900"
           on:click={() => selectProduct(product)}>{product.name}</button
         >
       {/each}
