@@ -43,12 +43,13 @@ function validateToken(req, res, next, needsAdmin = true) {
         return res.status(401).json({ error: 'Token not provided' });
     }
 
-    jwt.verify(token, process.env.TOKEN_SECRET, async (err, u) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, wrapper) => {
         if (err) {
             console.error(err);
             return res.status(403).json({error: 'Invalid token'});
         }
-        const user = await db.User.findOne({ where: { username: u.username } })
+
+        const user = await db.User.findOne({ where: { username: wrapper.user.username } })
 
         if (needsAdmin){
             if(user.roleId !== 4){
