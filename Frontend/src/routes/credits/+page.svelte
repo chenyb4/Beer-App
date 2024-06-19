@@ -14,13 +14,33 @@
   let price = 0;
   let ref;
 
+  //this variable keeps track of whether the call to
+  //fetch default credits and price is successful
+
+  let defaultCreditsAndPriceReceived=false;
+
   // Initialize these values based on fetched data
   let creditIncrement = amountOfCredits;
   let priceIncrement = price;
 
   /** @type {import('./$types').PageData} */
   export let data;
-  let defaultCreditsInitial = data.defaultCredits || 10;
+  console.log(data)
+
+  //defaultCredeitsInitial is an object containing the default price and default credits amount
+  // it is an object
+  let defaultCreditsInitial={};
+
+
+
+  if(data.defaultCredits!=null){
+    defaultCreditsAndPriceReceived=true;
+    defaultCreditsInitial= data.defaultCredits;
+  }else{
+    defaultCreditsInitial.price=0;
+    defaultCreditsInitial.default_amount=0;
+  }
+
 
   //re-assign when there is data from the server for these values
   amountOfCredits = defaultCreditsInitial.default_amount;
@@ -93,6 +113,11 @@
     >
       {$t("credits.amountOfCredits")}
     </label>
+
+    {#if !defaultCreditsAndPriceReceived}
+      <p style="color: red">{$t("credits.warning")}</p>
+    {/if}
+
     <div class="relative flex items-center max-w-[8rem]">
       <button
         type="button"
@@ -150,6 +175,7 @@
     </div>
 
     <PriceTitle captionText={$t("credits.price")} {price}></PriceTitle>
+
 
     <CtaButton
       captionText={$t("credits.confirm")}
