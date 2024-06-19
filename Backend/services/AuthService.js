@@ -36,7 +36,7 @@ function developmentCheck(req){
     }
 }
 
-function validateToken(req, res, next, checkSeller = false) {
+function validateToken(req, res, next, needsAdmin = true) {
     const token = req.headers['authorization'];
 
     if (!token) {
@@ -48,11 +48,10 @@ function validateToken(req, res, next, checkSeller = false) {
             console.error(err);
             return res.status(403).json({error: 'Invalid token'});
         }
-        const {users} = await userService.getAllUsers({query: {username: u.username}})
+        const user = await db.User.findOne({ where: { username: u.username } })
 
-        const user = users[0]
-        if (!checkSeller){
-            if(user.roleId === 3){
+        if (needsAdmin){
+            if(user.roleId !== 4){
                 return res.status(403).json({error: 'No access'});
             } else {
                 req.user = user
@@ -68,7 +67,7 @@ function validateToken(req, res, next, checkSeller = false) {
 
 exports.authenticateTokenForSeller = (req, res, next) => {
     if(developmentCheck(req)) return next();
-    validateToken(req, res, next, true)
+    validateToken(req, res, next, false)
 }
 
 exports.authenticateToken = (req, res, next) => {

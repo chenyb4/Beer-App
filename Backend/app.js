@@ -121,12 +121,13 @@ async function loadDummyData() {
             },
             {
                 name: 'seller',
-                discount: 1.5
+                discount: 1
             },
             {
-                name: 'admin',
-                discount: 1.5
-            }
+                name: 'administrator',
+                discount: 1
+            },
+
         ]);
         await db.User.bulkCreate([
             {
@@ -140,7 +141,7 @@ async function loadDummyData() {
                 username: "dummy2",
                 email: "dummy2@dummy.nl",
                 password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
-                date_of_birth: "2024-05-23 00:00:00.000",
+                date_of_birth: "1990-05-23 00:00:00.000",
                 roleId: 3,
                 credits: 20
             },
