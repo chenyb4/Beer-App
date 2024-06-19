@@ -11,7 +11,8 @@ exports.login = async (username, password) => {
     const passwordCorrect = await bcrypt.compare(password, user.password);
     if (!passwordCorrect) throw new Error('Password is incorrect!');
 
-    return generateAccessToken({ username });
+    const roleId = user.roleId;
+    return generateAccessToken({ username, roleId });
 }
 
 exports.register = async (username, password, email, date_of_birth) => {
@@ -22,8 +23,8 @@ exports.register = async (username, password, email, date_of_birth) => {
     return generateAccessToken({ username });
 }
 
-function generateAccessToken(username) {
-    return jwt.sign(username, process.env.TOKEN_SECRET, {expiresIn: '1800s'});
+function generateAccessToken(user) {
+    return jwt.sign({user}, process.env.TOKEN_SECRET, {expiresIn: '1800s'});
 }
 
 function developmentCheck(req){
