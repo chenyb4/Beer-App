@@ -47,7 +47,7 @@
   }
 
   async function updateCreditsForAUser() {
-    let addCreditsSound = new Audio("sound-effects/checkout_sound.mp3");
+    let addCreditsSound = new Audio("sound-effects/creditbought_sound.mp3");
     addCreditsSound.volume = 0.3;
     addCreditsSound.play();
     try {

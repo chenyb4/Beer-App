@@ -98,6 +98,9 @@
     if (order) {
       await addProductsToOrder(order.id, productCart);
       await confirmOrder(order.id);
+      let checkoutSound = new Audio("sound-effects/checkout_sound.mp3");
+      checkoutSound.volume = 0.3;
+      checkoutSound.play();
       clearFields();
     }
   }
