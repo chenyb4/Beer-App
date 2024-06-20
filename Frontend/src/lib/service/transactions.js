@@ -1,6 +1,6 @@
 import {request} from "$lib/service/config.js";
 
-export async function getAllOrders(page=1,pageSize=6){
+export async function getAllOrders(page=1,pageSize=5){
     try {
         const response = await request( `/orders?page=${page}&pageSize=${pageSize}`, "GET", '',true);
         if (!response.ok) {
