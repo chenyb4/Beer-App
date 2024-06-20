@@ -17,6 +17,8 @@
     let allOrders = data.allOrders?.data || [];
 
     console.log(allOrders[1]);
+    let currentPage=1;
+  const pages = Math.ceil(data.allOrders.meta.total / data.allOrders.meta.page_size);
 
     // State variables for modal control
     let showModal = false;
@@ -29,6 +31,13 @@
         showModal = true;
     }
 
+    async function changeTransactionHistory(page=1){
+      const response=await getAllOrders(page);
+
+      allOrders=response.data;
+      currentPage=page;
+    }
+
   async function undo(orderId) {
     const result = await undoTransaction(orderId)
     const updatedOrders = await getAllOrders() || [];
@@ -38,7 +47,7 @@
 </script>
 
 
-  <TablePage title={$t("transaction_history.title")}>
+  <TablePage title={$t("transaction_history.title")} {currentPage} changeData={changeTransactionHistory} {pages}>
     <TableHeader
       headerValues={[
         $t("transaction_history.buyer"),
