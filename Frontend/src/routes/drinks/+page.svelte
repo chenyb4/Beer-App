@@ -155,11 +155,9 @@
       </span>
     </Alert>
   {/if}
-  <div
-    class="dark:bg-dark-900 bg-light-s_bg rounded-xl flex flex-col justify-between h-[90%]"
-  >
+  <div class="dark:bg-dark-900 bg-light-s_bg rounded-xl flex-col h-[90%]">
     <h2 class="p-4 text-3xl font-bold mb-4">{$t("drinks.title")}</h2>
-    <div class="flex flex-col mx-4">
+    <div class="flex flex-col mx-4 mb-2">
       <div class="flex flex-row justify-between">
         <StudentIdentifier
           bind:identifiedUser
@@ -187,7 +185,7 @@
         />
       </div>
       <div
-        class="dark:bg-dark-800 bg-light-p_bg w-full mt-4 flex flex-col h-64 rounded-xl overflow-auto px-4"
+        class="dark:bg-dark-800 bg-light-p_bg w-full mt-4 flex flex-col min-h-64 rounded-xl overflow-auto px-4"
       >
         <div class="grid grid-cols-6 gap-2 font-bold">
           <div class="col-span-3">Product</div>
@@ -227,10 +225,10 @@
       {#if errorMessage}
         <p class="text-red-400 px-3">{errorMessage}</p>
       {/if}
-    </div>
-    <div class="flex justify-end mr-4">
-      <CtaButton captionText="SUBMIT" onCTAButtonClickFn={handleSubmitOrder}
-      ></CtaButton>
+      <Button
+        class="bg-light-p_foreground dark:bg-dark-p_foreground my-5 rounded-xl"
+        on:click={handleSubmitOrder}>SUBMIT</Button
+      >
     </div>
   </div>
 </div>
