@@ -106,7 +106,7 @@
     }
   }
 
-  let pageSize = 10;
+  let pageSize = 6;
 
   async function changeUsers(page = 1) {
     const response = await getUsers(
@@ -244,7 +244,7 @@
   {pages}
   {currentPage}
   changeData={changeUsers}
-  title="Student administration"
+  title={$t("administration.titleAdmin")}
 >
   <TableHeader
     headerValues={[
@@ -333,13 +333,19 @@
           <TableCell position="middle">
             <div>
               {#if isAbove18(user.date_of_birth)}
-                <CheckCircleOutline id={`date_of_birth-${user.id}`} class="text-green-600" />
+                <CheckCircleOutline
+                  id={`date_of_birth-${user.id}`}
+                  class="text-green-600"
+                />
               {:else}
-                <CloseCircleOutline id={`date_of_birth-${user.id}`} class="text-red-600" />
+                <CloseCircleOutline
+                  id={`date_of_birth-${user.id}`}
+                  class="text-red-600"
+                />
               {/if}
               <Popover
-                      class="text-sm text-light-text dark:text-dark-text z-50"
-                      triggeredBy={`#date_of_birth-${user.id}`}
+                class="text-sm text-light-text dark:text-dark-text z-50"
+                triggeredBy={`#date_of_birth-${user.id}`}
               >
                 {dateToString(user.date_of_birth)}
               </Popover>

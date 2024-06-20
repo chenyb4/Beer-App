@@ -12,7 +12,7 @@ export async function createUser(username, email, date_of_birth) {
         console.error("Failed to fetch user data:", error);
     }
 }
-export async function getUsers(page = 1, pageSize = 10, filterUsername = "", filterEmail = "", filterIsLegalAge = 0, filterLanguage = -1, filterRole = 0) {
+export async function getUsers(page = 1, pageSize = 6, filterUsername = "", filterEmail = "", filterIsLegalAge = 0, filterLanguage = -1, filterRole = 0) {
     let query = {};
     query.page = page;
     query.pageSize = pageSize;

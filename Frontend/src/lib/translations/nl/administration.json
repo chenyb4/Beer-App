@@ -19,5 +19,6 @@
   "passwordConfirm": "Wachtwoord herhalen: ",
   "credits": "Credits: ",
   "addUsers": "Meerdere gebruikers toevoegen",
-  "language": "Taal voorkeur: "
+  "language": "Taal voorkeur: ",
+  "titleAdmin": "STUDENT ADMINISTRATIE"
 }

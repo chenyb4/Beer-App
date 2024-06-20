@@ -19,5 +19,6 @@
   "passwordConfirm": "Confirm password: ",
   "credits": "Credits: ",
   "addUsers": "Add multiple users",
-  "language": "Preferred language: "
+  "language": "Preferred language: ",
+  "titleAdmin": "STUDENT ADMINISTRATION"
 }
