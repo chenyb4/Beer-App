@@ -115,6 +115,9 @@
         width: 100%;
         height: 100%;
         background-image: url("$lib/images/login_background.svg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
     .loader {
