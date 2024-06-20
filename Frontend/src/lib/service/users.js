@@ -2,7 +2,7 @@ import {request} from "$lib/service/config.js";
 
 export async function getUserByQRIdentifier(identifier) {
     try {
-        const response = await request( "/users?qr_identifier=" + identifier, "GET", true);
+        const response = await request( "/users?qr_identifier=" + identifier, "GET", "",  true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -15,7 +15,7 @@ export async function getUserByQRIdentifier(identifier) {
 
 export async function getUserById(userId) {
     try {
-        const response = await request( `/users/${userId}`, "GET", true);
+        const response = await request( `/users/${userId}`, "GET", "", true);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

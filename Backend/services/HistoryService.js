@@ -137,6 +137,7 @@ exports.undo = async (undo, loggedInUserId) => {
                 isDisabled: undo.action === Action.enable_user,
                 loggedInUserId
             });
+            break;
         case Action.change_user_credits:
             await userService.incrementUserCredits(actionDetails.buyerId, actionDetails.credits, loggedInUserId);
             await orderService.deleteOrder(actionDetails.orderId)

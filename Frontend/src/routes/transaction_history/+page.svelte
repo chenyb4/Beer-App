@@ -31,8 +31,9 @@
 
   async function undo(orderId) {
     const result = await undoTransaction(orderId)
-    console.log(result)
-    allOrders = await getAllOrders()
+    const updatedOrders = await getAllOrders() || [];
+    allOrders = updatedOrders.data;
+    console.log(allOrders)
   }
 </script>
 
