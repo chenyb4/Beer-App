@@ -57,7 +57,9 @@ exports.undo = async (req, res) => {
     try {
 
         let undo;
-        if (req.query.historyId) {
+        if (req.query.orderId) {
+            undo = await historyService.getHistoryByOrderId(req.query.orderId);
+        } else if (req.query.historyId) {
             undo = await historyService.getHistory(req.query.historyId)
         } else {
             undo = await historyService.getLastUndo()

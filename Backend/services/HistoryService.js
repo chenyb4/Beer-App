@@ -2,6 +2,7 @@ const db = require('../database')
 const paginationService = require("./PaginationService");
 const productService = require("./ProductService");
 const userService = require("./UserService");
+const orderService = require("./OrderService");
 const {Action} = require('../enums/Action')
 const {Op} = require('sequelize');
 const logger = require("../logger");
@@ -39,6 +40,23 @@ exports.getHistory = async (id) => {
     }
 };
 
+exports.getHistoryByOrderId = async (orderId) => {
+    if (!orderId) {
+        throw new Error('Missing required fields');
+    }
+
+    try {
+        return await db.History.findOne({
+            where: {
+                'description.orderId': orderId
+            }
+        });
+    } catch (err) {
+        logger.error(err);
+        throw new Error('Failed to get history');
+    }
+};
+
 exports.createHistory = async (action, description, userId, productId = null) => {
     if (action === undefined || !description || !userId) {
         throw new Error('Missing required fields');
@@ -64,13 +82,6 @@ exports.getLastUndo = async () => {
 }
 
 exports.updateHistory = async ({id, action, description, userId, undoUserId}) => {
-    console.log("-------------------------------------")
-    console.log("id: " + id)
-    console.log("action: " + action)
-    console.log("description: " + description)
-    console.log("userId: " + userId)
-    console.log("undoUserId: " + undoUserId)
-    console.log("-------------------------------------")
     if (!id || (!action && !description && !userId && !undoUserId)) {
         throw new Error('Missing required fields or no update data provided');
     }
@@ -125,7 +136,10 @@ exports.undo = async (undo, loggedInUserId) => {
                 id: actionDetails.user_id,
                 isDisabled: undo.action === Action.enable_user,
                 loggedInUserId
-            })
+            });
+        case Action.change_user_credits:
+            await userService.incrementUserCredits(actionDetails.buyerId, actionDetails.credits, loggedInUserId);
+            await orderService.deleteOrder(actionDetails.orderId)
     }
 
     undo.undoUserId = loggedInUserId;

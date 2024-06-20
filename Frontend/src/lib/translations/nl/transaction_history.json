@@ -6,6 +6,7 @@
   "details": "Details",
   "barkeeper": "Barman",
   "date": "Datum",
+  "undo": "Undo",
   "product": "Product",
   "quantity": "Hoeveelheid",
   "no_data_message": "Er zijn momenteel geen gegevens om transacties weer te geven."

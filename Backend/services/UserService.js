@@ -155,19 +155,20 @@ exports.incrementUserCredits = async (id, amount, loggedInUserId) => {
     }
 }
 
-exports.decrementUserCredits = async (id, amount, loggedInUserId) => {
-    if (id === undefined || amount === undefined) throw new Error('Missing required fields or no update data provided');
+exports.decrementUserCredits = async (orderId, buyerId, amount, loggedInUserId) => {
+    if (buyerId === undefined || amount === undefined) throw new Error('Missing required fields or no update data provided');
     if (amount < 1) throw new Error('Amount can not be lower than 1');
-    const preUser = await this.getUser(id);
+    const preUser = await this.getUser(buyerId);
     if(preUser.credits < amount) throw new Error('Amount can not be more than available credits')
     try {
-        const user = await db.User.decrement({credits: amount}, {where: {id}});
+        const user = await db.User.decrement({credits: amount}, {where: {id: buyerId}});
 
         await historyService.createHistory(
             Action.change_user_credits,
             {
-                buyerId: id,
-                credits: amount
+                buyerId: buyerId,
+                credits: amount,
+                orderId: orderId,
             },
             loggedInUserId
         );
@@ -175,7 +176,7 @@ exports.decrementUserCredits = async (id, amount, loggedInUserId) => {
 
     } catch (err) {
         logger.error(err);
-        throw new Error('Failed to manipulate credits of user: ' + id + ' by: ' + amount)
+        throw new Error('Failed to manipulate credits of user: ' + buyerId + ' by: ' + amount)
     }
 }
 
