@@ -333,15 +333,16 @@
           <TableCell position="middle">
             <div>
               {#if isAbove18(user.date_of_birth)}
-                <CheckCircleOutline id="date_of_birth" class="text-green-600" />
+                <CheckCircleOutline id={`date_of_birth-${user.id}`} class="text-green-600" />
               {:else}
-                <CloseCircleOutline id="date_of_birth" class="text-red-600" />
+                <CloseCircleOutline id={`date_of_birth-${user.id}`} class="text-red-600" />
               {/if}
               <Popover
-                class="text-sm text-light-text dark:text-dark-text z-50"
-                triggeredBy="#date_of_birth"
-                >{dateToString(user.date_of_birth)}</Popover
+                      class="text-sm text-light-text dark:text-dark-text z-50"
+                      triggeredBy={`#date_of_birth-${user.id}`}
               >
+                {dateToString(user.date_of_birth)}
+              </Popover>
             </div>
           </TableCell>
           <TableCell position="middle">{languages[user.language]}</TableCell>

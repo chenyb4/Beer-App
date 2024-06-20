@@ -1,12 +1,13 @@
 <script>
-    import {t} from "$lib/translations/index.js";
-    import {Button, TableBody, TableBodyRow, Modal} from "flowbite-svelte";
-    import TableHeader from "$lib/components/table/TableHeader.svelte";
-    import TableCell from "$lib/components/table/TableCell.svelte";
-    import TablePage from "$lib/components/table/TablePage.svelte";
-    import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
-    import {InfoCircleSolid} from "flowbite-svelte-icons";
-    import {getAllOrders, getOneOrderById, undoTransaction} from "../../lib/service/transactions.js";
+  import { t } from "$lib/translations/index.js";
+  import { Button, TableBody, TableBodyRow, Modal } from "flowbite-svelte";
+  import TableHeader from "$lib/components/table/TableHeader.svelte";
+  import TableCell from "$lib/components/table/TableCell.svelte";
+  import TablePage from "$lib/components/table/TablePage.svelte";
+  import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
+  import { InfoCircleSolid } from "flowbite-svelte-icons";
+  import { getAllOrders, getOneOrderById, undoTransaction } from "../../lib/service/transactions.js";
+  import { dateToString } from "$lib/service/dateToString.js";
 
     const iconStyle =
         "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
@@ -62,32 +63,29 @@
     {#if allOrders.length === 0}
         <p>{$t("transaction_history.no_data_message")}</p>
     {:else}
-        <TableBody>
-            {#each allOrders as entry}
-                <TableBodyRow>
-                    <TableCell position="first">{entry.buyer.email}</TableCell>
-                    <TableCell position="middle">{entry.amount_of_credits}</TableCell>
-                    <TableCellWithInputs position="middle">
-                        <Button class="p-0" on:click={() => openModal(entry.id)}>
-                            <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
-                        </Button>
-                    </TableCellWithInputs>
-                    <TableCell position="middle">{entry.seller.username}</TableCell>
-                    <TableCell position="middle">{entry.createdAt}</TableCell>
-                    <TableCellWithInputs position="last">
-                        <Button
-                                class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
-                                on:click={() => undo(entry.id)}
-                        >
-                            Undo
-                        </Button>
-
-                        <!--              <CtaButton captionText="Undo" onCTAButtonClickFn={() => undo(entry.id)}>-->
-                        <!--              </CtaButton>-->
-                    </TableCellWithInputs>
-                </TableBodyRow>
-            {/each}
-        </TableBody>
+      <TableBody>
+        {#each allOrders as entry}
+          <TableBodyRow>
+            <TableCell position="first">{entry.buyer.email}</TableCell>
+            <TableCell position="middle">{entry.amount_of_credits}</TableCell>
+            <TableCellWithInputs position="middle">
+              <Button class="p-0" on:click={() => openModal(entry.id)}>
+                <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
+              </Button>
+            </TableCellWithInputs>
+            <TableCell position="middle">{entry.seller.username}</TableCell>
+            <TableCell position="middle">{dateToString(entry.createdAt)}</TableCell>
+            <TableCellWithInputs position="last">
+              <Button
+                      class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
+                      on:click={() => undo(entry.id)}
+              >
+                Undo
+              </Button>
+            </TableCellWithInputs>
+          </TableBodyRow>
+        {/each}
+      </TableBody>
     {/if}
 </TablePage>
 

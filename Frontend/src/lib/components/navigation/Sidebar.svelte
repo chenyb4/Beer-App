@@ -13,6 +13,7 @@
   import { locale, locales, t } from "$lib/translations/index.js";
   import {setCookie} from "$lib/service/authentication.js"
   import {goto} from "$app/navigation";
+    import ProfileTag from "$lib/components/ProfileTag.svelte";
 
   export let username = "user";
   export let roleName = "";
@@ -33,12 +34,7 @@
     document.cookie = `lang=${value} ;`;
   };
 
-    function capitalizeFirstLetter(str) {
-        if (typeof str !== 'string' || str.length === 0) {
-            return '';
-        }
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+
 
   function handleLogOut(){
     setCookie("authToken", "", -1)
@@ -90,7 +86,7 @@
         />
       </SidebarGroup>
         <SidebarGroup class="bottom-0 absolute">
-            <SidebarItem label="Hello {capitalizeFirstLetter(roleName)} {capitalizeFirstLetter(username)}!" class="hover:cursor-default bg-light-p_bg dark:bg-dark-p_bg min-w-64 border-r-2 border-light-p_foreground dark:border-light-p_foreground"/>
+            <ProfileTag username={username} roleName={roleName}/>
                 <Button on:click={handleLogOut} class="flex flex-auto text-center m-auto items-center p-2 px-20 text-base font-normal border-2 border-white hover:bg-light-p_bg hover:dark:bg-dark-p_bg">
                     Log out
                 </Button>

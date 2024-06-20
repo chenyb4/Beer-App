@@ -4,14 +4,19 @@
   import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
-  import {CloseCircleOutline, CloseCircleSolid, CloseOutline, TrashBinSolid} from "flowbite-svelte-icons";
+  import {
+    CloseCircleOutline,
+    CloseCircleSolid,
+    CloseOutline,
+    TrashBinSolid,
+  } from "flowbite-svelte-icons";
   import {
     addProductsToOrder,
     confirmOrder,
     createOrder,
   } from "$lib/service/orders";
-  import {Alert, Button, Modal} from "flowbite-svelte";
-  import {goto} from "$app/navigation";
+  import { Alert, Button, Modal } from "flowbite-svelte";
+  import { goto } from "$app/navigation";
 
   let ref = {};
   let identifiedUser;
@@ -25,7 +30,6 @@
   let elementInputSearchbar;
 
   export let data;
-
 
   function handleSelectProduct(event) {
     //Getting constant values from the product;
@@ -133,21 +137,27 @@
   onMount(() => {
     ref.focus();
   });
-
 </script>
 
 <div class="w-full h-full">
   {#if data.status === "302"}
     <Alert color="red" class="absolute top-5 left-5" dismissable>
-      <Button slot="close-button" class="hover:cursor-pointer" on:click={() => goto("/drinks")} >
-            <CloseOutline  />
+      <Button
+        slot="close-button"
+        class="hover:cursor-pointer"
+        on:click={() => goto("/drinks")}
+      >
+        <CloseOutline />
       </Button>
-        <span class="font-bold text-2xl">
-            You are a seller. If you want to use other activities on this system, please log out and log in with admin credentials
-        </span>
+      <span class="font-bold text-2xl">
+        You are a seller. If you want to use other activities on this system,
+        please log out and log in with admin credentials
+      </span>
     </Alert>
   {/if}
-  <div class="bg-dark-900 m-4 rounded-xl h-[85%] flex flex-col justify-between">
+  <div
+    class="dark:bg-dark-900 bg-light-p_bg m-4 rounded-xl h-[85%] flex flex-col justify-between"
+  >
     <h2 class="p-4 font-bold">{$t("drinks.title")}</h2>
     <div class="flex flex-col mx-4">
       <div class="flex flex-row justify-between">
