@@ -57,7 +57,11 @@
         if (response) {
             let userId = response.user.id;
             if (response.user.roleId !== selectedRoleId) {
-                const userRoleEdit = await updateUser(response.user, undefined, undefined, selectedLanguage, selectedRoleId);
+                const userRoleEdit = await updateUser({
+                    user: response.user,
+                    language: selectedLanguage,
+                    roleId: selectedRoleId
+                });
             }
             if (credits !== 0) {
                 const userCreditsResponse = await addCreditsForAUser(userId, credits);

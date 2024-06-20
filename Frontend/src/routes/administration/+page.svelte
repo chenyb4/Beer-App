@@ -1,6 +1,5 @@
 <script>
   import { t } from "$lib/translations/index.js";
-  import CtaButton from "$lib/components/CtaButton.svelte";
   import CreateStudent from "$lib/components/administration/CreateStudent.svelte";
   import { handleSendMailResponse } from "$lib/service/QR.js";
   import TablePage from "$lib/components/table/TablePage.svelte";
