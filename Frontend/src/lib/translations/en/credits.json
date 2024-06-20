@@ -4,5 +4,6 @@
   "identifier": "Identifier",
   "amountOfCredits": "Amount of Credits",
   "price": "Price",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "warning": "Warning: There is currently no default credits and price configured in the database. Please contact admin."
 }
