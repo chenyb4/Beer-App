@@ -9,8 +9,8 @@
   import { getAllOrders, getOneOrderById, undoTransaction } from "../../lib/service/transactions.js";
   import { dateToString } from "$lib/service/dateToString.js";
 
-  const iconStyle =
-    "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
+    const iconStyle =
+        "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -18,6 +18,8 @@
     let allOrders = data.allOrders?.data || [];
 
     console.log(allOrders[1]);
+    let currentPage = 1;
+    const pages = Math.ceil(data.allOrders.meta.total / data.allOrders.meta.page_size);
 
     // State variables for modal control
     let showModal = false;
@@ -30,18 +32,25 @@
         showModal = true;
     }
 
-  async function undo(orderId) {
-    const result = await undoTransaction(orderId)
-    const updatedOrders = await getAllOrders() || [];
-    allOrders = updatedOrders.data;
-    console.log(allOrders)
-  }
+    async function changeTransactionHistory(page = 1) {
+        const response = await getAllOrders(page);
+
+        allOrders = response.data;
+        currentPage = page;
+    }
+
+    async function undo(orderId) {
+        const result = await undoTransaction(orderId)
+        const updatedOrders = await getAllOrders() || [];
+        allOrders = updatedOrders.data;
+        console.log(allOrders)
+    }
 </script>
 
 
-  <TablePage title={$t("transaction_history.title")}>
+<TablePage title={$t("transaction_history.title")} {currentPage} changeData={changeTransactionHistory} {pages}>
     <TableHeader
-      headerValues={[
+            headerValues={[
         $t("transaction_history.buyer"),
         $t("transaction_history.credits"),
         $t("transaction_history.details"),
@@ -52,7 +61,7 @@
     ></TableHeader>
 
     {#if allOrders.length === 0}
-      <p>{$t("transaction_history.no_data_message")}</p>
+        <p>{$t("transaction_history.no_data_message")}</p>
     {:else}
       <TableBody>
         {#each allOrders as entry}
@@ -78,29 +87,32 @@
         {/each}
       </TableBody>
     {/if}
-  </TablePage>
+</TablePage>
 
-  {#if showModal}
+{#if showModal}
     <Modal
-      title={$t("transaction_history.details")}
-      bind:open={showModal}
-      autoclose
+            class="w-100"
+            title={$t("transaction_history.details")}
+            bind:open={showModal}
+            autoclose
     >
-      <div class="p-4">
-        <div class="mt-2">
-          <TableHeader
-            headerValues={[
-              $t("transaction_history.product"),
-              $t("transaction_history.quantity"),
-            ]}
-          ></TableHeader>
-          {#each productsArray as entry}
-            <TableBody>
-              <TableCell position="first">{entry.product.name}</TableCell>
-              <TableCell position="last">{entry.quantity}</TableCell>
-            </TableBody>
-          {/each}
+        <div class="m-2 p-4">
+            <div class="mb-2">
+                <TableHeader
+                        headerValues={[
+                        $t("transaction_history.product"),
+                        $t("transaction_history.quantity"),
+                    ]}
+                ></TableHeader>
+            </div>
+            {#each productsArray as entry}
+                <TableBody>
+                    <TableCell position="first">{entry.product.name}</TableCell>
+                    <TableCell position="middle"></TableCell>
+                    <TableCell position="middle">{entry.quantity}</TableCell>
+                    <TableCell position="last"></TableCell>
+                </TableBody>
+            {/each}
         </div>
-      </div>
     </Modal>
-  {/if}
+{/if}
