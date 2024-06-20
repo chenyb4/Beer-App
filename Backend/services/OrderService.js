@@ -6,6 +6,7 @@ const {confirmOrder} = require("../controllers/OrderController");
 const historyService = require("./HistoryService");
 const {Action} = require("../enums/Action");
 const userService = require("./UserService");
+const logger = require("../logger");
 
 exports.getAllOrders = async (req) => {
     const {sellerId, buyerId, createdAt} = req.query
@@ -101,7 +102,7 @@ exports.confirmOrder = async (id, loggedInUserId) => {
     try {
         const order = await db.Order.findByPk(id);
         console.log(JSON.stringify(order))
-        await userService.decrementUserCredits(order.buyerId, order.amount_of_credits, loggedInUserId)
+        await userService.decrementUserCredits(order.id, order.buyerId, order.amount_of_credits, loggedInUserId)
     } catch (err) {
         console.error(err);
         throw new Error('Failed to confirm order');

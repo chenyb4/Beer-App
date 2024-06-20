@@ -6,6 +6,7 @@
   "details": "Details",
   "barkeeper": "Barkeeper",
   "date": "Date",
+  "undo": "Undo",
   "product": "Product",
   "quantity": "Quantity",
   "no_data_message": "There is currently no data to show for transactions."

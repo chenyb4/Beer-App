@@ -2,6 +2,7 @@ const db = require('../database')
 const paginationService = require("./PaginationService");
 const productService = require("./ProductService");
 const userService = require("./UserService");
+const orderService = require("./OrderService");
 const {Action} = require('../enums/Action')
 const {Op} = require('sequelize');
 const logger = require("../logger");
@@ -33,6 +34,23 @@ exports.getHistory = async (id) => {
 
     try {
         return await db.History.findByPk(id);
+    } catch (err) {
+        logger.error(err);
+        throw new Error('Failed to get history');
+    }
+};
+
+exports.getHistoryByOrderId = async (orderId) => {
+    if (!orderId) {
+        throw new Error('Missing required fields');
+    }
+
+    try {
+        return await db.History.findOne({
+            where: {
+                'description.orderId': orderId
+            }
+        });
     } catch (err) {
         logger.error(err);
         throw new Error('Failed to get history');
@@ -96,14 +114,15 @@ exports.deleteHistory = async (id) => {
     });
 };
 
-exports.undo = async (loggedInUserId) => {
-    let lastUndo = await this.getLastUndo();
-    if(lastUndo.undoUserId !== null && lastUndo.undoUserId !== undefined) throw new Error("The history has already been undone.")
-    const actionDetails = lastUndo.description;
-    switch (lastUndo.action) {
+exports.undo = async (undo, loggedInUserId) => {
+    if (undo.undoUserId !== null && undo.undoUserId !== undefined)
+        throw new Error("The history has already been undone.")
+
+    const actionDetails = undo.description;
+    switch (undo.action) {
         case Action.increase_product_stock: // increase product stock
         case Action.decrease_product_stock: // decrease product stock
-            await undoStockChange(lastUndo.productId, lastUndo.action, Number(actionDetails.inventory_change), loggedInUserId)
+            await undoStockChange(undo.productId, undo.action, Number(actionDetails.inventory_change), loggedInUserId)
             break;
         case Action.change_role: // change role
             await userService.updateUser({id: actionDetails.user_id, roleId: actionDetails.old_role_id})
@@ -115,13 +134,17 @@ exports.undo = async (loggedInUserId) => {
         case Action.disable_user: // disable user - if action === 4 then pass true else pass false
             await userService.updateUser({
                 id: actionDetails.user_id,
-                isDisabled: lastUndo.action === Action.enable_user,
+                isDisabled: undo.action === Action.enable_user,
                 loggedInUserId
-            })
+            });
+            break;
+        case Action.change_user_credits:
+            await userService.incrementUserCredits(actionDetails.buyerId, actionDetails.credits, loggedInUserId);
+            await orderService.deleteOrder(actionDetails.orderId)
     }
 
-    lastUndo.undoUserId = loggedInUserId;
-    return await this.updateHistory(lastUndo);
+    undo.undoUserId = loggedInUserId;
+    return await this.updateHistory(undo);
 }
 
 async function undoStockChange(product_id, action, amount, loggedInUserId) {
@@ -145,6 +168,7 @@ exports.convertHistory = function(history) {
     historyToReturn.createdAt = history.createdAt
     historyToReturn.updatedAt = history.updatedAt
     historyToReturn.userId = history.userId
+    historyToReturn.productId = history.productId
 
     if(history.undoUser !== null && history.undoUser !== undefined) {
         historyToReturn.undoUserId = history.undoUserId

@@ -4,8 +4,9 @@
   import TableHeader from "$lib/components/table/TableHeader.svelte";
   import TableCell from "$lib/components/table/TableCell.svelte";
   import TablePage from "$lib/components/table/TablePage.svelte";
+  import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
   import { InfoCircleSolid } from "flowbite-svelte-icons";
-  import { getOneOrderById } from "$lib/service/transactions.js";
+  import { getAllOrders, getOneOrderById, undoTransaction } from "../../lib/service/transactions.js";
 
   const iconStyle =
     "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
@@ -14,6 +15,8 @@
     export let data;
     //this is an array of order objects
     let allOrders = data.allOrders?.data || [];
+
+    console.log(allOrders[1]);
 
     // State variables for modal control
     let showModal = false;
@@ -25,11 +28,16 @@
         productsArray = selectedOrder.order_products;
         showModal = true;
     }
+
+  async function undo(orderId) {
+    const result = await undoTransaction(orderId)
+    const updatedOrders = await getAllOrders() || [];
+    allOrders = updatedOrders.data;
+    console.log(allOrders)
+  }
 </script>
 
-<body
-  class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl"
->
+
   <TablePage title={$t("transaction_history.title")}>
     <TableHeader
       headerValues={[
@@ -38,6 +46,7 @@
         $t("transaction_history.details"),
         $t("transaction_history.barkeeper"),
         $t("transaction_history.date"),
+        $t("transaction_history.undo"),
       ]}
     ></TableHeader>
 
@@ -49,13 +58,24 @@
           <TableBodyRow>
             <TableCell position="first">{entry.buyer.email}</TableCell>
             <TableCell position="middle">{entry.amount_of_credits}</TableCell>
-            <TableCell position="middle">
+            <TableCellWithInputs position="middle">
               <Button class="p-0" on:click={() => openModal(entry.id)}>
                 <InfoCircleSolid class={iconStyle}></InfoCircleSolid>
               </Button>
-            </TableCell>
+            </TableCellWithInputs>
             <TableCell position="middle">{entry.seller.username}</TableCell>
-            <TableCell position="last">{entry.createdAt}</TableCell>
+            <TableCell position="middle">{entry.createdAt}</TableCell>
+            <TableCellWithInputs position="last">
+              <Button
+                      class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
+                      on:click={() => undo(entry.id)}
+              >
+                Undo
+              </Button>
+
+<!--              <CtaButton captionText="Undo" onCTAButtonClickFn={() => undo(entry.id)}>-->
+<!--              </CtaButton>-->
+            </TableCellWithInputs>
           </TableBodyRow>
         {/each}
       </TableBody>
@@ -86,4 +106,3 @@
       </div>
     </Modal>
   {/if}
-</body>

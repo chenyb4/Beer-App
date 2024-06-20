@@ -39,12 +39,12 @@ exports.getInventoryHistory = async (req, res) => {
 };
 
 exports.createHistory = async (req, res) => {
-    let { action, description, userId } = req.body;
+    let { action, description, userId, productId } = req.body;
     if (action !== undefined) {
         action = historyService.convertAction(action)
     }
     try {
-        const newHistory = historyService.convertHistory(await historyService.createHistory(action, description, userId));
+        const newHistory = historyService.convertHistory(await historyService.createHistory(action, description, userId, productId));
         // newHistory.description = JSON.parse(newHistory.description);
         res.status(201).json(newHistory);
     } catch (err) {
@@ -55,14 +55,23 @@ exports.createHistory = async (req, res) => {
 
 exports.undo = async (req, res) => {
     try {
-        let lastUndo = await historyService.undo(req.user.id);
 
-        res.status(200).json(lastUndo);
+        let undo;
+        if (req.query.orderId) {
+            undo = await historyService.getHistoryByOrderId(req.query.orderId);
+        } else if (req.query.historyId) {
+            undo = await historyService.getHistory(req.query.historyId)
+        } else {
+            undo = await historyService.getLastUndo()
+        }
+
+        const result = await historyService.undo(undo, req.user.id);
+
+        res.status(200).json(result);
     } catch (err) {
         logger.error(err);
         res.status(500).json({message: 'Service error: ' + err.message});
     }
-
 }
 
 exports.updateHistory = async (req, res) => {
