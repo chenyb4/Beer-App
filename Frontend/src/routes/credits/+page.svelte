@@ -25,7 +25,6 @@
 
   /** @type {import('./$types').PageData} */
   export let data;
-  console.log(data)
 
   //defaultCredeitsInitial is an object containing the default price and default credits amount
   // it is an object
