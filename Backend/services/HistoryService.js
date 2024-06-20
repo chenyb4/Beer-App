@@ -117,12 +117,12 @@ exports.deleteHistory = async (id) => {
 exports.undo = async (undo, loggedInUserId) => {
     if (undo.undoUserId !== null && undo.undoUserId !== undefined)
         throw new Error("The history has already been undone.")
-
+    
     const actionDetails = undo.description;
     switch (undo.action) {
         case Action.increase_product_stock: // increase product stock
         case Action.decrease_product_stock: // decrease product stock
-            await undoStockChange(undo.productId, undo.action, Number(actionDetails.inventory_change), loggedInUserId)
+            await undoStockChange(undo.id, undo.productId, undo.action, Number(actionDetails.inventory_change), loggedInUserId)
             break;
         case Action.change_role: // change role
             await userService.updateUser({id: actionDetails.user_id, roleId: actionDetails.old_role_id})
@@ -147,10 +147,21 @@ exports.undo = async (undo, loggedInUserId) => {
     return await this.updateHistory(undo);
 }
 
-async function undoStockChange(product_id, action, amount, loggedInUserId) {
+async function undoStockChange(historyId, product_id, action, amount, loggedInUserId) {
+    try {
+        await db.History.destroy({
+            where: {
+                id: historyId
+            }
+        });
+    } catch (err) {
+        logger.error(err)
+        throw new Error("DELETION ERROR: " + err);
+    }
+
     action === Action.increase_product_stock
-        ? await productService.decrementProductStock(product_id, amount, loggedInUserId)
-        : await productService.incrementProductStock(product_id, amount,  loggedInUserId)
+        ? await productService.decrementProductStock(product_id, amount)
+        : await productService.incrementProductStock(product_id, amount)
 }
 
 exports.convertAllToDTO = async (histories, total, req) => {
