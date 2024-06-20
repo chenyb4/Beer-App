@@ -13,8 +13,6 @@
 
 </script>
 
-
-<body class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl">
 <TablePage title={$t("inventory_history.inventoryHistory")}>
     <TableHeader headerValues={[
                 $t('inventory_history.drink'),
@@ -47,13 +45,3 @@
 
 
 </TablePage>
-
-
-</body>
-
-
-
-
-
-
-
