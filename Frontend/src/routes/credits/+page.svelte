@@ -5,6 +5,7 @@
   import { addCreditsForAUser } from "$lib/service/credits.js";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import { onMount } from "svelte";
+  import {Button, Modal} from "flowbite-svelte";
 
   // Create reactive variables
   let identifier = "";
@@ -64,10 +65,10 @@
   async function updateCreditsForAUser() {
     try {
       await addCreditsForAUser(identifiedUser.id, amountOfCredits);
-      alert("Action was successful");
     } catch (error) {
       alert("An error occurred while updating credits");
     }
+    showBuyCreditModal = false;
   }
 
   function onConfirmButtonClick() {
@@ -75,10 +76,7 @@
       alert("Identifier is required.");
       return;
     }
-    if (window.confirm("Are you sure you want to update the credits?")) {
-      updateCreditsForAUser();
-      clearFields();
-    }
+    showBuyCreditModal = true;
   }
 
   function clearFields() {
@@ -90,25 +88,36 @@
   onMount(() => {
     ref.focus();
   });
+
+  let showBuyCreditModal = false;
 </script>
 
 <div
-  class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl"
+        class="m-4 w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl"
 >
+  {#if showBuyCreditModal}
+    <Modal title={"Buy credit for " + identifiedUser.username} bind:open={showBuyCreditModal} autoclose={false}>
+      Has user {identifiedUser.username} payed?
+      <svelte:fragment slot="footer">
+        <Button on:click={updateCreditsForAUser}>Yes</Button>
+        <Button color="alternative">Cancel</Button>
+      </svelte:fragment>
+    </Modal>
+  {/if}
   <form>
     <h2 class="text-4xl font-extrabold mb-8">{$t("credits.title")}</h2>
     <StudentIdentifier
-      bind:identifiedUser
-      bind:identifier
-      bind:userName
-      bind:ref
+            bind:identifiedUser
+            bind:identifier
+            bind:userName
+            bind:ref
     ></StudentIdentifier>
     <!-- for the student number field -->
 
     <!-- for the balance field -->
     <label
-      for="quantity-input"
-      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            for="quantity-input"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
     >
       {$t("credits.amountOfCredits")}
     </label>
@@ -119,55 +128,55 @@
 
     <div class="relative flex items-center max-w-[8rem]">
       <button
-        type="button"
-        id="decrement-button"
-        on:click={decrementCredits}
-        class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+              type="button"
+              id="decrement-button"
+              on:click={decrementCredits}
+              class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
       >
         <svg
-          class="w-3 h-3 text-gray-900 dark:text-white"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 18 2"
+                class="w-3 h-3 text-gray-900 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 18 2"
         >
           <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M1 1h16"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M1 1h16"
           />
         </svg>
       </button>
       <input
-        type="text"
-        id="quantity-input"
-        bind:value={amountOfCredits}
-        aria-describedby="helper-text-explanation"
-        class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="999"
-        required
+              type="text"
+              id="quantity-input"
+              bind:value={amountOfCredits}
+              aria-describedby="helper-text-explanation"
+              class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="999"
+              required
       />
       <button
-        type="button"
-        id="increment-button"
-        on:click={incrementCredits}
-        class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+              type="button"
+              id="increment-button"
+              on:click={incrementCredits}
+              class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
       >
         <svg
-          class="w-3 h-3 text-gray-900 dark:text-white"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 18 18"
+                class="w-3 h-3 text-gray-900 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 18 18"
         >
           <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 1v16M1 9h16"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 1v16M1 9h16"
           />
         </svg>
       </button>
@@ -177,8 +186,8 @@
 
 
     <CtaButton
-      captionText={$t("credits.confirm")}
-      onCTAButtonClickFn={onConfirmButtonClick}
+            captionText={$t("credits.confirm")}
+            onCTAButtonClickFn={onConfirmButtonClick}
     ></CtaButton>
   </form>
 </div>
