@@ -1,8 +1,8 @@
 import {request} from "$lib/service/config.js";
 
-export async function getAllInventoyHistories(){
+export async function getAllInventoyHistories(page=1,pageSize=8){
     try {
-        const response = await request( `/histories/inventory`, "GET", '', true);
+        const response = await request( `/histories/inventory?page=${page}&pageSize=${pageSize}`, "GET", '', true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
