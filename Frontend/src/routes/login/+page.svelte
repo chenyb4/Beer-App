@@ -33,6 +33,12 @@
         }
     }
 
+    async function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            await handleLogin();
+        }
+    }
+
     export let data;
     let status = data.status || "";
 </script>
@@ -74,6 +80,7 @@
                         name="password"
                         class="bg-dark-900 border-none text-white w-full rounded-xl"
                         bind:value={password}
+                        on:keypress={handleKeyPress}
                 />
                 <div
                         class="text-red-400 mt-4 text-sm h-4 {errorMessage

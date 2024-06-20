@@ -1,6 +1,5 @@
 <script>
   import { t } from "$lib/translations/index.js";
-  import CtaButton from "$lib/components/CtaButton.svelte";
   import CreateStudent from "$lib/components/administration/CreateStudent.svelte";
   import { handleSendMailResponse } from "$lib/service/QR.js";
   import TablePage from "$lib/components/table/TablePage.svelte";
@@ -148,8 +147,6 @@
     email: "",
   };
   let selectedRole = 0;
-  const falseValue = false;
-  const emptyValue = "";
 
   function handleChangeUserRole(
     user = { id: 0, username: "User not defined", roleId: 0 }
@@ -192,9 +189,9 @@
   selectedRoleId={selectedRole}
   {roles}
   currentRole={selectedRole}
-  showPassword={falseValue}
-  password={emptyValue}
-  passwordConfirm="" {emptyValue}
+  showPassword={false}
+  password=""
+  passwordConfirm=""
   modalOpen={openUpdateStudentRoleModal}
   user={selectedUser}
   onClose={changeUsers}
