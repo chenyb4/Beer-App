@@ -46,7 +46,7 @@
 
 </script>
 <Modal bind:open={openUpdateUserDialog}>
-    <span class="text-3xl text-light-text dark:text-dark-text">{$t("administration.addUser")}</span>
+    <span class="text-3xl text-light-text dark:text-dark-text">{$t("administration.editUser")}</span>
     {#if !hideHelper}
         <Alert class="bg-light-s_bg dark:bg-dark-s_bg mt-2 border-1" color="red" dismissable transition={fly}>
             <span class="font-medium">{$t("administration.helper") + ": " + helper} </span>

@@ -40,7 +40,7 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const {id} = req.query;
-    let {isDisabled, username, email, credits, date_of_birth, language, roleId} = req.body;
+    let {isDisabled, username, email, credits, date_of_birth, language, roleId, password} = req.body;
     if (language !== undefined) language = userService.convertLanguage(language);
     try {
         let updatedUser = await userService.updateUser({
@@ -52,7 +52,8 @@ exports.updateUser = async (req, res) => {
             date_of_birth,
             language,
             roleId,
-            loggedInUserId: req.user.id
+            loggedInUserId: req.user.id,
+            password
         });
         if (!updatedUser) {
             return res.status(404).json({message: 'User not found'});

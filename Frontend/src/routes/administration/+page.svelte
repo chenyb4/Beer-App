@@ -148,6 +148,8 @@
     email: "",
   };
   let selectedRole = 0;
+  const falseValue = false;
+  const emptyValue = "";
 
   function handleChangeUserRole(
     user = { id: 0, username: "User not defined", roleId: 0 }
@@ -189,6 +191,10 @@
 <UpdateStudentRoleModal
   selectedRoleId={selectedRole}
   {roles}
+  currentRole={selectedRole}
+  showPassword={falseValue}
+  password={emptyValue}
+  passwordConfirm="" {emptyValue}
   modalOpen={openUpdateStudentRoleModal}
   user={selectedUser}
   onClose={changeUsers}
