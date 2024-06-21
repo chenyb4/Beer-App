@@ -17,3 +17,4 @@ frontend-svelte/.svelte-kit
 Frontend/test-results
 *.log
 Backend/logs/app.log
+Frontend/screenshot.png

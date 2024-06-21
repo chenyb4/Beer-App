@@ -9,7 +9,7 @@
     /** @type {import('./$types').PageData} */
     export let data;
     //this is an array of order objects
-    let allInventoryHistories = data.allInventoryHistories.data;
+    let allInventoryHistories = data.allInventoryHistories?.data || [];
 
 </script>
 

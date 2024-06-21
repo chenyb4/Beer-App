@@ -37,12 +37,12 @@
 
   /** @type {import('./$types').PageData} */
   export let data;
-  $: users = data.users.data;
+  $: users = data.users?.data || [];
 
-  const pages = Math.ceil(data.users.meta.total / data.users.meta.page_size);
+  const pages = Math.ceil(data.users?.meta.total / data.users?.meta.page_size);
   let currentPage = 1;
 
-  const roles = data.roles.data;
+  const roles = data.roles?.data || [];
   let modalTitle = "";
   let modalText = "";
   let modalOpen = false;

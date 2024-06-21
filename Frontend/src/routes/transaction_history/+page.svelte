@@ -19,7 +19,7 @@
 
     console.log(allOrders[1]);
     let currentPage = 1;
-    const pages = Math.ceil(data.allOrders.meta.total / data.allOrders.meta.page_size);
+    const pages = Math.ceil(data.allOrders?.meta.total / data.allOrders?.meta.page_size) || 1;
 
     // State variables for modal control
     let showModal = false;
