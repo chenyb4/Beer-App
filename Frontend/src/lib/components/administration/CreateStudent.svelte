@@ -14,6 +14,9 @@
     export let onClose = async function () {
     };
 
+    export let changeQrMessage = function (qr) {
+    };
+
     let studentNumber = "";
     let email = "";
     $: date_of_birth = new Date().toISOString().split('T')[0];
@@ -57,6 +60,7 @@
             openCreateUserDialog = false;
             showCreatedUserModal = false;
             showCreatedUserModal = true;
+            changeQrMessage(responseQR.qr);
         } else {
             alert("User cannot be created");
         }
