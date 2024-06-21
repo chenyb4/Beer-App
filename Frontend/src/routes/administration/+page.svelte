@@ -248,7 +248,7 @@
 >
   <TableHeader
     headerValues={[
-      "Username/ Student number",
+      "Username",
       "Email",
       "Role",
       "Above 18",
