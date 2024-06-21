@@ -27,7 +27,6 @@
   let selectedProducts = [];
   let errorMessage = "";
   let productCart = new Map();
-  let elementInputSearchbar;
 
   export let data;
 

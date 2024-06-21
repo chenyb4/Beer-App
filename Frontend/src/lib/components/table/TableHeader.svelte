@@ -10,7 +10,7 @@
       class="{index === 0 ? 'rounded-l-full' : ''} {index ===
       headerValues.length - 1
         ? 'rounded-r-full'
-        : ''} px-6 py-2 border-light-s_bg dark:border-dark-s_bg text-xs uppercase bg-light-p_foreground dark:bg-dark-p_foreground text-white"
+        : ''} px-6 py-4 border-light-s_bg dark:border-dark-s_bg text-xs uppercase bg-light-p_foreground dark:bg-dark-p_foreground text-white"
     >
       {headerValue}
     </TableHeadCell>

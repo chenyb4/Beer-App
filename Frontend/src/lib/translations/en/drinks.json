@@ -3,6 +3,7 @@
   "identifier": "Identifier",
   "studentNumber": "Studentnumber",
   "drinkScanner": "Barcode / Name of drink",
+  "email": "E-mail",
   "selectedDrinks": "DRINKS SELECTED",
   "creditsLeft": "Number of credits left:",
   "confirm": "CONFIRM",
