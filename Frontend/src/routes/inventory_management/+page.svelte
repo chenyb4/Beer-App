@@ -1,5 +1,5 @@
 <script>
-    import CtaButton from "$lib/components/CtaButton.svelte";
+    import CtaButton from "$lib/components/universal/CtaButton.svelte";
     import TableCell from "$lib/components/table/TableCell.svelte";
     import TableHeader from "$lib/components/table/TableHeader.svelte";
     import TablePage from "$lib/components/table/TablePage.svelte";

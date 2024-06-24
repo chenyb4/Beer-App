@@ -1,7 +1,7 @@
 <script>
   import { Button, Modal } from "flowbite-svelte";
   import { t } from "$lib/translations/index.js";
-  import CtaButton from "$lib/components/CtaButton.svelte";
+  import CtaButton from "$lib/components/universal/CtaButton.svelte";
   import { deleteProduct } from "$lib/service/inventory";
 
   export let openDeleteProductDialog = false;
