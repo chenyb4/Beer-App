@@ -78,8 +78,12 @@ exports.mail = async (req, res) => {
             ]
         };
 
-        await sendMail(mailData);
-        res.status(201).json({ sentMail: true });
+        try {
+            await sendMail(mailData);
+            res.status(201).json({ sentMail: true, qr });
+        } catch {
+            res.status(201).json({ sentMail: false, qr });
+        }
     } catch (err) {
         logger.error(err);
         res.status(400).json({ message: 'Bad request' });

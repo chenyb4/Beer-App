@@ -16,6 +16,10 @@
     export let onClose = async function () {
     };
 
+    export let changeQrMessage = function (qr) {
+    };
+
+
     let studentNumber = "";
     let email = "";
     $: date_of_birth = new Date().toISOString().split('T')[0];
@@ -71,6 +75,7 @@
             createdUserModalText = handleSendMailResponse(responseQR.sentMail, response.user, responseQR.qr);
             createdUserModalText += "\n" + $t("administration.userCreated") + ": " + response.user.username + " : " + response.user.email;
 
+            changeQrMessage(responseQR.qr)
             showCreatedUserModal = false;
             showCreatedUserModal = true;
             studentNumber = "";

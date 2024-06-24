@@ -4,6 +4,7 @@
   import { handleSendMailResponse } from "$lib/service/QR.js";
   import TablePage from "$lib/components/table/TablePage.svelte";
   import {
+    Alert,
     Button,
     ButtonGroup,
     Dropdown,
@@ -18,7 +19,7 @@
   import { dateToString } from "$lib/service/dateToString.js";
   import {
     CheckCircleOutline,
-    CloseCircleOutline,
+    CloseCircleOutline, CloseOutline,
     DotsVerticalOutline,
     QrCodeOutline,
     TrashBinSolid,
@@ -34,6 +35,7 @@
   import UpdateStudent from "$lib/components/administration/UpdateStudent.svelte";
   import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
   import CreateStudents from "$lib/components/administration/CreateStudents.svelte";
+  import {goto} from "$app/navigation";
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -87,6 +89,7 @@
       );
       openSentQRModal = false;
       openSentQRModal = true;
+      qrMessage = responseQR.qr;
     };
   }
 
@@ -176,15 +179,31 @@
   let filterIsLegalAge = 0;
   let filterLanguage = -1;
   let filterRole = 0;
-</script>
 
+  $: qrMessage = "";
+  function changeQrMessage(qr){
+    qrMessage = qr;
+  }
+</script>
+{#if qrMessage !== ""}
+  <Alert color="green" class="absolute top-5 right-5 z-50" dismissable>
+    <Button
+            slot="close-button"
+            class="hover:cursor-pointer"
+            on:click={() => qrMessage = ""}
+    >
+      <CloseOutline />
+    </Button>
+    <img src={qrMessage} alt="QR image"/>
+  </Alert>
+{/if}
 <UpdateStudent
   user={selectedUser}
   openUpdateUserDialog={openUpdateStudentModal}
   onClose={changeUsers}
 />
-<CreateStudent {openCreateUserDialog} onClose={changeUsers} />
-<CreateStudents {roles} {openCreateUsersDialog} onClose={changeUsers} />
+<CreateStudent {openCreateUserDialog} onClose={changeUsers} changeQrMessage={changeQrMessage} />
+<CreateStudents {roles} {openCreateUsersDialog} onClose={changeUsers} changeQrMessage={changeQrMessage} />
 <UpdateStudentRoleModal
   selectedRoleId={selectedRole}
   {roles}
