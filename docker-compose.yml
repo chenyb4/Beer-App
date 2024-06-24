@@ -36,8 +36,6 @@ services:
     environment:
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_USER: ${PGUSER}
-    ports:
-      - ${DBPORT}:${DBPORT}
     volumes:
       - beer-swipe-vol:/var/lib/postgresql/data
   test:
@@ -65,8 +63,6 @@ services:
     environment:
       POSTGRES_PASSWORD: ${PGPASSWORD_TEST}
       POSTGRES_USER: ${POSTGRES_USER_TEST}
-    ports:
-      - ${DBPORT_TEST}:${DBPORT}
     volumes:
       - beer-swipe-test-vol:/var/lib/postgresql/data
   sveltekit:
