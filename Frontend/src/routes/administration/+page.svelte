@@ -149,6 +149,7 @@
     roleId: 0,
     date_of_birth: "",
     email: "",
+    language: "english"
   };
   let selectedRole = 0;
 

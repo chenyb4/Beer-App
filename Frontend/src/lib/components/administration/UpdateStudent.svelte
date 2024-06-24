@@ -38,7 +38,7 @@
             hideHelper = false;
             return;
         }
-        const response = await updateUser(user);
+        const response = await updateUser({user, language:user.language, username: user.username, date_of_birth: user.date_of_birth});
         if (!response) alert("User not found");
         await onClose();
         openUpdateUserDialog = false;
