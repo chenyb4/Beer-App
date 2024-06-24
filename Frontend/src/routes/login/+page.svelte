@@ -4,7 +4,6 @@
   import logo from "$lib/images/ada-logo.png";
   import { Alert, Label } from "flowbite-svelte";
   import { login } from "$lib/service/authentication";
-  import { InfoCircleSolid } from "flowbite-svelte-icons";
 
   let username = "";
   let password = "";
@@ -15,25 +14,26 @@
     try {
       loading = true;
       errorMessage = "";
-
+      //Logging in the user
       const response = await login({ username, password });
-
       if (response) {
+        //Setting timeout to show loading screen
         setTimeout(() => {
           loading = false;
           goto("/");
-        }, 2500);
+        }, 1500);
       } else {
         errorMessage = $t("login.notCorrect");
         loading = false;
       }
     } catch (error) {
       console.error("Login error:", error);
-      errorMessage = $t("login.notCorrect"); // Add a generic error message for unexpected failures
+      errorMessage = $t("login.notCorrect");
       loading = false;
     }
   }
 
+  //Function to make sure user can press enter to submit
   async function handleKeyPress(event) {
     if (event.key === "Enter") {
       await handleLogin();

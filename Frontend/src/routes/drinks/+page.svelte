@@ -3,31 +3,29 @@
   import { onMount } from "svelte";
   import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
-  import CtaButton from "$lib/components/CtaButton.svelte";
-  import {
-    CloseCircleOutline,
-    CloseCircleSolid,
-    CloseOutline,
-    TrashBinSolid,
-  } from "flowbite-svelte-icons";
+  import { CloseOutline, TrashBinSolid } from "flowbite-svelte-icons";
   import {
     addProductsToOrder,
     confirmOrder,
     createOrder,
   } from "$lib/service/orders";
-  import { Alert, Button, Modal } from "flowbite-svelte";
+  import { Alert, Button } from "flowbite-svelte";
   import { goto } from "$app/navigation";
 
   let ref = {};
-  let identifiedUser;
+  let identifiedUser = {};
   let identifier = "";
   let userName = "";
   let drinksScanner = "";
   let product = {};
-  let selectedProducts = [];
+  let selectedProducts = [product];
   let errorMessage = "";
   let productCart = new Map();
   let elementInputSearchbar;
+
+  //Loading sound and setting the volume
+  let checkoutSound = new Audio("sound-effects/checkout_sound.mp3");
+  checkoutSound.volume = 0.3;
 
   export let data;
 
@@ -94,12 +92,9 @@
     }
     errorMessage = "";
     const order = await createOrder(identifiedUser.id);
-    console.log(order);
     if (order) {
       await addProductsToOrder(order.id, productCart);
       await confirmOrder(order.id);
-      let checkoutSound = new Audio("sound-effects/checkout_sound.mp3");
-      checkoutSound.volume = 0.3;
       checkoutSound.play();
       clearFields();
     }
@@ -130,7 +125,7 @@
 
   function clearFields() {
     identifier = "";
-    identifiedUser = "";
+    identifiedUser = { id: 0, credits: 0 };
     selectedProducts = [];
     userName = "";
     drinksScanner = "";
@@ -168,7 +163,7 @@
           bind:userName
           bind:ref
         />
-        {#if identifiedUser}
+        {#if identifiedUser.credits}
           <div
             class="dark:bg-dark-p_foreground bg-light-p_foreground w-64 p-4 rounded-2xl flex-col items-center"
           >
@@ -184,6 +179,7 @@
           bind:value={drinksScanner}
           bind:selectedProduct={product}
           on:selectProduct={handleSelectProduct}
+          bind:elementInputSearchbar
           bind:identifiedUser
         />
       </div>
@@ -201,28 +197,30 @@
         </div>
 
         {#each selectedProducts as product}
-          <div
-            class="grid grid-cols-6 gap-2 mt-2 dark:bg-dark-900 bg-light-s_bg rounded-xl p-4"
-          >
-            <div class="col-span-3">
-              {product.name}
-            </div>
+          {#if product.name}
             <div
-              class="col-span-2 flex justify-center text-center items-center"
+              class="grid grid-cols-6 gap-2 mt-2 dark:bg-dark-900 bg-light-s_bg rounded-xl p-4"
             >
-              {product.quantity}
-            </div>
-            <div
-              class="col-span-1 flex justify-center text-center items-center"
-            >
-              <button on:click={() => removeProductFromCart(product)}
-                ><svelte:component
-                  this={TrashBinSolid}
-                  class="text-light-p_foreground dark:text-dark-p_foreground h-full"
-                /></button
+              <div class="col-span-3">
+                {product.name}
+              </div>
+              <div
+                class="col-span-2 flex justify-center text-center items-center"
               >
+                {product.quantity}
+              </div>
+              <div
+                class="col-span-1 flex justify-center text-center items-center"
+              >
+                <button on:click={() => removeProductFromCart(product)}
+                  ><svelte:component
+                    this={TrashBinSolid}
+                    class="text-light-p_foreground dark:text-dark-p_foreground h-full"
+                  /></button
+                >
+              </div>
             </div>
-          </div>
+          {/if}
         {/each}
       </div>
       {#if errorMessage}

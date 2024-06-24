@@ -1,5 +1,11 @@
 import {request} from "$lib/service/config.js";
 
+/**
+ * 
+ * @param {*} buyerId 
+ * @returns 
+ *
+ */
 export async function createOrder(buyerId) {
     try {
         const response = await request( `/orders`, "POST", JSON.stringify({buyerId}), true);
@@ -12,6 +18,11 @@ export async function createOrder(buyerId) {
         }
 }
 
+/**
+ * 
+ * @param {*} orderId 
+ * @param {*} productCart 
+ */
 export async function addProductsToOrder(orderId, productCart) {
     for (let [productId, productDetails] of productCart) {
       const productData = {
@@ -22,8 +33,6 @@ export async function addProductsToOrder(orderId, productCart) {
   
       if (!response.ok) {
         console.error('Failed to add product to order:', response.statusText);
-      } else {
-        console.log('Product added successfully:', productData);
       }
     }
   }
@@ -31,17 +40,18 @@ export async function addProductsToOrder(orderId, productCart) {
   export async function confirmOrder(orderId) {
     try {
       const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/orders/confirm?id=" + orderId, {
-          headers: {
-              "Content-Type": "application/json"
-          },
-          method: "PUT",
-
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "PUT",
       });
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return await response.json();
-      } catch (error) {
-          console.error("Failed to fetch user data:", error);
-      }
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+} catch (error) {
+    console.error("Failed to fetch user data:", error);
+}
   }
+  

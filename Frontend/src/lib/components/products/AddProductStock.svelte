@@ -1,5 +1,5 @@
 <script>
-  import { Alert, Input, Label, Modal, Radio, Select } from "flowbite-svelte";
+  import { Alert, Input, Label, Modal, Select } from "flowbite-svelte";
   import { t } from "$lib/translations/index.js";
   import CtaButton from "$lib/components/CtaButton.svelte";
   import { fly } from "svelte/transition";

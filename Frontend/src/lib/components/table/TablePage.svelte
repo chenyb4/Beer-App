@@ -1,5 +1,5 @@
 <script>
-  import { Input, Label, PaginationItem, Table } from "flowbite-svelte";
+  import { PaginationItem, Table } from "flowbite-svelte";
 
   export let pages = 1;
   export let currentPage = 1;

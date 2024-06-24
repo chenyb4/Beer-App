@@ -1,16 +1,15 @@
 <script>
-  // @ts-nocheck
-
   import { getUserByQRIdentifier } from "$lib/service/users";
   import { t } from "$lib/translations/index.js";
 
   export let identifier = "";
   export let userName = "";
   export let ref;
-  export let identifiedUser;
+  export let identifiedUser = {};
   let errorMessage = "";
 
   async function handleSubmit(event) {
+    //Preventing empty submit
     event.preventDefault();
     errorMessage = "";
     try {
