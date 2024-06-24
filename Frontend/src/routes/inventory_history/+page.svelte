@@ -29,7 +29,6 @@
         const result = await undoHistory(historyId)
         await changeInventoryHistory()
     }
->>>>>>> Frontend/src/routes/inventory_history/+page.svelte
 
 </script>
 
