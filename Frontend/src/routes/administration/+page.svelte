@@ -35,13 +35,17 @@
   import UpdateStudent from "$lib/components/administration/UpdateStudent.svelte";
   import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
   import CreateStudents from "$lib/components/administration/CreateStudents.svelte";
-  import {goto} from "$app/navigation";
+  import {isAbove18} from "$lib/service/users.js"
+  import AmountInTableSelect from "$lib/components/table/AmountInTableSelect.svelte";
+  import QRImageDisplay from "$lib/components/administration/QRImageDisplay.svelte";
+  import UniversalModal from "$lib/components/universal/UniversalModal.svelte";
+  import ButtonExtraOption from "$lib/components/administration/ButtonExtraOption.svelte";
 
   /** @type {import('./$types').PageData} */
   export let data;
   $: users = data.users?.data || [];
 
-  const pages = Math.ceil(data.users?.meta.total / data.users?.meta.page_size);
+  const pages = Math.ceil(data.users?.meta.total / data.users?.meta.page_size) || 1;
   let currentPage = 1;
 
   const roles = data.roles?.data || [];
@@ -51,20 +55,14 @@
   let modalTextOk = "Yes";
   let modalFunction = async function () {};
 
+  let filterUsername = "";
+  let filterEmail = "";
+  let filterIsLegalAge = 0;
+  let filterLanguage = -1;
+  let filterRole = 0;
+
   let openSentQRModal = false;
   let textSentQRModal = "";
-
-  // Calculate if the user is above 18
-  function isAbove18(dob = new Date()) {
-    const today = new Date();
-    const birthDate = new Date(dob);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age >= 18;
-  }
 
   function getRole(role = 0) {
     const foundRole = roles.find((r) => r.id === role);
@@ -76,9 +74,7 @@
     modalOpen = true;
     modalTitle = "Resending QR code";
     modalText =
-      "Are you certain to resend and regenerate QR code of " +
-      user.username +
-      "?";
+      "Are you certain to resend and regenerate QR code of " + user.username + "?";
     modalTextOk = "Resend QR";
     modalFunction = async function () {
       let responseQR = await getQRandSendMail(user.id);
@@ -110,6 +106,11 @@
   }
 
   let pageSize = 6;
+
+  async function getHandleTableChange(event){
+    pageSize = event.detail.pageSize
+    await changeUsers();
+  }
 
   async function changeUsers(page = 1) {
     const response = await getUsers(
@@ -174,34 +175,15 @@
     openUpdateStudentModal = true;
   }
 
-  let filterUsername = "";
-  let filterEmail = "";
-  let filterIsLegalAge = 0;
-  let filterLanguage = -1;
-  let filterRole = 0;
-
   $: qrMessage = "";
   function changeQrMessage(qr){
     qrMessage = qr;
   }
 </script>
 {#if qrMessage !== ""}
-  <Alert color="green" class="absolute top-5 right-5 z-50" dismissable>
-    <Button
-            slot="close-button"
-            class="hover:cursor-pointer"
-            on:click={() => qrMessage = ""}
-    >
-      <CloseOutline />
-    </Button>
-    <img src={qrMessage} alt="QR image"/>
-  </Alert>
+  <QRImageDisplay qrMessage={qrMessage}/>
 {/if}
-<UpdateStudent
-  user={selectedUser}
-  openUpdateUserDialog={openUpdateStudentModal}
-  onClose={changeUsers}
-/>
+<UpdateStudent user={selectedUser} openUpdateUserDialog={openUpdateStudentModal} onClose={changeUsers}/>
 <CreateStudent {openCreateUserDialog} onClose={changeUsers} changeQrMessage={changeQrMessage} />
 <CreateStudents {roles} {openCreateUsersDialog} onClose={changeUsers} changeQrMessage={changeQrMessage} />
 <UpdateStudentRoleModal
@@ -220,45 +202,20 @@
   modalText={textSentQRModal}
   modalTitle={$t("administration.qrRecreation")}
 />
-<Modal title={modalTitle} bind:open={modalOpen} autoclose>
-  {modalText}
-  <svelte:fragment slot="footer">
-    <Button on:click={modalFunction}>{modalTextOk}</Button>
-    <Button color="alternative">Cancel</Button>
-  </svelte:fragment>
-</Modal>
+<UniversalModal modalTextOk={modalTextOk} modalTitle={modalTitle} modalOpen={modalOpen} modalText={modalText} modalFunction={modalFunction}/>
 <div class="fixed bottom-12 right-12 z-50">
-  <ButtonGroup
-    class="text-dark-text bg-light-p_foreground dark:bg-dark-p_foreground rounded-full"
-  >
-    <Button
-      class="bg-light-p_foreground dark:bg-dark-p_foreground text-white"
-      on:click={handleOpenCreateUserDialog}
-    >
-      {$t("administration.addUser")}
-    </Button>
-    <Button
-      class="bg-light-p_foreground dark:bg-dark-p_foreground p-1 text-white"
-    >
-      <DotsVerticalOutline class="dots-menu" />
-    </Button>
-    <Dropdown placement="top" triggeredBy=".dots-menu" class="w-32">
-      <DropdownItem on:click={handleOpenCreateUsersDialog} class="text-center"
-        >{$t("administration.addUsers")}</DropdownItem
-      >
-    </Dropdown>
-  </ButtonGroup>
-</div>
+  <ButtonExtraOption
+          buttonText={$t("administration.addUser")}
+          handleButton={handleOpenCreateUserDialog}
+          dropDownText={$t("administration.addUsers")}
+          handleDropDownButton={handleOpenCreateUsersDialog}
 
-<select
-  bind:value={pageSize}
-  on:change={() => changeUsers()}
-  class="absolute right-10 top-10 rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg"
->
-  <option value={10}> 10 </option>
-  <option value={25}> 25 </option>
-  <option value={50}> 50 </option>
-</select>
+  />
+</div>
+<AmountInTableSelect
+        pageSize={pageSize}
+        on:changeTable={getHandleTableChange}
+/>
 <TablePage
   {pages}
   {currentPage}

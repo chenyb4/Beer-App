@@ -2,7 +2,7 @@
   // Import necessary components from Flowbite and custom libraries
   import { Button, Modal } from "flowbite-svelte";
   import { t } from "$lib/translations/index.js";
-  import CtaButton from "$lib/components/CtaButton.svelte";
+  import CtaButton from "$lib/components/universal/CtaButton.svelte";
   import { deleteProduct } from "$lib/service/inventory";
 
   // Props passed to the component

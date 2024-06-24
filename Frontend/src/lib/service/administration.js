@@ -1,4 +1,4 @@
-import { request} from "$lib/service/config.js";
+import {request} from "$lib/service/config.js";
 
 export async function createUser(username, email, date_of_birth) {
     try {

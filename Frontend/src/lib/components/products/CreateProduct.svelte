@@ -2,7 +2,7 @@
   // Import necessary components from Flowbite and custom libraries
   import { Alert, Input, Label, Modal, Select } from "flowbite-svelte";
   import { t } from "$lib/translations/index.js";
-  import CtaButton from "$lib/components/CtaButton.svelte";
+  import CtaButton from "$lib/components/universal/CtaButton.svelte";
   import { fly } from "svelte/transition";
   import { createProduct } from "$lib/service/inventory";
 

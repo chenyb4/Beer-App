@@ -13,6 +13,7 @@ export const config = {
         en: { lang },
         nl: { lang },
     },
+    // Determine each page and load different json files for each language and each page
     loaders: [
         {
             locale: 'en',
