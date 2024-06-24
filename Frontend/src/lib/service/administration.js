@@ -58,9 +58,9 @@ export async function deleteUser(user) {
     }
 }
 
-export async function updateUser({user, username = user.username, date_of_birth = user.date_of_birth, language = user.language, roleId = user.roleId, password = ''}) {
+export async function updateUser({oldUser, username = oldUser.username, date_of_birth = oldUser.date_of_birth, language = oldUser.language, roleId = oldUser.roleId, password = ''}) {
     try {
-        const response = await request("/users/?id=" + user.id, "PUT",JSON.stringify({username, date_of_birth, language, roleId, password}), true);
+        const response = await request("/users/?id=" + oldUser.id, "PUT",JSON.stringify({username, date_of_birth, language, roleId, password}), true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
