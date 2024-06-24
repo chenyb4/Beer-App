@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
-  import CtaButton from "$lib/components/CtaButton.svelte";
+  import CtaButton from "$lib/components/universal/CtaButton.svelte";
   import {
     CloseCircleOutline,
     CloseCircleSolid,

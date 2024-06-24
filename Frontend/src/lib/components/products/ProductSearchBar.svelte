@@ -3,6 +3,7 @@
   import { loadProducts } from "$lib/service/inventory";
   import { t } from "$lib/translations/index.js";
   import { createEventDispatcher, onMount } from "svelte";
+  import {isAbove18} from "$lib/service/users.js"
 
   export let filteredProductsOptions = [];
   export let value = "";
@@ -45,17 +46,6 @@
       // Automatically select the product by barcode if the length exceeds 12 characters
       autoSelectProductByBarcode(value);
     }
-  }
-
-  function isAbove18(dob = new Date()) {
-    const today = new Date();
-    const birthDate = new Date(dob);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const month = today.getMonth() - birthDate.getMonth();
-    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age >= 18;
   }
 
   function selectProduct(product) {

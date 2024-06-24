@@ -13,6 +13,13 @@
   const handleChangePage = (page) => {
     changeData(page, pageSize);
   };
+
+  function isPageInRange(pageIndex, currentPage) {
+    if (currentPage < 4 && pageIndex <= 6)
+      return true;
+    const distanceFromCurrent = Math.abs(pageIndex - currentPage);
+    return distanceFromCurrent <= 3;
+  }
 </script>
 
 <div class="p-5 flex w-full h-[90%]">
@@ -34,13 +41,15 @@
           <th colspan="99">
             <div class="w-full p-2 flex justify-center items-center">
               {#each pagesArray as i}
-                <PaginationItem
-                  active={i === currentPage}
-                  on:click={() => handleChangePage(i)}
-                  normalClass="bg-light-p_foreground dark:bg-dark-p_foreground"
-                >
-                  {i}
-                </PaginationItem>
+                {#if isPageInRange(i, currentPage)}
+                  <PaginationItem
+                          active={i === currentPage}
+                          on:click={() => handleChangePage(i)}
+                          normalClass="bg-light-p_foreground dark:bg-dark-p_foreground"
+                  >
+                    {i}
+                  </PaginationItem>
+                {/if}
               {/each}
             </div>
           </th>

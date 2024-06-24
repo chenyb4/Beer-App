@@ -1,6 +1,6 @@
 <script>
   import { t } from "$lib/translations/index.js";
-  import CtaButton from "$lib/components/CtaButton.svelte";
+  import CtaButton from "$lib/components/universal/CtaButton.svelte";
   import PriceTitle from "$lib/components/PriceTitle.svelte";
   import { addCreditsForAUser } from "$lib/service/credits.js";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
