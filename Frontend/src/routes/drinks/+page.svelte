@@ -27,6 +27,7 @@
   let selectedProducts = [];
   let errorMessage = "";
   let productCart = new Map();
+  $: scannerActive = true;
 
   export let data;
 
@@ -125,6 +126,10 @@
     }
     //Set the new array
     selectedProducts = Array.from(productCart.values());
+  }
+
+  function switchScannerOn() {
+    scannerActive = !scannerActive;
   }
 
   function clearFields() {
