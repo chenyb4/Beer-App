@@ -21,6 +21,8 @@
   let selectedProducts = [product];
   let errorMessage = "";
   let productCart = new Map();
+
+  let elementInputSearchbar;
   $: scannerActive = true;
 
   //Loading sound and setting the volume
