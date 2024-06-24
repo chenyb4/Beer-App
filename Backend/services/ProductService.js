@@ -81,15 +81,11 @@ async function createProductStockHistory(id, amountChanged, loggedInUserId) {
 }
 
 exports.incrementProductStock = async (id, amount, loggedInUserId) => {
-    const product = await db.Product.increment({amount_in_stock: amount}, {where: {id}});
-    await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amount}, loggedInUserId, id);
-    return product;
+    return await db.Product.increment({amount_in_stock: amount}, {where: {id}});
 }
 
-exports.decrementProductStock = async (id, amount, loggedInUserId) => {
-    const product = await db.Product.decrement({amount_in_stock: amount}, {where: {id}});
-    await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amount}, loggedInUserId, id);
-    return product;
+exports.decrementProductStock = async (id, amount) => {
+    return await db.Product.decrement({amount_in_stock: amount}, {where: {id}});
 }
 
 exports.deleteProduct = async (id) => {
