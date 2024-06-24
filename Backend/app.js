@@ -7,6 +7,9 @@ const logger = require('./logger');
 const process = require('process');
 const app = express();
 const cors = require('cors')
+const {parse} = require("csv-parse");
+const fs = require("fs");
+const {loadCsvOldFormat} = require('./services/CsvLoadService');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,14 +21,14 @@ const corsOptions = {
 };
 
 morgan.token('id', function getId(req) {
-  return req.id;
+    return req.id;
 });
 morgan.token('timestamp', function getTimestamp() {
-  return new Date().toISOString();
+    return new Date().toISOString();
 });
 const morganFormat = ':method :url :status :res[content-length] - :response-time ms';
 
-app.use(morgan(morganFormat, { stream: { write: (message) => logger.info(message.trim()) } }));
+app.use(morgan(morganFormat, {stream: {write: (message) => logger.info(message.trim())}}));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
@@ -132,7 +135,7 @@ async function loadDummyData() {
         await db.User.bulkCreate([
             {
                 username: "dummy",
-                email: "dummy@dummy.nl",
+                email: "510739@student.saxion.nl",
                 password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: "2024-05-23 00:00:00.000",
                 roleId: 4,
@@ -169,6 +172,7 @@ async function loadDummyData() {
 }
 
 
+
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   next(createError(404));
@@ -197,6 +201,17 @@ app.get('/force', async (req, res) => {
     await loadDummyData()
     res.send('Forced!')
 })
+
+
+app.get('/loadOldCsv', async (req, res) => {
+    try {
+        await loadCsvOldFormat();
+        res.status(200).json("CSV has been loaded");
+    } catch (err) {
+        logger.error(err);
+        res.status(500).json({message: 'Service Error'});
+    }
+});
 
 const port = process.env.APIPORT
 app.listen(port, () => {

@@ -2,6 +2,7 @@
   "title": "VERKOOP DRANKEN",
   "identifier": "Identificeren",
   "studentNumber": "Studentennummer",
+  "email": "E-mail",
   "drinkScanner": "Barcode / Dranknaam",
   "selectedDrinks": "GESELECTEERDE DRANKEN",
   "creditsLeft": "Aantal credits over:",

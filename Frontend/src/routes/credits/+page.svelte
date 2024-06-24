@@ -116,11 +116,7 @@
   <h2 class="text-3xl font-bold mb-8">{$t("credits.title")}</h2>
   <div class="flex-1">
     <div class="flex flex-row justify-between">
-      <StudentIdentifier
-        bind:identifiedUser
-        bind:identifier
-        bind:userName
-        bind:ref
+      <StudentIdentifier bind:identifiedUser bind:identifier bind:ref
       ></StudentIdentifier>
       <PriceTitle captionText={$t("credits.price")} {price}></PriceTitle>
     </div>

@@ -21,7 +21,7 @@
   let selectedProducts = [product];
   let errorMessage = "";
   let productCart = new Map();
-  let elementInputSearchbar;
+  $: scannerActive = true;
 
   //Loading sound and setting the volume
   let checkoutSound = new Audio("sound-effects/checkout_sound.mp3");
@@ -121,6 +121,10 @@
     }
     //Set the new array
     selectedProducts = Array.from(productCart.values());
+  }
+
+  function switchScannerOn() {
+    scannerActive = !scannerActive;
   }
 
   function clearFields() {
