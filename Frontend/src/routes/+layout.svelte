@@ -3,6 +3,8 @@
   import Sidebar from "$lib/components/navigation/Sidebar.svelte";
   import { locale } from "$lib/translations/index.js";
   $: $locale;
+  export let data;
+
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,7 +14,7 @@
   rel="stylesheet"
 />
 <div class="h-screen flex">
-  <Sidebar />
+  <Sidebar username={data.user?.username || "user"} roleName={data.user?.roleName || ""}/>
   <slot></slot>
 </div>
 

@@ -16,6 +16,10 @@
     export let onClose = async function () {
     };
 
+    export let changeQrMessage = function (qr) {
+    };
+
+
     let studentNumber = "";
     let email = "";
     $: date_of_birth = new Date().toISOString().split('T')[0];
@@ -57,7 +61,11 @@
         if (response) {
             let userId = response.user.id;
             if (response.user.roleId !== selectedRoleId) {
-                const userRoleEdit = await updateUser(response.user, undefined, undefined, selectedLanguage, selectedRoleId);
+                const userRoleEdit = await updateUser({
+                    user: response.user,
+                    language: selectedLanguage,
+                    roleId: selectedRoleId
+                });
             }
             if (credits !== 0) {
                 const userCreditsResponse = await addCreditsForAUser(userId, credits);
@@ -67,6 +75,7 @@
             createdUserModalText = handleSendMailResponse(responseQR.sentMail, response.user, responseQR.qr);
             createdUserModalText += "\n" + $t("administration.userCreated") + ": " + response.user.username + " : " + response.user.email;
 
+            changeQrMessage(responseQR.qr)
             showCreatedUserModal = false;
             showCreatedUserModal = true;
             studentNumber = "";

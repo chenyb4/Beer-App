@@ -1,13 +1,8 @@
+import {request} from "$lib/service/config.js";
+
 export async function createOrder(buyerId) {
     try {
-        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/orders", {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            method: "POST",
-            body: JSON.stringify({buyerId})
-        });
-
+        const response = await request( `/orders`, "POST", JSON.stringify({buyerId}), true);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -23,15 +18,7 @@ export async function addProductsToOrder(orderId, productCart) {
         productId: productId,
         quantity: productDetails.quantity
       };
-      console.log(productData)
-  
-      const response = await fetch(`http://${import.meta.env.VITE_APIURL}:${import.meta.env.VITE_APIPORT}/orders/products?id=${orderId}`, {
-        method: 'PUT', // Change to the appropriate method (POST, PUT, etc.)
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(productData)
-      });
+        const response = await request( `/orders/products?id=${orderId}`, "PUT", JSON.stringify(productData), true);
   
       if (!response.ok) {
         console.error('Failed to add product to order:', response.statusText);

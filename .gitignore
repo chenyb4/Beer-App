@@ -1,4 +1,4 @@
-﻿.env
+.env
 .idea
 node_modules
 build
@@ -14,5 +14,7 @@ vite.config.ts.timestamp-*
 Backend/node_modules
 frontend-svelte/node-modules
 frontend-svelte/.svelte-kit
+Frontend/test-results
 *.log
 Backend/logs/app.log
+Frontend/screenshot.png

@@ -1,5 +1,6 @@
 {
   "addUser": "Nieuwe gebruiker toevoegen",
+  "editUser": "Gebruiker aanpassen",
   "studentNumber": "Studenten nummer van student:",
   "studentNumberPlaceholder": "Typ hier het studenten nummer van student...",
   "email": "e-mail:",
@@ -13,9 +14,11 @@
   "mailSent": "Mail is verstuurd naar student: ",
   "userCreated": "Een gebruiker is aangemaakt!",
   "qrRecreation": "De QR code is opnieuw aangemaakt!",
-  "edit": "Verander gebruiker ",
   "changeRole": "Rol: ",
+  "password": "Maak een wachtwoord: ",
+  "passwordConfirm": "Wachtwoord herhalen: ",
   "credits": "Credits: ",
   "addUsers": "Meerdere gebruikers toevoegen",
-  "language": "Taal voorkeur: "
+  "language": "Taal voorkeur: ",
+  "titleAdmin": "STUDENT ADMINISTRATIE"
 }

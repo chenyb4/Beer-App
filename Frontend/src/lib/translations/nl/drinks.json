@@ -8,5 +8,6 @@
   "confirm": "OPSLAAN",
   "numberOfItems": "Aantal",
   "remove": "Verwijderen",
-  "errorMessage": "Kan gebruiker niet vinden. Probeer het opnieuw."
+  "errorMessage": "Kan gebruiker niet vinden. Probeer het opnieuw.",
+  "submit": "VERSTUREN"
 }

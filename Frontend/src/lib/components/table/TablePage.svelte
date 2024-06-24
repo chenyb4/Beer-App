@@ -4,7 +4,7 @@
   export let pages = 1;
   export let currentPage = 1;
   export let changeData;
-  export let pageSize = 10;
+  export let pageSize = 6;
 
   export let title;
 
@@ -15,12 +15,12 @@
   };
 </script>
 
-<div class="p-5 flex w-full">
+<div class="p-5 flex w-full h-[90%]">
   <div
-    class="w-full overflow-auto p-5 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl"
+    class="w-full overflow-auto p-4 bg-light-s_bg dark:bg-dark-s_bg rounded-2xl"
   >
     <div class="inline-flex">
-      <h1 class="text-3xl mt-2 m-5 ml-2 font-bold">
+      <h1 class="text-3xl font-bold mb-4">
         {title}
       </h1>
     </div>

@@ -14,6 +14,9 @@
     export let onClose = async function () {
     };
 
+    export let changeQrMessage = function (qr) {
+    };
+
     let studentNumber = "";
     let email = "";
     $: date_of_birth = new Date().toISOString().split('T')[0];
@@ -50,13 +53,14 @@
         }
 
         const response = await createUser(studentNumber, email, date_of_birth)
-        await updateUser(response.user, undefined, undefined, selectedLanguage, undefined);
+        await updateUser({user: response.user, language: selectedLanguage});
         if (response) {
             let responseQR = await getQRandSendMail(response.user.id);
             createdUserModalText = handleSendMailResponse(responseQR.sentMail, response.user, responseQR.qr);
             openCreateUserDialog = false;
             showCreatedUserModal = false;
             showCreatedUserModal = true;
+            changeQrMessage(responseQR.qr);
         } else {
             alert("User cannot be created");
         }

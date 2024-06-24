@@ -66,12 +66,12 @@ app.delete('/histories', authService.authenticateToken, historyController.delete
 app.get('/credits', authService.authenticateToken, creditController.getCredit);
 app.put('/credits', authService.authenticateToken, creditController.updateCredit);
 
-app.get('/roles', authService.authenticateToken, roleController.getRole);
+app.get('/roles', authService.authenticateTokenForSeller, roleController.getRole);
 app.post('/roles', authService.authenticateToken, roleController.createRole);
 app.put('/roles', authService.authenticateToken, roleController.updateRole);
 app.delete('/roles', authService.authenticateToken, roleController.deleteRole);
 
-app.get('/products', authService.authenticateToken, productController.getProducts);
+app.get('/products', authService.authenticateTokenForSeller, productController.getProducts);
 app.post('/products', authService.authenticateToken, productController.createProduct);
 app.put('/products', authService.authenticateToken, productController.updateProduct);
 app.delete('/products', authService.authenticateToken, productController.deleteProduct)
@@ -122,7 +122,12 @@ async function loadDummyData() {
             {
                 name: 'seller',
                 discount: 1
-            }
+            },
+            {
+                name: 'administrator',
+                discount: 1
+            },
+
         ]);
         await db.User.bulkCreate([
             {
@@ -130,14 +135,14 @@ async function loadDummyData() {
                 email: "dummy@dummy.nl",
                 password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: "2024-05-23 00:00:00.000",
-                roleId: 3,
+                roleId: 4,
                 credits: 20
             }, {
                 username: "dummy2",
                 email: "dummy2@dummy.nl",
-                password: "$2b$10$PhqaHcR13xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
+                password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: "1990-05-23 00:00:00.000",
-                roleId: 2,
+                roleId: 3,
                 credits: 20
             },
         ]);

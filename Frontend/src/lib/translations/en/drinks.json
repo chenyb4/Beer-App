@@ -8,5 +8,6 @@
   "confirm": "CONFIRM",
   "numberOfItems": "Amount",
   "remove": "Remove",
-  "errorMessage": "Failed to find corresponding user. Please try again."
+  "errorMessage": "Failed to find corresponding user. Please try again.",
+  "submit": "SUBMIT"
 }

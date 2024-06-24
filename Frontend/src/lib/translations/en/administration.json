@@ -1,5 +1,6 @@
 {
   "addUser": "Add new user",
+  "editUser": "Edit user",
   "studentNumber": "Student Number of student:",
   "studentNumberPlaceholder": "Type here the student number of the student...",
   "email": "e-mail:",
@@ -13,9 +14,11 @@
   "mailSent": "Mail has been send for student: ",
   "userCreated": "An user is created!",
   "qrRecreation": "The QR code has been recreated!",
-  "edit": "Edit user ",
   "changeRole": "Role: ",
+  "password": "Create password: ",
+  "passwordConfirm": "Confirm password: ",
   "credits": "Credits: ",
   "addUsers": "Add multiple users",
-  "language": "Preferred language: "
+  "language": "Preferred language: ",
+  "titleAdmin": "STUDENT ADMINISTRATION"
 }

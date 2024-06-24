@@ -1,11 +1,8 @@
+import {request} from "$lib/service/config.js";
+
 export async function getQRandSendMail(userID) {
     try {
-        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/mail?id=" + userID, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            method: "POST",
-        });
+        const response = await request( "/mail?id=" + userID, "POST",'',true);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

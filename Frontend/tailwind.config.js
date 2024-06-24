@@ -8,6 +8,16 @@ export default {
 
     theme: {
         extend: {
+            backgroundImage: {
+                'bottleskyline-light': "url('/images/bottleskyline-light.svg')",
+                'bottleskyline-dark': "url('/images/bottleskyline-dark.svg')"
+              },
+             backgroundPosition: {
+        'bottom-custom': 'right 10% bottom -10px',
+      },
+      backgroundSize: {
+        'auto-11': 'auto 11%',
+      },
             colors: {
                 'dark': {
                     50: '#00ffd3',
@@ -38,12 +48,12 @@ export default {
                     700: '#042A2B',
                     800: '#38383C',
                     900: '#28282C',
-                    p_foreground: '#009C82',
+                    p_foreground: '#A4C3B2',
                     s_foreground: '#042A2B',
-                    text: '#000000',
-                    p_bg: '#ffffff',
-                    s_bg: '#a9a9a9',
-                    input_bg: '#ffffff',
+                    text: '#28282C',
+                    p_bg: '#F4F3EE',
+                    s_bg: '#D9D9D9',
+                    input_bg: '#F4F3EE',
                 },
             }
         }

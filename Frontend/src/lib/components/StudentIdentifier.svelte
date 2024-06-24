@@ -36,15 +36,18 @@
     >
     <div class="flex flex-row items-center">
       <input
-        class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0"
+        class="bg-light-p_bg text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0"
         id="identifier_input"
         type="text"
         bind:value={identifier}
         bind:this={ref}
         on:input={handleInput}
       />
-      <button class="bg-dark-200 rounded-full ml-2 px-4 py-2" type="submit">
-        SUBMIT
+      <button
+        class="dark:bg-dark-p_foreground bg-light-p_foreground rounded-full text-white ml-2 px-4 py-2"
+        type="submit"
+      >
+        {$t("drinks.submit")}
       </button>
       {#if errorMessage}
         <p class="text-red-400 px-4">{errorMessage}</p>
@@ -55,7 +58,7 @@
     >
     <input
       disabled
-      class="bg-white-200 text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0 text-opacity-30 dark:text-opacity-30 max-w-72"
+      class="bg-light-p_bg text-black rounded-lg border-none dark:bg-dark-800 dark:text-white focus:outline-0 text-opacity-30 dark:text-opacity-30 max-w-72"
       id="studentNumber_input"
       type="text"
       bind:value={userName}

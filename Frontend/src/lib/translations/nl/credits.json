@@ -4,5 +4,6 @@
   "identifier": "Identificatie",
   "amountOfCredits": "Aantal Kredieten",
   "price": "Prijs",
-  "confirm": "Bevestigen"
+  "confirm": "Bevestigen",
+  "warning": "Waarschuwing: Er zijn momenteel geen standaardkredieten en prijzen geconfigureerd in de database. Neem contact op met de beheerder."
 }

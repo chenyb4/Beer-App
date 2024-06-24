@@ -11,7 +11,8 @@ exports.login = async (username, password) => {
     const passwordCorrect = await bcrypt.compare(password, user.password);
     if (!passwordCorrect) throw new Error('Password is incorrect!');
 
-    return generateAccessToken({ username });
+    const roleId = user.roleId;
+    return generateAccessToken({ username, roleId });
 }
 
 exports.register = async (username, password, email, date_of_birth) => {
@@ -22,8 +23,8 @@ exports.register = async (username, password, email, date_of_birth) => {
     return generateAccessToken({ username });
 }
 
-function generateAccessToken(username) {
-    return jwt.sign(username, process.env.TOKEN_SECRET, {expiresIn: '1800s'});
+function generateAccessToken(user) {
+    return jwt.sign({user}, process.env.TOKEN_SECRET, {expiresIn: '1800s'});
 }
 
 function developmentCheck(req){
@@ -35,23 +36,23 @@ function developmentCheck(req){
     }
 }
 
-function validateToken(req, res, next, checkSeller = false) {
+function validateToken(req, res, next, needsAdmin = true) {
     const token = req.headers['authorization'];
 
     if (!token) {
         return res.status(401).json({ error: 'Token not provided' });
     }
 
-    jwt.verify(token, process.env.TOKEN_SECRET, async (err, u) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, wrapper) => {
         if (err) {
             console.error(err);
             return res.status(403).json({error: 'Invalid token'});
         }
-        const {users} = await userService.getAllUsers({query: {username: u.username}})
 
-        const user = users[0]
-        if (!checkSeller){
-            if(user.roleId === 3){
+        const user = await db.User.findOne({ where: { username: wrapper.user.username } })
+
+        if (needsAdmin){
+            if(user.roleId !== 4){
                 return res.status(403).json({error: 'No access'});
             } else {
                 req.user = user
@@ -67,7 +68,7 @@ function validateToken(req, res, next, checkSeller = false) {
 
 exports.authenticateTokenForSeller = (req, res, next) => {
     if(developmentCheck(req)) return next();
-    validateToken(req, res, next, true)
+    validateToken(req, res, next, false)
 }
 
 exports.authenticateToken = (req, res, next) => {

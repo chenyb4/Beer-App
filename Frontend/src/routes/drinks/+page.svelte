@@ -4,12 +4,19 @@
   import ProductSearchBar from "$lib/components/products/ProductSearchBar.svelte";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import CtaButton from "$lib/components/CtaButton.svelte";
-  import { TrashBinSolid } from "flowbite-svelte-icons";
+  import {
+    CloseCircleOutline,
+    CloseCircleSolid,
+    CloseOutline,
+    TrashBinSolid,
+  } from "flowbite-svelte-icons";
   import {
     addProductsToOrder,
     confirmOrder,
     createOrder,
   } from "$lib/service/orders";
+  import { Alert, Button, Modal } from "flowbite-svelte";
+  import { goto } from "$app/navigation";
 
   let ref = {};
   let identifiedUser;
@@ -21,6 +28,8 @@
   let errorMessage = "";
   let productCart = new Map();
   let elementInputSearchbar;
+
+  export let data;
 
   function handleSelectProduct(event) {
     //Getting constant values from the product;
@@ -89,6 +98,9 @@
     if (order) {
       await addProductsToOrder(order.id, productCart);
       await confirmOrder(order.id);
+      let checkoutSound = new Audio("sound-effects/checkout_sound.mp3");
+      checkoutSound.volume = 0.3;
+      checkoutSound.play();
       clearFields();
     }
   }
@@ -130,10 +142,25 @@
   });
 </script>
 
-<div class="w-full h-full">
-  <div class="bg-dark-900 m-4 rounded-xl h-[85%] flex flex-col justify-between">
-    <h2 class="p-4 font-bold">{$t("drinks.title")}</h2>
-    <div class="flex flex-col mx-4">
+<div class=" p-5 w-full">
+  {#if data.status === "302"}
+    <Alert color="red" class="absolute top-5 left-5" dismissable>
+      <Button
+        slot="close-button"
+        class="hover:cursor-pointer"
+        on:click={() => goto("/drinks")}
+      >
+        <CloseOutline />
+      </Button>
+      <span class="font-bold text-2xl">
+        You are a seller. If you want to use other activities on this system,
+        please log out and log in with admin credentials
+      </span>
+    </Alert>
+  {/if}
+  <div class="dark:bg-dark-900 bg-light-s_bg rounded-xl flex-col h-[90%]">
+    <h2 class="p-4 text-3xl font-bold mb-4">{$t("drinks.title")}</h2>
+    <div class="flex flex-col mx-4 mb-2">
       <div class="flex flex-row justify-between">
         <StudentIdentifier
           bind:identifiedUser
@@ -142,7 +169,9 @@
           bind:ref
         />
         {#if identifiedUser}
-          <div class="bg-dark-300 w-64 p-4 rounded-2xl flex-col items-center">
+          <div
+            class="dark:bg-dark-p_foreground bg-light-p_foreground w-64 p-4 rounded-2xl flex-col items-center"
+          >
             <h4>Amount of credits left:</h4>
             <p class="flex justify-center text-4xl">
               {identifiedUser.credits}
@@ -159,54 +188,50 @@
         />
       </div>
       <div
-        class="bg-dark-800 w-full mt-6 flex flex-col h-80 rounded-xl overflow-auto"
+        class="dark:bg-dark-800 bg-light-p_bg w-full mt-4 flex flex-col min-h-64 rounded-xl overflow-auto px-4"
       >
-        <div class="px-4 py-2">
-          <div class="grid grid-cols-6 gap-2 font-bold">
-            <div class="col-span-3">Product</div>
-            <div
-              class="col-span-2 flex items-center justify-center text-center"
-            >
-              {$t("drinks.numberOfItems")}
+        <div class="grid grid-cols-6 gap-2 font-bold">
+          <div class="col-span-3">Product</div>
+          <div class="col-span-2 flex items-center justify-center text-center">
+            {$t("drinks.numberOfItems")}
+          </div>
+          <div class="col-span-1 flex items-center justify-center text-center">
+            {$t("drinks.remove")}
+          </div>
+        </div>
+
+        {#each selectedProducts as product}
+          <div
+            class="grid grid-cols-6 gap-2 mt-2 dark:bg-dark-900 bg-light-s_bg rounded-xl p-4"
+          >
+            <div class="col-span-3">
+              {product.name}
             </div>
             <div
-              class="col-span-1 flex items-center justify-center text-center"
+              class="col-span-2 flex justify-center text-center items-center"
             >
-              {$t("drinks.remove")}
+              {product.quantity}
+            </div>
+            <div
+              class="col-span-1 flex justify-center text-center items-center"
+            >
+              <button on:click={() => removeProductFromCart(product)}
+                ><svelte:component
+                  this={TrashBinSolid}
+                  class="text-light-p_foreground dark:text-dark-p_foreground h-full"
+                /></button
+              >
             </div>
           </div>
-
-          {#each selectedProducts as product}
-            <div class="grid grid-cols-6 gap-2 mt-2 bg-dark-900 rounded-xl p-4">
-              <div class="col-span-3">
-                {product.name}
-              </div>
-              <div
-                class="col-span-2 flex justify-center text-center items-center"
-              >
-                {product.quantity}
-              </div>
-              <div
-                class="col-span-1 flex justify-center text-center items-center"
-              >
-                <button on:click={() => removeProductFromCart(product)}
-                  ><svelte:component
-                    this={TrashBinSolid}
-                    class="text-light-p_foreground h-full"
-                  /></button
-                >
-              </div>
-            </div>
-          {/each}
-        </div>
+        {/each}
       </div>
       {#if errorMessage}
         <p class="text-red-400 px-3">{errorMessage}</p>
       {/if}
-    </div>
-    <div class="flex justify-end mb-4 mr-4">
-      <CtaButton captionText="SUBMIT" onCTAButtonClickFn={handleSubmitOrder}
-      ></CtaButton>
+      <Button
+        class="bg-light-p_foreground dark:bg-dark-p_foreground my-5 rounded-xl"
+        on:click={handleSubmitOrder}>SUBMIT</Button
+      >
     </div>
   </div>
 </div>

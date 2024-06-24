@@ -2,8 +2,9 @@
   import { goto } from "$app/navigation";
   import { t } from "$lib/translations";
   import logo from "$lib/images/ada-logo.png";
-  import { Label } from "flowbite-svelte";
+  import { Alert, Label } from "flowbite-svelte";
   import { login } from "$lib/service/authentication";
+  import { InfoCircleSolid } from "flowbite-svelte-icons";
 
   let username = "";
   let password = "";
@@ -16,7 +17,6 @@
       errorMessage = "";
 
       const response = await login({ username, password });
-      console.log(response);
 
       if (response) {
         setTimeout(() => {
@@ -33,9 +33,23 @@
       loading = false;
     }
   }
+
+  async function handleKeyPress(event) {
+    if (event.key === "Enter") {
+      await handleLogin();
+    }
+  }
+
+  export let data;
+  let status = data.status || "";
 </script>
 
 <div class="content flex">
+  {#if status === "302"}
+    <Alert border color="red" class="absolute top-5 left-5">
+      <span class="font-bold text-2xl"> You have been logged out! </span>
+    </Alert>
+  {/if}
   {#if loading}
     <div
       class="absolute top-0 left-0 w-full h-full flex items-center justify-center"
@@ -65,6 +79,7 @@
           name="password"
           class="bg-dark-900 border-none text-white w-full rounded-xl"
           bind:value={password}
+          on:keypress={handleKeyPress}
         />
         <div
           class="text-red-400 mt-4 text-sm h-4 {errorMessage
@@ -99,6 +114,9 @@
     width: 100%;
     height: 100%;
     background-image: url("$lib/images/login_background.svg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .loader {
