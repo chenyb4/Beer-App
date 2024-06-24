@@ -14,7 +14,8 @@
     /** @type {import('./$types').PageData} */
     export let data;
     //this is an array of order objects
-    let allInventoryHistories = data.allInventoryHistories.data;
+    let allInventoryHistories = data.allInventoryHistories?.data || [];
+
     let currentPage = 1;
     const pages = Math.ceil(data.allInventoryHistories.meta.total / data.allInventoryHistories.meta.page_size);
 
