@@ -1,7 +1,7 @@
 <script>
   import { Card } from "flowbite-svelte";
-  import { t } from "$lib/translations";
-  import {QuestionCircleOutline} from "flowbite-svelte-icons"; // Ensure t is correctly imported from your localization setup
+  import { t } from "$lib/translations"; // Ensure t is correctly imported from your localization setup
+  import { QuestionCircleOutline } from "flowbite-svelte-icons";
   export let path = "/";
   //When icon isn't given, implement a question mark icon
   export let icon = QuestionCircleOutline;

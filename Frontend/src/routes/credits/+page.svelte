@@ -1,12 +1,13 @@
 <script>
+  // Import necessary components and functions
   import { t } from "$lib/translations/index.js";
-  import CtaButton from "$lib/components/universal/CtaButton.svelte";
   import PriceTitle from "$lib/components/PriceTitle.svelte";
   import { addCreditsForAUser } from "$lib/service/credits.js";
   import StudentIdentifier from "$lib/components/StudentIdentifier.svelte";
   import { onMount } from "svelte";
   import { Button, Modal } from "flowbite-svelte";
 
+  // Initialize variables for the form
   let identifier = "";
   let userName = "";
   let identifiedUser = {};
@@ -17,10 +18,13 @@
   let creditIncrement = amountOfCredits;
   let priceIncrement = price;
 
+  // Exported data from the parent component
   export let data;
 
+  // Initial default credit values
   let defaultCreditsInitial = {};
 
+  // Check if default credits are provided in the data
   if (data.defaultCredits != null) {
     defaultCreditsAndPriceReceived = true;
     defaultCreditsInitial = data.defaultCredits;
@@ -29,16 +33,19 @@
     defaultCreditsInitial.default_amount = 0;
   }
 
+  // Set initial values for credits and price
   amountOfCredits = defaultCreditsInitial.default_amount;
   price = defaultCreditsInitial.price;
   creditIncrement = defaultCreditsInitial.default_amount;
   priceIncrement = defaultCreditsInitial.price;
 
+  // Function to increment credits and price
   function incrementCredits() {
     amountOfCredits += creditIncrement;
     price += priceIncrement;
   }
 
+  // Function to decrement credits and price
   function decrementCredits() {
     if (amountOfCredits > creditIncrement) {
       amountOfCredits -= creditIncrement;
@@ -46,19 +53,26 @@
     }
   }
 
+  // Function to update credits for a user
   async function updateCreditsForAUser() {
+    // Play sound effect
     let addCreditsSound = new Audio("sound-effects/creditbought_sound.mp3");
     addCreditsSound.volume = 0.3;
     addCreditsSound.play();
+
     try {
+      // Call API to add credits for the user
       await addCreditsForAUser(identifiedUser.id, amountOfCredits);
     } catch (error) {
       alert("An error occurred while updating credits");
     }
+
+    // Clear input fields and close the modal
     clearFields();
     showBuyCreditModal = false;
   }
 
+  // Function to show the confirmation modal
   function onConfirmButtonClick() {
     if (!identifier.trim()) {
       alert("Identifier is required.");
@@ -67,16 +81,19 @@
     showBuyCreditModal = true;
   }
 
+  // Function to clear input fields
   function clearFields() {
     identifier = "";
-    identifiedUser = "";
+    identifiedUser = {};
     userName = "";
   }
 
+  // Set focus on the input field when the component is mounted
   onMount(() => {
     ref.focus();
   });
 
+  // Boolean to control the visibility of the modal
   let showBuyCreditModal = false;
 </script>
 

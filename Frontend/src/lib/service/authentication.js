@@ -1,8 +1,12 @@
 import {jwtDecode} from "jwt-decode";
 import {getRoles} from "$lib/service/administration.js";
-import {getCookie, request} from "$lib/service/config.js";
+import {request} from "$lib/service/config.js";
 
-
+/**
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 export async function login({username, password}) {
     const response = await request("/login", "post", JSON.stringify({ username, password }), false);
 
@@ -17,13 +21,22 @@ export async function login({username, password}) {
     return response.status
 }
 
+/**
+ * 
+ * @param {*} name 
+ * @param {*} value 
+ * @param {*} expires 
+ */
 export function setCookie(name, value, expires = 3) { // Expires in 7 days by default
     const date = new Date();
     date.setTime(date.getTime() + (expires * 60 * 60 * 1000));
     const expiresString = "expires=" + date.toUTCString();
     document.cookie = name + "=" + value + ";" + expiresString + ";path=/";
 }
-
+/**
+ * 
+ * @param {*} token 
+ */
 async function handleLogin(token) {
     setCookie('authToken', token);
     const decodedUser = jwtDecode(token)
@@ -31,15 +44,4 @@ async function handleLogin(token) {
     const rolesData = await getRoles();
     setCookie('roleName', rolesData.data[decodedUser.user.roleId -1].name)
 
-}
-
-export async function register(username, password, email, date_of_birth) {
-    const response = await request(`/register`, "POST", JSON.stringify({ username, password, email, date_of_birth }), false);
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-    }
-
-    const data = await response.json();
-    return data.token;
 }

@@ -1,6 +1,5 @@
 <script>
   import { getUsers } from "$lib/service/administration";
-  // @ts-nocheck
   import { getUserByQRIdentifier } from "$lib/service/users";
   import { t } from "$lib/translations/index.js";
   import { Toggle } from "flowbite-svelte";
@@ -9,7 +8,7 @@
   export let identifier = "";
   export let userName = "";
   export let ref;
-  export let identifiedUser;
+  export let identifiedUser = {};
   export let scannerActive = true;
 
   let errorMessage = "";
@@ -17,6 +16,7 @@
   let autoEmail = "";
 
   async function handleSubmit(event) {
+    //Preventing empty submit
     event.preventDefault();
     errorMessage = "";
 
