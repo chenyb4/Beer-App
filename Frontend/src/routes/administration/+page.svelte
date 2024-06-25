@@ -3,29 +3,16 @@
     import CreateStudent from "$lib/components/administration/CreateStudent.svelte";
     import {handleSendMailResponse} from "$lib/service/QR.js";
     import TablePage from "$lib/components/table/TablePage.svelte";
-    import {
-        Button,
-        Input,
-        Popover,
-        TableBody,
-        TableBodyRow,
-    } from "flowbite-svelte";
+    import {Popover, TableBody, TableBodyRow, } from "flowbite-svelte";
     import languages from "$lib/service/languages.json";
     import {dateToString} from "$lib/service/dateToString.js";
-    import {
-        CheckCircleOutline,
-        QrCodeOutline,
-        TrashBinSolid,
-        UserEditSolid,
-        UserSettingsSolid,
-    } from "flowbite-svelte-icons";
+    import { CheckCircleOutline, QrCodeOutline, TrashBinSolid, UserEditSolid, UserSettingsSolid } from "flowbite-svelte-icons";
     import {deleteUser, getUsers} from "$lib/service/administration.js";
     import TableHeader from "$lib/components/table/TableHeader.svelte";
     import TableCell from "$lib/components/table/TableCell.svelte";
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import UpdateStudentRoleModal from "$lib/components/administration/UpdateStudentRoleModal.svelte";
     import UpdateStudent from "$lib/components/administration/UpdateStudent.svelte";
-    import TableCellWithInputs from "$lib/components/table/TableCellWithInputs.svelte";
     import CreateStudents from "$lib/components/administration/CreateStudents.svelte";
     import {isAbove18} from "$lib/service/users.js"
     import AmountInTableSelect from "$lib/components/table/AmountInTableSelect.svelte";
@@ -34,9 +21,8 @@
     import ButtonExtraOption from "$lib/components/administration/ButtonExtraOption.svelte";
     import TableIcons from "$lib/components/table/TableIcons.svelte";
     import SendQRModal from "$lib/components/ResponseModal.svelte";
+    import AdministrationFilterInputs from "./AdministrationFilterInputs.svelte";
 
-
-    /** @type {import('./$types').PageData} */
     export let data;
     $: users = data.users?.data || [];
 
@@ -49,15 +35,34 @@
     let filterIsLegalAge = 0;
     let filterLanguage = -1;
     let filterRole = 0;
+    let pageSize = 6;
+    let modalComponent;
+    let modalProps = {};
+    let selectedUser = {
+        id: 0,
+        username: "User not defined",
+        roleId: 0,
+        date_of_birth: "",
+        email: "",
+        language: "english"
+    };
 
+    /**
+     * Filter role by id to find right role
+     * @param role
+     */
     function getRole(role = 0) {
         const foundRole = roles.find((r) => r.id === role);
         return foundRole ? foundRole.name : "No role assigned!";
     }
 
+    /**
+     * Request backend to send QR and handle response for user
+     * @param user Selected user
+     */
     function handleResendQR(user = {username: "User not found", id: 0}) {
         if (user === undefined || user.id === 0) return;
-        modalCompontent = UniversalModal
+        modalComponent = UniversalModal
         modalProps = {
             modalTitle: "Resending QR code",
             modalTextOk: "Resend QR",
@@ -71,8 +76,13 @@
         }
     }
 
+    /**
+     * Handle reaction of request of sending QR. Make an information modal out of it
+     * @param responseQR Response of QR sending request
+     * @param user Selected user
+     */
     async function handleQRMailReaction(responseQR, user){
-        modalCompontent = SendQRModal;
+        modalComponent = SendQRModal;
         const modalText = handleSendMailResponse(
             responseQR.sentMail,
             user,
@@ -84,8 +94,12 @@
         }
     }
 
+    /**
+     * Handle deleting user
+     * @param user Selected user
+     */
     function handleDeleteUser(user = undefined) {
-        modalCompontent = UniversalModal;
+        modalComponent = UniversalModal;
         modalProps = {
             modalTitle: "Deleting user",
             modalText: "Are you sure to delete the user?",
@@ -98,13 +112,32 @@
         }
     }
 
-    let pageSize = 6;
-
+    /**
+     * Handle event of changing size of table. Finally, update users
+     * @param event
+     */
     async function getHandleTableChange(event) {
         pageSize = event.detail.pageSize
         await changeUsers();
     }
 
+    /**
+     * Handle filters of row of filters. Finally, update users
+     * @param event
+     */
+    async function getHandleFilter(event) {
+        filterUsername = event.detail.filterUsername
+        filterEmail= event.detail.filterEmail
+        filterIsLegalAge = event.detail.filterIsLegalAge
+        filterLanguage = event.detail.filterLanguage
+        filterRole = event.detail.filterRole
+        await changeUsers();
+    }
+
+    /**
+     * Update the users inside the table body
+     * @param page
+     */
     async function changeUsers(page = 1) {
         const response = await getUsers(
             page,
@@ -119,17 +152,12 @@
         currentPage = page;
     }
 
-    let selectedUser = {
-        id: 0,
-        username: "User not defined",
-        roleId: 0,
-        date_of_birth: "",
-        email: "",
-        language: "english"
-    };
-
+    /**
+     * Make modal component ChangeUser component for editing user
+     * @param user
+     */
     const handleChangeUser = (user = selectedUser) => {
-        modalCompontent = UpdateStudent;
+        modalComponent = UpdateStudent;
         modalProps = {
             user: user,
             selectedDateOfBirth: new Date(user.date_of_birth).toISOString().split('T')[0],
@@ -137,8 +165,11 @@
         };
     };
 
+    /**
+     * Make modal component CreateStudents component for creating users
+     */
     const handleOpenCreateUsersDialog = () => {
-        modalCompontent = CreateStudents;
+        modalComponent = CreateStudents;
         modalProps = {
             roles: roles,
             changeQrMessage: changeQrMessage,
@@ -146,8 +177,11 @@
         };
     };
 
+    /**
+     * Make modal component CreatStudent component for creating user
+     */
     const handleOpenCreateUserDialog = () => {
-        modalCompontent = CreateStudent;
+        modalComponent = CreateStudent;
         modalProps = {
             changeQrMessage: changeQrMessage,
             onClose: handleCloseOfModal
@@ -156,15 +190,20 @@
 
     $: qrMessage = "";
 
+    /**
+     * Change qr message to show QR afters sending QR
+     * @param qr
+     */
     function changeQrMessage(qr) {
         qrMessage = qr;
     }
 
-    let modalCompontent;
-    let modalProps = {};
-
+    /**
+     * Make modal component ChangeUser component for changing role of user
+     * @param user
+     */
     const handleChangeUserRole = (user = selectedUser) => {
-        modalCompontent = UpdateStudentRoleModal;
+        modalComponent = UpdateStudentRoleModal;
         modalProps = {
             roles: roles,
             user: user,
@@ -173,13 +212,16 @@
         };
     };
 
+    /**
+     * After close of modal, clean up modal.
+     */
     function handleCloseOfModal(){
         changeUsers()
-        modalCompontent = null;
+        modalComponent = null;
         modalProps= {}
     }
 </script>
-<svelte:component this={modalCompontent} {...modalProps}/>
+<svelte:component this={modalComponent} {...modalProps}/>
 {#if qrMessage !== ""}
     <QRImageDisplay qrMessage={qrMessage}/>
 {/if}
@@ -196,72 +238,10 @@
 <TablePage {pages} {currentPage} changeData={changeUsers} title={$t("administration.titleAdmin")} >
     <TableHeader headerValues={[ "Username", "Email", "Role", "Above 18", "Preferred language", "credits", ""]}/>
     <TableBody>
-        <TableBodyRow>
-            <TableCellWithInputs position="first">
-                <Input
-                        id="username"
-                        bind:value={filterUsername}
-                        class="w-full"
-                        placeholder="Username..."
-                />
-            </TableCellWithInputs>
-            <TableCellWithInputs position="middle">
-                <Input
-                        id="email"
-                        class="w-full"
-                        bind:value={filterEmail}
-                        placeholder="Email..."
-                />
-            </TableCellWithInputs>
-            <TableCellWithInputs position="middle">
-                <select
-                        bind:value={filterRole}
-                        id="role"
-                        class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg"
-                >
-                    {#each roles as role}
-                        <option value={role.id}>
-                            {role.name}
-                        </option>
-                    {/each}
-                    <option value={0}> Not selected</option>
-                </select>
-            </TableCellWithInputs>
-            <TableCellWithInputs position="middle">
-                <select
-                        bind:value={filterIsLegalAge}
-                        id="IsLegalAge"
-                        class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg"
-                >
-                    <option value={true}> Yes</option>
-                    <option value={false}> No</option>
-                    <option value={0}> Not selected</option>
-                </select>
-            </TableCellWithInputs>
-            <TableCellWithInputs position="middle">
-                <select
-                        bind:value={filterLanguage}
-                        id="language"
-                        class="w-full rounded-xl text-light-text dark:text-dark-text bg-light-input_bg dark:bg-dark-input_bg"
-                >
-                    {#each languages as language, index}
-                        <option value={index}>
-                            {language}
-                        </option>
-                    {/each}
-                    <option value={-1}> Not selected</option>
-                </select>
-            </TableCellWithInputs>
-            <TableCellWithInputs position="middle"/>
-            <TableCellWithInputs position="last">
-                <Button
-                        class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
-                        on:click={() => changeUsers()}
-                >
-                    Filter
-                </Button>
-            </TableCellWithInputs>
-        </TableBodyRow>
+        <AdministrationFilterInputs
+                on:changeFilters={getHandleFilter}
+                {roles}
+            />
         {#if users.length > 0}
             {#each users as user}
                 <TableBodyRow>

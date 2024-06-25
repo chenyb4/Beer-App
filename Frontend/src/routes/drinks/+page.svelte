@@ -18,7 +18,7 @@
   let userName = "";
   let drinksScanner = "";
   let product = {};
-  let selectedProducts = [product];
+  let selectedProducts = [];
   let errorMessage = "";
   let productCart = new Map();
 
