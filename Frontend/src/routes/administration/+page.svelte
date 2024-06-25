@@ -4,13 +4,8 @@
   import { handleSendMailResponse } from "$lib/service/QR.js";
   import TablePage from "$lib/components/table/TablePage.svelte";
   import {
-    Alert,
     Button,
-    ButtonGroup,
-    Dropdown,
-    DropdownItem,
     Input,
-    Modal,
     Popover,
     TableBody,
     TableBodyRow,
@@ -19,8 +14,6 @@
   import { dateToString } from "$lib/service/dateToString.js";
   import {
     CheckCircleOutline,
-    CloseCircleOutline, CloseOutline,
-    DotsVerticalOutline,
     QrCodeOutline,
     TrashBinSolid,
     UserEditSolid,
@@ -40,6 +33,7 @@
   import QRImageDisplay from "$lib/components/administration/QRImageDisplay.svelte";
   import UniversalModal from "$lib/components/universal/UniversalModal.svelte";
   import ButtonExtraOption from "$lib/components/administration/ButtonExtraOption.svelte";
+  import TableIcons from "$lib/components/table/TableIcons.svelte";
 
   /** @type {import('./$types').PageData} */
   export let data;
@@ -63,6 +57,8 @@
 
   let openSentQRModal = false;
   let textSentQRModal = "";
+
+  let openUpdateStudentModal = false;
 
   function getRole(role = 0) {
     const foundRole = roles.find((r) => r.id === role);
@@ -126,9 +122,6 @@
     currentPage = page;
   }
 
-  const iconStyle =
-    "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
-
   let openCreateUserDialog = false;
   let openCreateUsersDialog = false;
 
@@ -153,21 +146,14 @@
   };
   let selectedRole = 0;
 
-  function handleChangeUserRole(
-    user = { id: 0, username: "User not defined", roleId: 0 }
-  ) {
-    if (user.id === 0) return;
+  function handleChangeUserRole(user = selectedUser) {
     selectedRole = user.roleId;
     openUpdateStudentRoleModal = false;
     openUpdateStudentRoleModal = true;
     selectedUser = user;
   }
 
-  let openUpdateStudentModal = false;
-
-  function handleChangeUser(
-    user = { id: 0, username: "User not defined", date_of_birth: "", roleId: 0 }
-  ) {
+  function handleChangeUser(user = selectedUser) {
     user.date_of_birth = new Date(user.date_of_birth)
       .toISOString()
       .split("T")[0];
@@ -180,7 +166,13 @@
   function changeQrMessage(qr){
     qrMessage = qr;
   }
+
+  const page2 = () => {
+      component = Page2;
+      props = {page2Prop: 2};
+  };
 </script>
+<svelte:component this={component} {...props}/>
 {#if qrMessage !== ""}
   <QRImageDisplay qrMessage={qrMessage}/>
 {/if}
@@ -188,12 +180,7 @@
 <CreateStudent {openCreateUserDialog} onClose={changeUsers} changeQrMessage={changeQrMessage} />
 <CreateStudents {roles} {openCreateUsersDialog} onClose={changeUsers} changeQrMessage={changeQrMessage} />
 <UpdateStudentRoleModal
-  selectedRoleId={selectedRole}
   {roles}
-  currentRole={selectedRole}
-  showPassword={false}
-  password=""
-  passwordConfirm=""
   modalOpen={openUpdateStudentRoleModal}
   user={selectedUser}
   onClose={changeUsers}
@@ -309,17 +296,10 @@
           <TableCell position="middle">{getRole(user.roleId)}</TableCell>
           <TableCell position="middle">
             <div>
-              {#if isAbove18(user.date_of_birth)}
                 <CheckCircleOutline
                   id={`date_of_birth-${user.id}`}
-                  class="text-green-600"
+                  class="{isAbove18(user.date_of_birth) ? 'text-green-600' : 'text-red-600'}"
                 />
-              {:else}
-                <CloseCircleOutline
-                  id={`date_of_birth-${user.id}`}
-                  class="text-red-600"
-                />
-              {/if}
               <Popover
                 class="text-sm text-light-text dark:text-dark-text z-50"
                 triggeredBy={`#date_of_birth-${user.id}`}
@@ -331,32 +311,12 @@
           <TableCell position="middle">{languages[user.language]}</TableCell>
           <TableCell position="middle">{user.credits}</TableCell>
           <TableCell position="last">
-            <div class="flex gap-4">
-              <Button
-                class="p-0 dark:text-white text-black"
-                on:click={() => handleResendQR(user)}
-              >
-                <QrCodeOutline class={iconStyle} />
-              </Button>
-              <Button
-                class="p-0 dark:text-white text-black"
-                on:click={() => handleChangeUserRole(user)}
-              >
-                <UserSettingsSolid class={iconStyle} />
-              </Button>
-              <Button
-                class="p-0 dark:text-white text-black"
-                on:click={() => handleChangeUser(user)}
-              >
-                <UserEditSolid class={iconStyle} />
-              </Button>
-              <Button
-                class="p-0 dark:text-white text-black"
-                on:click={() => handleDeleteUser(user)}
-              >
-                <TrashBinSolid class={iconStyle} />
-              </Button>
-            </div>
+            <TableIcons
+                    icons={[
+                        { icon: QrCodeOutline, function: () => handleResendQR(user) },
+                        { icon: UserSettingsSolid, function: () => handleChangeUserRole(user) },
+                        { icon: UserEditSolid, function: () => handleChangeUser(user) },
+                        { icon: TrashBinSolid, function: () => handleDeleteUser(user)} ]}/>
           </TableCell>
         </TableBodyRow>
       {/each}

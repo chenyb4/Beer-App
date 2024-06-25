@@ -3,14 +3,13 @@
     import {Button, Input, Label, Modal, Select} from "flowbite-svelte";
     import {updateUser} from "$lib/service/administration.js";
 
-    export let roles = [{id: 0, name: "No roles assigned!"}];
+    export let roles = [{id: -1, name: "No roles assigned!"}];
     export let modalOpen = false;
-    export let user = {"roleId": 0};
-    export let selectedRoleId = user.roleId;
-    export let currentRole = user.roleId
-    export let showPassword = false;
-    export let password = "";
-    export let passwordConfirm = "";
+    export let user = {"roleId": -1};
+    let selectedRoleId = -1;
+    $: showPassword = selectedRoleId === 3 || selectedRoleId === 4;
+    let password = "";
+    let passwordConfirm = "";
 
     async function handleChangeRole() {
         if (selectedRoleId === 0) {
@@ -32,21 +31,14 @@
         await onClose();
     }
 
-    function onRoleSelectUpdate() {
-        if (currentRole === 3 || currentRole === 4) {
-            showPassword = false;
-        } else {
-            showPassword = selectedRoleId === 3 || selectedRoleId === 4;
-        }
-    }
+    export let onClose = async function () {};
 
-    export let onClose = async function () {
-    };
+
 </script>
 
 <Modal title='{$t("administration.editUser")}' bind:open={modalOpen} autoclose>
     <Label for="roleSelection">{$t("administration.changeRole")}</Label>
-    <Select id="roleSelection" bind:value={selectedRoleId} on:change={onRoleSelectUpdate}>
+    <Select id="roleSelection" bind:value={selectedRoleId}>
         {#each roles as role}
             <option value={role.id}>
                 {role.name}
