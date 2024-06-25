@@ -11,7 +11,7 @@
 
     export let roles;
 
-    export let openCreateUsersDialog = false;
+    let openCreateUsersDialog = true;
 
     export let onClose = async function () {
     };
@@ -88,11 +88,6 @@
         } else {
             alert("User cannot be created");
         }
-        await onClose();
-    }
-
-    $: if (openCreateUsersDialog) {
-        studentNumberInput?.focus()
     }
 
     function handleKeyPress(event) {
@@ -101,11 +96,16 @@
         }
     }
 
+    function handleOnClose(){
+        onClose();
+        openCreateUsersDialog = false;
+    }
+
 </script>
-<Modal bind:open={openCreateUsersDialog} on:close={onClose} dismissable={false}>
+<Modal bind:open={openCreateUsersDialog}>
     <div slot="header" class="flex items-center">
         <span class="text-3xl text-light-text dark:text-dark-text">{$t("administration.addUsers")}</span>
-        <CloseButton tabindex="-1" class="absolute top-5 right-5" on:click={() => openCreateUsersDialog = false} />
+        <CloseButton tabindex="-1" class="absolute top-5 right-5" on:click={handleOnClose} />
     </div>
 
     {#if showCreatedUserModal}
@@ -160,5 +160,5 @@
             {/each}
         </Select>
     </div>
-    <CtaButton captionText={$t("administration.addUser")} onCTAButtonClickFn={handleSubmit}/>
+    <CtaButton on:keypress={handleKeyPress} captionText={$t("administration.addUser")} onCTAButtonClickFn={handleSubmit}/>
 </Modal>
