@@ -27,33 +27,50 @@ async function createTestData() {
                 id: 3,
                 name: 'board_member',
                 discount: 1.5
+            },
+            {
+                id: 4,
+                name: 'administrator',
+                discount: 1.5
             }
         ]);
         await db.User.bulkCreate([
             {
                 username: "example",
                 email: "example@example.com",
-                qr_identifier: 'iahdfo9q34w8yhrtharfiulhas',
-                password: "password",
+                qr_identifier: 'iahdfo9q34wsdf8yhrtharfiulhas',
+                password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: "1999-01-01 00:00:00.000",
-                roleId: 1
+                roleId: 1,
+                credits: 0
             },
             {
                 username: "example2",
                 email: "example2@example.com",
-                qr_identifier: 'iahdfo9q34w8yhrthasdfrfiulhas',
-                password: "password2",
+                qr_identifier: 'iasdfahdfo9q34w8yhrthasdfrfiulhas',
+                password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 language: Language.dutch,
                 date_of_birth: new Date().setHours(0, 0, 0, 0),
-                roleId: 3
+                roleId: 3,
+                credits: 0
             },
             {
                 username: "exemplary",
                 email: "exemplary@exemplary.com",
-                qr_identifier: 'iahdfdsao9q34w8yhrtharfiulhas',
-                password: "password_exemplary",
+                qr_identifier: 'iahdfdsao9q34w8yhrtharfifdasulhas',
+                password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: new Date().setHours(0, 0, 0, 0),
-                roleId: 2
+                roleId: 2,
+                credits: 0
+            },
+            {
+                username: "exampleAdmin",
+                email: "exampleAdmin@example.com",
+                qr_identifier: 'iahdfdsao9q34w8yhrthasdfgarfiulhas',
+                password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
+                date_of_birth: new Date().setHours(0, 0, 0, 0),
+                roleId: 4,
+                credits: 0
             },
         ]);
         await db.Product.bulkCreate([

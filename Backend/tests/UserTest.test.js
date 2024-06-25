@@ -18,7 +18,7 @@ test("getUsersAge",async ()=> {
 
 test("getUsersEmail",async ()=> {
     const {users} = await userService.getAllUsers({query: {email: 'example'}});
-    expect(users.length).toBe(2);
+    expect(users.length).toBe(3);
 })
 
 test("getUserById",async ()=> {
@@ -27,7 +27,7 @@ test("getUserById",async ()=> {
 })
 
 test("getUserByQr",async ()=> {
-    const user = await userService.getQRUser('iahdfo9q34w8yhrtharfiulhas');
+    const user = await userService.getQRUser('iahdfo9q34wsdf8yhrtharfiulhas');
     expect(user.username).toBe('example');
 })
 
@@ -67,20 +67,21 @@ test("incrementUserCreditsFail",async ()=> {
 })
 
 test("decrementUserCredits",async ()=> {
-    const id = 1
+    const userId = 1
+    const orderId = 1
     const amount = 5
-    await userService.updateUser({id, credits: amount})
-    const userBefore = await userService.getUser(id)
+    await userService.updateUser({id: userId, credits: amount})
+    const userBefore = await userService.getUser(userId)
     const creditBefore = userBefore.credits
-    await userService.decrementUserCredits(id, amount, 1)
-    const userAfter = await userService.getUser(id)
+    await userService.decrementUserCredits(orderId, userId, amount, 1)
+    const userAfter = await userService.getUser(userId)
     const creditAfter = userAfter.credits
 
     expect(Number(creditBefore) - Number(creditAfter)).toBe(amount)
 })
 
 test("decrementUserCreditsFail",async ()=> {
-    await expect(userService.decrementUserCredits(1, 5, 1))
+    await expect(userService.decrementUserCredits(1, 1, 5, 1))
         .rejects
         .toThrow(Error);
 })
