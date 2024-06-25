@@ -1,6 +1,7 @@
 const {parse} = require("csv-parse");
 const fs = require("fs");
 const db = require("../database");
+const logger = require("../logger");
 
 exports.loadCsvOldFormat = async () => {
     try {
@@ -9,7 +10,7 @@ exports.loadCsvOldFormat = async () => {
         let nonNumericUsernames = [];
 
         await new Promise((resolve, reject) => {
-            const parser = parse({ delimiter: ",", from_line: 1 });
+            const parser = parse({delimiter: ",", from_line: 1});
             fs.createReadStream(path).pipe(parser);
 
             parser.on("data", async (row) => {
@@ -25,7 +26,7 @@ exports.loadCsvOldFormat = async () => {
                 let credits = row[3] || 0; // Adjust the index based on your CSV structure
 
                 try {
-                    const existingUser = await db.User.findOne({ where: { email: email } });
+                    const existingUser = await db.User.findOne({where: {email: email}});
                     if (existingUser) {
                         duplicateUsernames.push(username);
                         console.log("Duplicate: " + email)
@@ -71,4 +72,64 @@ exports.loadCsvOldFormat = async () => {
         console.error(err);
         throw new Error('Failed to create csv data');
     }
+}
+exports.loadDummyData = async () => {
+    try {
+        await db.Role.bulkCreate([
+            {
+                name: 'member',
+                discount: 1.5,
+            },
+            {
+                name: 'student',
+                discount: 1
+            },
+            {
+                name: 'seller',
+                discount: 1
+            },
+            {
+                name: 'administrator',
+                discount: 1
+            },
+
+        ]);
+        await db.User.bulkCreate([
+            {
+                username: "dummy",
+                email: "510739@student.saxion.nl",
+                password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
+                date_of_birth: "2024-05-23 00:00:00.000",
+                roleId: 4,
+                credits: 20
+            }, {
+                username: "dummy2",
+                email: "dummy2@dummy.nl",
+                password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
+                date_of_birth: "1990-05-23 00:00:00.000",
+                roleId: 3,
+                credits: 20
+            },
+        ]);
+        await db.Product.create({
+            name: 'beer',
+            price_in_credits: 1,
+            amount_in_stock: 24,
+            EAN: '12345678910',
+            isAlcoholic: true
+        })
+        await db.Order.create({
+            amount_of_credits: 4,
+            buyerId: 2,
+            sellerId: 1
+        })
+        await db.Credit.create({
+            default_amount: 10,
+            price: 11
+        })
+    } catch (err) {
+        logger.error(err);
+        throw new Error('Failed to create dummy data');
+    }
+
 }
