@@ -38,6 +38,16 @@ services:
       POSTGRES_USER: ${PGUSER}
     volumes:
       - beer-swipe-vol:/var/lib/postgresql/data
+  backup:
+    build: ./Backend/Backup
+    environment:
+      PGPASSWORD: ${PGPASSWORD}
+      PGUSER: ${PGUSER}
+      DBURL: ${DOCKERDBURL}
+      DBPORT: ${DBPORT}
+    command: npm run start
+    volumes:
+      - ./Backend/Backup/backups:/backups
   test:
     build: ./Backend
     environment:

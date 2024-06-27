@@ -18,3 +18,7 @@ Frontend/test-results
 *.log
 Backend/logs/app.log
 Frontend/screenshot.png
+Backend/Backup/node_modules
+Backend/Backup/package-lock.json
+Backend/Backup/backups
+Backend/Backup/.pgpass
