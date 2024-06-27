@@ -32,6 +32,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 const db = require('./database')
+const authController = require("./controllers/AuthController");
 require("./Routing")(app)
 
 async function authenticate() {
@@ -51,6 +52,8 @@ async function sync() {
         logger.error('Unable to sync database:', error)
     }
 }
+
+app.post('/force', resetDatabaseAndLoadDummyData);
 
 async function resetDatabaseAndLoadDummyData() {
     if (process.env.NODE_ENV === 'development') {
