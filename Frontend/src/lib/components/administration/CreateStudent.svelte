@@ -1,5 +1,5 @@
 <script>
-    import {Alert, Input, Label, Modal, Select} from "flowbite-svelte";
+    import {Alert, CloseButton, Input, Label, Modal, Select} from "flowbite-svelte";
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/universal/CtaButton.svelte";
     import {createUser, updateUser} from "$lib/service/administration.js";
@@ -9,7 +9,7 @@
     import {handleSendMailResponse} from "$lib/service/QR.js";
     import languages from "$lib/service/languages.json";
 
-    export let openCreateUserDialog = false;
+    let openCreateUserDialog = true;
 
     export let onClose = async function () {
     };
@@ -76,12 +76,18 @@
             handleSubmit();
         }
     }
+
+    function handleOnClose(){
+        onClose();
+        openCreateUserDialog = false;
+    }
 </script>
 
-<SendQRModal showModal={showCreatedUserModal} modalText={createdUserModalText}
-             modalTitle={$t("administration.userCreated")}/>
 <Modal bind:open={openCreateUserDialog}>
-    <span slot="header" class="text-3xl text-light-text dark:text-dark-text">{$t("administration.addUser")}</span>
+    <div slot="header" class="flex items-center">
+        <span class="text-3xl text-light-text dark:text-dark-text">{$t("administration.addUser")}</span>
+        <CloseButton tabindex="-1" class="absolute top-5 right-5" on:click={handleOnClose} />
+    </div>
     {#if !hideHelper}
         <Alert class="bg-light-s_bg dark:bg-dark-s_bg mt-2 border-1" color="red" dismissable transition={fly}  on:close={() => hideHelper=true}>
             <span class="font-medium">{$t("administration.helper") + ": " + helper} </span>
