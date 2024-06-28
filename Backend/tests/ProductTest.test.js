@@ -41,7 +41,7 @@ test("updateProduct", async () => {
     const isAlcoholic = false
     const loggedInUserId = 1
 
-    const product = await productService.updateProduct(
+    const product = await productService.updateProduct({
         id,
         name,
         price_in_credits,
@@ -49,7 +49,7 @@ test("updateProduct", async () => {
         EAN,
         isAlcoholic,
         loggedInUserId
-    );
+    });
 
     expect(product.name).toBe("ranja");
     expect(product.price_in_credits).toBe(2);
@@ -65,4 +65,40 @@ test("deleteProduct", async () => {
 
     const deletedProduct = await productService.getProduct(id)
     expect(deletedProduct).toBe(null)
+})
+
+test("incrementProductStock", async () => {
+    const id = 1
+    const amount = 5
+    const productBefore = await productService.getProduct(id)
+    const stockBefore = productBefore.amount_in_stock
+    await productService.incrementProductStock(id, amount, 1)
+    const productAfter = await productService.getProduct(id)
+    const stockAfter = productAfter.amount_in_stock
+
+    expect(Number(stockAfter) - Number(stockBefore)).toBe(amount)
+})
+
+test("incrementProductStockFail", async () => {
+    await expect(productService.incrementProductStock(1, -5, 1))
+        .rejects
+        .toThrow(Error);
+})
+
+test("decrementProductStock", async () => {
+    const id = 1
+    const amount = 5
+    const productBefore = await productService.getProduct(id)
+    const stockBefore = productBefore.amount_in_stock
+    await productService.decrementProductStock(id, amount, 1)
+    const productAfter = await productService.getProduct(id)
+    const stockAfter = productAfter.amount_in_stock
+
+    expect(Number(stockBefore) - Number(stockAfter)).toBe(amount)
+})
+
+test("decrementProductStockFail", async () => {
+    await expect(productService.decrementProductStock(1, 50, 1))
+        .rejects
+        .toThrow(Error);
 })

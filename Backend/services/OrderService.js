@@ -123,8 +123,7 @@ exports.addProductToOrder = async (orderId, productId, quantity, loggedInUserId)
                     await createNewOrderProduct(orderId, productId, quantity)
                 }
 
-                await productService.decrementProductStock(productId, quantity)
-                await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": quantity}, loggedInUserId, productId);
+                await productService.decrementProductStock(productId, quantity, loggedInUserId)
                 await this.incrementOrderPrice(orderId, product.price_in_credits, quantity)
 
             } catch (err) {
