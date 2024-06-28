@@ -91,7 +91,6 @@ async function createTestData() {
             },
         ])
         await db.Order.create({
-            id: 1,
             buyerId: 1,
             sellerId: 2
         })
