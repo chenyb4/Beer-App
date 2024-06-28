@@ -40,16 +40,16 @@ exports.getHistory = async (id) => {
     }
 };
 
-exports.getHistoryByOrderId = async (orderId) => {
+exports.getHistoriesByOrderId = async (orderId) => {
     if (!orderId) {
         throw new Error('Missing required fields');
     }
 
     try {
-        return await db.History.findOne({
+        return await db.History.findAll({
             where: {
                 'description.orderId': orderId,
-                'undoUserId': {[Op.is]: null}
+                'undoUserId': {[Op.eq]: null}
             }
         });
     } catch (err) {
@@ -83,10 +83,10 @@ exports.getLastUndo = async () => {
 }
 
 exports.updateHistory = async ({id, action, description, userId, undoUserId}) => {
+
     if (!id || (!action && !description && !userId && !undoUserId)) {
         throw new Error('Missing required fields or no update data provided');
     }
-
     try {
         return await db.History.update(
             {
@@ -116,6 +116,7 @@ exports.deleteHistory = async (id) => {
 };
 
 exports.undo = async (undo, loggedInUserId) => {
+    if (undo.id === undefined || undo.id === null) throw new Error("No id was given in undo")
     if (undo.undoUserId !== null && undo.undoUserId !== undefined)
         throw new Error("The history has already been undone.")
 
@@ -123,13 +124,13 @@ exports.undo = async (undo, loggedInUserId) => {
     switch (undo.action) {
         case Action.increase_product_stock: // increase product stock
         case Action.decrease_product_stock: // decrease product stock
-            await undoStockChange(undo.id, undo.productId, undo.action, Number(actionDetails.inventory_change), loggedInUserId)
+            await undoStockChange(undo.productId, undo.action, Number(actionDetails.inventory_change), loggedInUserId)
             break;
         case Action.change_role: // change role
             await userService.updateUser({id: actionDetails.user_id, roleId: actionDetails.old_role_id})
             break;
         case Action.sell_credits:
-            await userService.incrementUserCredits(actionDetails.buyerId, actionDetails.credits * -1, loggedInUserId);
+            await userService.decrementUserCredits(actionDetails.buyerId, actionDetails.credits, loggedInUserId);
             break;
         case Action.enable_user: // enable user
         case Action.disable_user: // disable user - if action === 4 then pass true else pass false
@@ -140,14 +141,27 @@ exports.undo = async (undo, loggedInUserId) => {
             });
             break;
         case Action.change_user_credits:
-            await userService.incrementUserCredits(actionDetails.buyerId, actionDetails.credits, loggedInUserId);
-            await orderService.deleteOrder(actionDetails.orderId)
+            await this.undoOrder(actionDetails, loggedInUserId)
     }
 
     return await this.updateHistory({id: undo.id, undoUserId: loggedInUserId});
 }
 
-async function undoStockChange(historyId, product_id, action, amount, loggedInUserId) {
+exports.massUndo = async (undos, loggedInUserId) => {
+    //undo all undos in the given list
+    await Promise.all(undos.map(async undo => {
+        await this.undo(undo, loggedInUserId)
+    }));
+}
+
+exports.undoOrder = async (actionDetails, loggedInUserId) => {
+    //undo credit changes this order made.
+    await userService.incrementUserCredits(actionDetails.buyerId, actionDetails.credits, loggedInUserId);
+    //delete the order.
+    await orderService.deleteOrder(actionDetails.orderId)
+}
+
+async function undoStockChange(product_id, action, amount, loggedInUserId) {
     action === Action.increase_product_stock
         ? await productService.decrementProductStock(product_id, amount, loggedInUserId)
         : await productService.incrementProductStock(product_id, amount, loggedInUserId)

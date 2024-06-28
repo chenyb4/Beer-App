@@ -90,10 +90,18 @@ async function createTestData() {
                 isAlcoholic: false
             },
         ])
-        await db.Order.create({
-            buyerId: 1,
-            sellerId: 2
-        })
+        await db.Order.bulkCreate([
+            {
+                buyerId: 1,
+                sellerId: 2
+            }, {
+                buyerId: 2,
+                sellerId: 1
+            }, {
+                buyerId: 1,
+                sellerId: 1
+            }
+        ])
         await db.Credit.create({
             default_amount: 10,
             price: 11,
@@ -102,14 +110,14 @@ async function createTestData() {
         await db.History.bulkCreate([
             {
                 action: Action.decrease_product_stock,
-                description: {inventory_change: 2},
-                userId: 1,
+                description: {inventory_change: 2, orderId: 1},
+                userId: 2,
                 productId: 1
             },
             {
                 action: Action.increase_product_stock,
-                description: {inventory_change: 4},
-                userId: 1,
+                description: {inventory_change: 4, orderId: 1},
+                userId: 2,
                 productId: 1
             },
             {
