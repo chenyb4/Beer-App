@@ -149,8 +149,8 @@ exports.undo = async (undo, loggedInUserId) => {
 
 async function undoStockChange(historyId, product_id, action, amount, loggedInUserId) {
     action === Action.increase_product_stock
-        ? await productService.decrementProductStock(product_id, amount)
-        : await productService.incrementProductStock(product_id, amount)
+        ? await productService.decrementProductStock(product_id, amount, loggedInUserId)
+        : await productService.incrementProductStock(product_id, amount, loggedInUserId)
 }
 
 exports.convertAllToDTO = async (histories, total, req) => {

@@ -41,19 +41,18 @@ exports.createProduct = async (name, price_in_credits, amount_in_stock, EAN, isA
 }
 
 // Update product
-exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN, loggedInUserId) => {
-    if (!id || (!name && !price_in_credits && !amount_in_stock && !EAN)) {
+exports.updateProduct = async ({id, name, price_in_credits, amount_in_stock, EAN, isAlcoholic, loggedInUserId}) => {
+    if (!id || (!name && !price_in_credits && !amount_in_stock && !EAN && !isAlcoholic)) {
         throw new Error('Missing required fields or no update data provided');
     }
 
     try {
-        const oldProduct = await this.getProduct(id);
         await db.Product.update(
             {
                 name,
                 price_in_credits,
-                amount_in_stock,
-                EAN
+                EAN,
+                isAlcoholic
             },
             {
                 where: {
@@ -61,9 +60,13 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN,
                 },
             },
         );
-        const updatedProduct = await this.getProduct(id);
-        const amountChanged = updatedProduct.amount_in_stock - oldProduct.amount_in_stock
-        await createProductStockHistory(id, amountChanged, loggedInUserId)
+        let updatedProduct = await this.getProduct(id);
+        if (amount_in_stock !== null && amount_in_stock !== undefined) {
+
+            const amountChanged = amount_in_stock - updatedProduct.amount_in_stock
+            await this.manipulateProductStock(id, amountChanged, loggedInUserId)
+            updatedProduct = await this.getProduct(id);
+        }
 
         return updatedProduct;
     } catch (err) {
@@ -72,20 +75,42 @@ exports.updateProduct = async (id, name, price_in_credits, amount_in_stock, EAN,
     }
 }
 
-async function createProductStockHistory(id, amountChanged, loggedInUserId) {
+exports.manipulateProductStock = async (id, amountChanged, loggedInUserId) => {
+    // Use full functions to ensure that database manipulation and history are done right.
     if (amountChanged > 0) {
-        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amountChanged}, loggedInUserId, id)
+        return await this.incrementProductStock(id, amountChanged, loggedInUserId)
     } else if (amountChanged < 0) {
-        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amountChanged * -1}, loggedInUserId, id)
+        return await this.decrementProductStock(id, amountChanged * -1, loggedInUserId)
     }
 }
 
 exports.incrementProductStock = async (id, amount, loggedInUserId) => {
-    return await db.Product.increment({amount_in_stock: amount}, {where: {id}});
+    if (amount < 1) throw new Error('Amount can not be lower than 1');
+
+    try {
+        const product = await db.Product.increment({amount_in_stock: amount}, {where: {id}});
+        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amount}, loggedInUserId, id);
+        return product;
+    } catch (err) {
+        logger.error(err);
+        throw new Error('Failed to manipulate stock of product: ' + id + ' by: ' + amount)
+    }
+
 }
 
-exports.decrementProductStock = async (id, amount) => {
-    return await db.Product.decrement({amount_in_stock: amount}, {where: {id}});
+exports.decrementProductStock = async (id, amount, loggedInUserId) => {
+    if (amount < 1) throw new Error('Amount can not be lower than 1');
+    const dbProduct = await this.getProduct(id);
+    if (dbProduct.amount_in_stock < amount) throw new Error('Amount can not be more than available stock')
+
+    try {
+        const product = await db.Product.decrement({amount_in_stock: amount}, {where: {id}});
+        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amount}, loggedInUserId, id);
+        return product;
+    } catch (err) {
+        logger.error(err);
+        throw new Error('Failed to manipulate stock of product: ' + id + ' by: ' + amount)
+    }
 }
 
 exports.deleteProduct = async (id) => {

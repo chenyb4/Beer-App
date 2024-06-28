@@ -40,7 +40,7 @@ exports.updateProduct = async (req, res) => {
     const {name, price_in_credits, amount_in_stock, EAN} = req.body;
 
     try {
-        const updatedProduct = await productService.updateProduct(id, name, price_in_credits, amount_in_stock, EAN, req.user.id);
+        const updatedProduct = await productService.updateProduct({id, name, price_in_credits, amount_in_stock, EAN, loggedInUserId: req.user.id});
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
