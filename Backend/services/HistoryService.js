@@ -48,7 +48,8 @@ exports.getHistoryByOrderId = async (orderId) => {
     try {
         return await db.History.findOne({
             where: {
-                'description.orderId': orderId
+                'description.orderId': orderId,
+                'undoUserId': {[Op.is]: null}
             }
         });
     } catch (err) {
@@ -117,7 +118,7 @@ exports.deleteHistory = async (id) => {
 exports.undo = async (undo, loggedInUserId) => {
     if (undo.undoUserId !== null && undo.undoUserId !== undefined)
         throw new Error("The history has already been undone.")
-    
+
     const actionDetails = undo.description;
     switch (undo.action) {
         case Action.increase_product_stock: // increase product stock
@@ -143,22 +144,10 @@ exports.undo = async (undo, loggedInUserId) => {
             await orderService.deleteOrder(actionDetails.orderId)
     }
 
-    undo.undoUserId = loggedInUserId;
-    return await this.updateHistory(undo);
+    return await this.updateHistory({id: undo.id, undoUserId: loggedInUserId});
 }
 
 async function undoStockChange(historyId, product_id, action, amount, loggedInUserId) {
-    try {
-        await db.History.destroy({
-            where: {
-                id: historyId
-            }
-        });
-    } catch (err) {
-        logger.error(err)
-        throw new Error("DELETION ERROR: " + err);
-    }
-
     action === Action.increase_product_stock
         ? await productService.decrementProductStock(product_id, amount)
         : await productService.incrementProductStock(product_id, amount)
@@ -169,7 +158,7 @@ exports.convertAllToDTO = async (histories, total, req) => {
     return await paginationService.addPaginationProperties(histories, total, req);
 }
 
-exports.convertHistory = function(history) {
+exports.convertHistory = function (history) {
     history.action = this.convertAction(history.action)
     let historyToReturn = {}
     history = JSON.parse(JSON.stringify(history, null, 2))
@@ -181,16 +170,16 @@ exports.convertHistory = function(history) {
     historyToReturn.userId = history.userId
     historyToReturn.productId = history.productId
 
-    if(history.undoUser !== null && history.undoUser !== undefined) {
+    if (history.undoUser !== null && history.undoUser !== undefined) {
         historyToReturn.undoUserId = history.undoUserId
         historyToReturn.undoneBy = history.undoUser.username
     }
 
-    if(history.product !== null && history.product !== undefined) {
+    if (history.product !== null && history.product !== undefined) {
         historyToReturn.productName = history.product.name
         historyToReturn.productId = history.productId
     }
-    if(history.user !== null && history.user !== undefined) {
+    if (history.user !== null && history.user !== undefined) {
         historyToReturn.username = history.user.username
     }
     return historyToReturn

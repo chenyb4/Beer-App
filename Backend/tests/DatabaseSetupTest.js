@@ -1,5 +1,6 @@
 const db = require('../database')
 const {Language} = require("../enums/Language");
+const {Action} = require("../enums/Action");
 
 exports.cleanTestDatabase = async () => {
     await db.sequelize.sync({force: true});
@@ -99,6 +100,29 @@ async function createTestData() {
             price: 11,
             id: 1
         })
+        await db.History.bulkCreate([
+            {
+                action: Action.decrease_product_stock,
+                description: {inventory_change: 2},
+                userId: 1,
+                productId: 1
+            },
+            {
+                action: Action.increase_product_stock,
+                description: {inventory_change: 4},
+                userId: 1,
+                productId: 1
+            },
+            {
+                action: Action.change_user_credits,
+                description: {
+                    buyerId: 1,
+                    credits: 1,
+                    orderId: 1,
+                },
+                userId: 2,
+            },
+        ])
     } catch (err) {
         console.error(err);
         throw new Error('Failed to create dummy data');
