@@ -2,9 +2,6 @@ const db = require('../database')
 const paginationService = require("./PaginationService");
 const productService = require('../services/ProductService');
 const {Op} = require("sequelize");
-const {confirmOrder} = require("../controllers/OrderController");
-const historyService = require("./HistoryService");
-const {Action} = require("../enums/Action");
 const userService = require("./UserService");
 const logger = require("../logger");
 
@@ -32,7 +29,6 @@ exports.getAllOrders = async (req) => {
         });
     }
     query = Object.assign({}, query, {where: queries});
-
 
     const orders = await db.Order.findAll(query);
     const total = await db.Order.count({where: queries});
@@ -101,7 +97,6 @@ exports.updateOrder = async (id, amount_of_credits, buyerId, sellerId) => {
 exports.confirmOrder = async (id, loggedInUserId) => {
     try {
         const order = await db.Order.findByPk(id);
-        console.log(JSON.stringify(order))
         await userService.decrementUserCredits(order.id, order.buyerId, order.amount_of_credits, loggedInUserId)
     } catch (err) {
         console.error(err);
@@ -141,6 +136,8 @@ exports.addProductToOrder = async (orderId, productId, quantity, loggedInUserId)
 }
 
 exports.incrementOrderPrice = async (id, price, amount) => {
+    if (amount < 1) throw new Error('Amount can not be lower than 1');
+    if (price < 1) throw new Error('Price can not be lower than 1');
     return await db.Order.increment({amount_of_credits: price * amount}, {where: {id}})
 }
 
