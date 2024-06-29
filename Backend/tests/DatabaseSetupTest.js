@@ -15,22 +15,18 @@ async function createTestData() {
     try {
         await db.Role.bulkCreate([
             {
-                id: 1,
                 name: 'member',
                 discount: 1.5,
             },
             {
-                id: 2,
                 name: 'student',
                 discount: 1
             },
             {
-                id: 3,
-                name: 'board_member',
+                name: 'seller',
                 discount: 1.5
             },
             {
-                id: 4,
                 name: 'administrator',
                 discount: 1.5
             }
