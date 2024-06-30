@@ -7,8 +7,8 @@
     "test": "jest --detectOpenHandles"
   },
   "dependencies": {
-    "@jest/globals": "^29.7.0",
     "@jest-mock/express": "^2.1.0",
+    "@jest/globals": "^29.7.0",
     "@loskir/styled-qr-code-node": "^1.5.1",
     "bcrypt": "^5.1.1",
     "chai": "^5.1.1",
@@ -31,6 +31,9 @@
     "pug": "2.0.0-beta11",
     "sequelize": "^6.37.3",
     "sequelize-test-helpers": "^1.4.3",
+    "swagger": "^0.7.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "winston": "^3.13.0"
   }
 }

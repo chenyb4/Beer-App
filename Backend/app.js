@@ -8,6 +8,13 @@ const app = express();
 const cors = require('cors')
 const dataManagementService = require('./services/DataManagementService');
 
+if(process.env.NODE_ENV === 'development') {
+const swaggerUi = require('swagger-ui-express');
+const specs = require('./swagger.js');
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+}
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
