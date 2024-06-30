@@ -17,6 +17,6 @@
         <CloseButton tabindex="-1" class="absolute top-5 right-5" on:click={() => handleOnClose()} />
     </div>
     <p class="text-base leading-relaxed text-light-text dark:text-dark-text">
-        {@html modalText}
+        <span>{modalText}</span>
     </p>
 </Modal>
