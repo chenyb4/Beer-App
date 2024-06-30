@@ -57,15 +57,21 @@ exports.undo = async (req, res) => {
     try {
 
         let undo;
+        let undos;
         if (req.query.orderId) {
-            undo = await historyService.getHistoryByOrderId(req.query.orderId);
+            undos = await historyService.getHistoriesByOrderId(req.query.orderId);
         } else if (req.query.historyId) {
             undo = await historyService.getHistory(req.query.historyId)
         } else {
             undo = await historyService.getLastUndo()
         }
+        let result
+        if(undo) {
+            result = await historyService.undo(undo, req.user.id);
+        } else {
+            result = await historyService.massUndo(undos, req.user.id);
+        }
 
-        const result = await historyService.undo(undo, req.user.id);
 
         res.status(200).json(result);
     } catch (err) {

@@ -89,7 +89,7 @@ exports.incrementProductStock = async (id, amount, loggedInUserId) => {
 
     try {
         const product = await db.Product.increment({amount_in_stock: amount}, {where: {id}});
-        await historyService.createHistory(Action.increase_product_stock, {"inventory_change": amount}, loggedInUserId, id);
+        await historyService.createHistory(Action.increase_product_stock, {inventory_change: amount}, loggedInUserId, id);
         return product;
     } catch (err) {
         logger.error(err);
@@ -98,14 +98,14 @@ exports.incrementProductStock = async (id, amount, loggedInUserId) => {
 
 }
 
-exports.decrementProductStock = async (id, amount, loggedInUserId) => {
+exports.decrementProductStock = async (id, amount, loggedInUserId, orderId = null) => {
     if (amount < 1) throw new Error('Amount can not be lower than 1');
     const dbProduct = await this.getProduct(id);
     if (dbProduct.amount_in_stock < amount) throw new Error('Amount can not be more than available stock')
 
     try {
         const product = await db.Product.decrement({amount_in_stock: amount}, {where: {id}});
-        await historyService.createHistory(Action.decrease_product_stock, {"inventory_change": amount}, loggedInUserId, id);
+        await historyService.createHistory(Action.decrease_product_stock, {inventory_change: amount, orderId: orderId}, loggedInUserId, id);
         return product;
     } catch (err) {
         logger.error(err);

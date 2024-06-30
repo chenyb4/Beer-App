@@ -99,7 +99,7 @@ exports.confirmOrder = async (id, loggedInUserId) => {
         const order = await db.Order.findByPk(id);
         await userService.decrementUserCredits(order.id, order.buyerId, order.amount_of_credits, loggedInUserId)
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         throw new Error('Failed to confirm order');
     }
 }
@@ -118,7 +118,7 @@ exports.addProductToOrder = async (orderId, productId, quantity, loggedInUserId)
                     await createNewOrderProduct(orderId, productId, quantity)
                 }
 
-                await productService.decrementProductStock(productId, quantity, loggedInUserId)
+                await productService.decrementProductStock(productId, quantity, loggedInUserId, orderId)
                 await this.incrementOrderPrice(orderId, product.price_in_credits, quantity)
 
             } catch (err) {
