@@ -2,11 +2,11 @@
     import {Alert, CloseButton, Input, Label, Modal, Select} from "flowbite-svelte";
     import {t} from "$lib/translations/index.js";
     import CtaButton from "$lib/components/universal/CtaButton.svelte";
-    import {createUser, updateUser} from "$lib/service/administration.js";
+    import {createUser} from "$lib/service/administration.js";
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
     import {handleSendMailResponse} from "$lib/service/QR.js";
-    import {addCreditsForAUser} from "$lib/service/credits.js";
+
     import languages from "$lib/service/languages.json";
 
     export let roles;
@@ -16,7 +16,7 @@
     export let onClose = async function () {
     };
 
-    export let changeQrMessage = function (qr) {
+    export let changeQrMessage = function () {
     };
 
 
@@ -60,16 +60,7 @@
         const response = await createUser(studentNumber, email, date_of_birth, )
         if (response) {
             let userId = response.user.id;
-            if (response.user.roleId !== selectedRoleId) {
-                const userRoleEdit = await updateUser({
-                    user: response.user,
-                    language: selectedLanguage,
-                    roleId: selectedRoleId
-                });
-            }
-            if (credits !== 0) {
-                const userCreditsResponse = await addCreditsForAUser(userId, credits);
-            }
+
 
             let responseQR = await getQRandSendMail(userId);
             createdUserModalText = handleSendMailResponse(responseQR.sentMail, response.user, responseQR.qr);
@@ -110,7 +101,7 @@
 
     {#if showCreatedUserModal}
         <Alert class="bg-light-s_bg dark:bg-dark-s_bg">
-            {@html createdUserModalText}
+            <span>{createdUserModalText}</span>
         </Alert>
     {/if}
     {#if !hideHelper}

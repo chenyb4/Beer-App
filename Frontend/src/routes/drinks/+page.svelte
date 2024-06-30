@@ -23,7 +23,7 @@
   let productCart = new Map();
 
   let elementInputSearchbar;
-  $: scannerActive = true;
+
 
   //Loading sound and setting the volume
   let checkoutSound = new Audio("sound-effects/checkout_sound.mp3");
@@ -125,9 +125,6 @@
     selectedProducts = Array.from(productCart.values());
   }
 
-  function switchScannerOn() {
-    scannerActive = !scannerActive;
-  }
 
   function clearFields() {
     identifier = "";

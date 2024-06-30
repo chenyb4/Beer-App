@@ -5,8 +5,7 @@
     import {createUser, updateUser} from "$lib/service/administration.js";
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
-    import SendQRModal from "$lib/components/ResponseModal.svelte";
-    import {handleSendMailResponse} from "$lib/service/QR.js";
+
     import languages from "$lib/service/languages.json";
 
     let openCreateUserDialog = true;
@@ -14,7 +13,7 @@
     export let onClose = async function () {
     };
 
-    export let changeQrMessage = function (qr) {
+    export let changeQrMessage = function () {
     };
 
     let studentNumber = "";
@@ -22,8 +21,6 @@
     $: date_of_birth = new Date().toISOString().split('T')[0];
     let helper = "";
     $: hideHelper = true;
-    let showCreatedUserModal = false;
-    let createdUserModalText = "";
     let studentNumberInput;
     let selectedLanguage = 0;
 
@@ -56,10 +53,7 @@
         await updateUser({user: response.user, language: selectedLanguage});
         if (response) {
             let responseQR = await getQRandSendMail(response.user.id);
-            createdUserModalText = handleSendMailResponse(responseQR.sentMail, response.user, responseQR.qr);
             openCreateUserDialog = false;
-            showCreatedUserModal = false;
-            showCreatedUserModal = true;
             changeQrMessage(responseQR.qr);
         } else {
             alert("User cannot be created");

@@ -1,5 +1,5 @@
 <script>
-import {t} from "$lib/translations/index.js";
+
 import {Button, ButtonGroup, Dropdown, DropdownItem} from "flowbite-svelte";
 import {DotsVerticalOutline} from "flowbite-svelte-icons";
 

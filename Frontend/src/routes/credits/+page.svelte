@@ -9,7 +9,7 @@
 
   // Initialize variables for the form
   let identifier = "";
-  let userName = "";
+
   let identifiedUser = {};
   let amountOfCredits = 0;
   let price = 0;
@@ -85,7 +85,7 @@
   function clearFields() {
     identifier = "";
     identifiedUser = {};
-    userName = "";
+
   }
 
   // Set focus on the input field when the component is mounted
