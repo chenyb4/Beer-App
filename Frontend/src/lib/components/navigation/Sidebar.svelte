@@ -5,7 +5,7 @@
         SidebarGroup,
         SidebarBrand,
         DarkMode,
-        Select, Button, SidebarItem,
+        Select, Button,
     } from "flowbite-svelte";
   import NavBarOption from "$lib/components/navigation/NavBarOption.svelte";
   import { page } from "$app/stores";

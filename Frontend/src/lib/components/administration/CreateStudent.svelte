@@ -5,7 +5,7 @@
     import {createUser, updateUser} from "$lib/service/administration.js";
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
-    import SendQRModal from "$lib/components/ResponseModal.svelte";
+
     import {handleSendMailResponse} from "$lib/service/QR.js";
     import languages from "$lib/service/languages.json";
 

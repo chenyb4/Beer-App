@@ -6,7 +6,7 @@
     import {getQRandSendMail} from "$lib/service/emailService.js";
     import {fly} from 'svelte/transition';
     import {handleSendMailResponse} from "$lib/service/QR.js";
-    import {addCreditsForAUser} from "$lib/service/credits.js";
+
     import languages from "$lib/service/languages.json";
 
     export let roles;
