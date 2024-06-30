@@ -15,4 +15,4 @@ cd Backend
 npm run start
 ```
 
-There is a .env required.
+There is a .env required in the root and a .pgpass in the Backend --> Backup folder.
