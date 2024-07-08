@@ -39,12 +39,7 @@ export async function addProductsToOrder(orderId, productCart) {
 
   export async function confirmOrder(orderId) {
     try {
-      const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/orders/confirm?id=" + orderId, {
-        headers: {
-          "Content-Type": "application/json"
-        },
-        method: "PUT",
-      });
+      const response = await request("/orders/confirm?id=" + orderId, "PUT", "", true);
   
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

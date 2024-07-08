@@ -97,7 +97,7 @@ exports.loadDummyData = async () => {
         await db.User.bulkCreate([
             {
                 username: "dummy",
-                email: "510739@student.saxion.nl",
+                email: "dummy@student.saxion.nl",
                 password: "$2b$10$PhqaHcRo3xnMAX3wyzSF7OmsVoR/7QclpJN9.ePjVHRuMACUsqOZ2",
                 date_of_birth: "2024-05-23 00:00:00.000",
                 roleId: 4,

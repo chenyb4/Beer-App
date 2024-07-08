@@ -220,10 +220,14 @@
         modalComponent = null;
         modalProps= {}
     }
+
+    function resetQr(){
+        qrMessage = "";
+    }
 </script>
 <svelte:component this={modalComponent} {...modalProps}/>
 {#if qrMessage !== ""}
-    <QRImageDisplay qrMessage={qrMessage}/>
+    <QRImageDisplay qrMessage={qrMessage} resetQr={resetQr}/>
 {/if}
 <div class="fixed bottom-12 right-12 z-50">
     <ButtonExtraOption

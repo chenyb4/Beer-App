@@ -26,12 +26,7 @@ export async function getOneOrderById(orderId) {
 
 export async function undoTransaction(orderId) {
     try {
-        const response = await fetch("http://" + import.meta.env.VITE_APIURL + ":" + import.meta.env.VITE_APIPORT + "/histories/undo?orderId=" + orderId, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            method: "POST"
-        });
+        const response = await request("/histories/undo?orderId=" + orderId, "POST", "", true);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
