@@ -33,7 +33,7 @@ module.exports = function (app) {
      *               type: object
      */
 
-    app.get('/users', authService.authenticateToken, userController.getUser);
+    app.get('/users', authService.authenticateTokenForSeller, userController.getUser);
     /**
      * @swagger
      * /users:
