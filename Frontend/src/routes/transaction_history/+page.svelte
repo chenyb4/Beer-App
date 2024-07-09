@@ -10,8 +10,8 @@
     getAllOrders,
     getOneOrderById,
     undoTransaction,
-  } from "../../lib/service/transactions.js";
-  import { dateToStringWithTime } from "../../lib/service/dateToString.js";
+  } from "$lib/service/transactions.js";
+  import { dateToStringWithTime } from "$lib/service/dateToString.js";
 
   const iconStyle =
     "hover:cursor-pointer hover:bg-light-p_foreground dark:hover:bg-dark-p_foreground rounded h-6 w-6";
@@ -47,6 +47,7 @@
     const updatedOrders = (await getAllOrders()) || [];
     allOrders = updatedOrders.data;
   }
+  $: console.log(allOrders)
 </script>
 
 <TablePage
@@ -87,6 +88,7 @@
             <Button
               class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
               on:click={() => undo(entry.id)}
+              disabled='{entry.undoneBy}'
             >
               Undo
             </Button>

@@ -85,6 +85,7 @@
             <Button
               class="w-full bg-light-p_foreground dark:bg-dark-p_foreground font-medium rounded-full text-lg text-center"
               on:click={() => undo(entry.id)}
+              disabled='{entry.undoneBy}'
             >
               Undo
             </Button>
