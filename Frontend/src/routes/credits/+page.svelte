@@ -9,7 +9,7 @@
 
   // Initialize variables for the form
   let identifier = "";
-
+  let userName = "";
   let identifiedUser = {};
   let amountOfCredits = 0;
   let price = 0;
@@ -17,6 +17,7 @@
   let defaultCreditsAndPriceReceived = false;
   let creditIncrement = amountOfCredits;
   let priceIncrement = price;
+  let scannerActive;
 
   // Exported data from the parent component
   export let data;
@@ -74,9 +75,16 @@
 
   // Function to show the confirmation modal
   function onConfirmButtonClick() {
-    if (!identifier.trim()) {
-      alert("Identifier is required.");
-      return;
+    if (scannerActive) {
+      if (!identifier.trim()) {
+        alert("Identifier is required.");
+        return;
+      }
+    } else {
+      if (!userName.trim()) {
+        alert("Username is required.");
+        return;
+      }
     }
     showBuyCreditModal = true;
   }
@@ -85,7 +93,6 @@
   function clearFields() {
     identifier = "";
     identifiedUser = {};
-
   }
 
   // Set focus on the input field when the component is mounted
@@ -116,7 +123,12 @@
   <h2 class="text-3xl font-bold mb-8">{$t("credits.title")}</h2>
   <div class="flex-1">
     <div class="flex flex-row justify-between">
-      <StudentIdentifier bind:identifiedUser bind:identifier bind:ref
+      <StudentIdentifier
+        bind:identifiedUser
+        bind:identifier
+        bind:ref
+        bind:scannerActive
+        bind:userName
       ></StudentIdentifier>
       <PriceTitle captionText={$t("credits.price")} {price}></PriceTitle>
     </div>
